@@ -24,8 +24,8 @@ class UsagerRequest extends FormRequest
         return [
             'email'=>'required',
             'motDePasse'=>'confirmed|required',
-            'nom'=>'',
-            'prenom'=>'',
+            'nom'=>'required',
+            'prenom'=>'required',
             'role'=>'required'
         ];
     }

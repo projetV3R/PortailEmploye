@@ -15,13 +15,22 @@ class UserController extends Controller
     
 public function index()
 {
-    $users=Usagers::all();
+    //Todo liste usagers
 }
 
 public function store (Request $request)
 {
+ 
+    $validatedData = $request->validated();
 
-    
+    Usager::create([
+        'email' => $validatedData['email'],
+        'motDePasse' => Hash::make($validatedData['motDePasse']),
+        'nom' => $validatedData['nom'],
+        'prenom' => $validatedData['prenom'],
+        'role' => $validatedData['role'],
+    ]);
+
 }
 
 }
