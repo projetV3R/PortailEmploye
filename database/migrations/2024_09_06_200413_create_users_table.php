@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('motDePasse',60); //TODO Retirer quand SSO implementer 
             $table->string('nom',255);
             $table->string('prenom',255);
+            $table->set('role',['admin','responsable','commis'])->default('commis');
             $table->timestamps();
         });
     }

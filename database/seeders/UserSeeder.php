@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
             'motDePasse' =>'password',
             'nom' => 'john',
             'prenom' => 'jahn',
+            'role'=>'admin',
         ]);
     }
 }
