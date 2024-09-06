@@ -15,7 +15,7 @@ class UserController extends Controller
     
 public function index()
 {
-    //Todo liste usagers
+    //TODO liste usagers
 }
 
 public function store (Request $request)
@@ -31,6 +31,9 @@ public function store (Request $request)
         'role' => $validatedData['role'],
     ]);
 
+    //TODO Try and catch 
 }
+
+
 
 }
