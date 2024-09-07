@@ -9,7 +9,7 @@
 
   @vite('resources/css/app.css') 
   <link rel="stylesheet" href="{{ asset('style.css') }}">
-  <link rel="shortcut icon" type="image/png" href="{{ asset('img/apple-icon-72x72.png') }}"/>
+  
 </head>
 
 <body>

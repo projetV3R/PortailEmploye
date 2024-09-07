@@ -6,7 +6,17 @@ export default {
     "./resources/**/*.vue",
   ],
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        'bounce-horizontal': {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '50%': { transform: 'translateX(25%)' },
+        },
+      },
+      animation: {
+        'bounce-horizontal': 'bounce-horizontal 1s infinite',
+      },
+    },
   },
   plugins: [],
 }
