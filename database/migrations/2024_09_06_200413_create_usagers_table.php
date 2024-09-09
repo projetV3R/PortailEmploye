@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('usagers', function (Blueprint $table) {
             $table->id();
             $table->string('email',255)->unique();
             $table->string('motDePasse',60); //TODO Retirer quand SSO implementer 
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('usagers');
     }
 };
