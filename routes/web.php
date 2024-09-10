@@ -12,3 +12,6 @@ Route::get('/admin', function () {
     return view('admin.admin');
 });
 
+Route::get('/redirection', function () {
+    return view('redirection');
+});
