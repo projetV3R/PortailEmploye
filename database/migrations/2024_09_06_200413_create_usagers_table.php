@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('usagers', function (Blueprint $table) {
             $table->id();
             $table->string('email',255)->unique();
-            $table->string('motDePasse',60); //TODO Retirer quand SSO implementer 
+            $table->string('password',60); //TODO Retirer quand SSO implementer 
             $table->string('nom',255);
             $table->string('prenom',255);
             $table->set('role',['admin','responsable','commis'])->default('commis');

@@ -15,7 +15,7 @@ class UsagerSeeder extends Seeder
         DB::table('usagers')->insert([
             'id' =>1,
             'email' => 'john@test.com',
-            'motDePasse' =>'password',
+            'password' =>'password',
             'nom' => '',
             'prenom' => 'jahn',
             'role'=>'admin',

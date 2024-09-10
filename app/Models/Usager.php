@@ -13,12 +13,13 @@ class Usager extends Authenticatable
     use HasFactory,Notifiable;
     protected $fillable = [
         'email',
-        'motDePasse',
+        'password',
         'nom',
         'prenom',
+        'role',
     ];
     protected $hidden = [
-        'motDePasse',
+        'password',
         'remember_token',
     ];
 }

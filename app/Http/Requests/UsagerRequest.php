@@ -22,11 +22,11 @@ class UsagerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email'=>'required',
-            'motDePasse'=>'confirmed|required',
-            'nom'=>'required',
-            'prenom'=>'required',
-            'role'=>'required'
+            'email'=>'required|email|unique:usagers,email',
+            'password'=>'required|confirmed',
+            'nom'=>'required|string|',
+            'prenom'=>'required|string|',
+            'role'=>'required|in:admin,responsable,commis'
         ];
     }
 }
