@@ -9,8 +9,8 @@
         <span class="iconify size-10" data-icon="ion:arrow-undo" data-inline="false"></span>
     </a>
     <div class="flex flex-row">
-        <div class="relative w-3/4 lg:ml-40 md:ml-20 sm:ml-10">
-            <div class="w-full lg:w-3/5 md:w-3/4 sm:w-2/3 lg:text-2xl md:text-lg sm:text-sm ">
+        <div class="relative">
+            <div class="w-full lg:w-3/5 md:w-3/4 sm:w-2/3 lg:text-2xl md:text-lg sm:text-sm lg:ml-40 md:ml-20 sm:ml-10 sm:mt-10">
                 <h1 class="relative z-10 text-center p-10 mt-6">
                     <b>Vous n'avez pas accès à cette page veuillez retourner au menu principal.</b>
                 </h1>
