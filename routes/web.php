@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsagerController;
-use App\Http\Controllers\UsagersController;
 use Illuminate\Support\Facades\Log;
 
 
@@ -20,17 +19,17 @@ Route::get('/admin', function () {
 
 // FORMULAIRE CONNEXION
 Route::get('/login',
-[UsagersController::class, 'index'])->name('showLoginForm');
+[UsagerController::class, 'index'])->name('showLoginForm');
 
 // ACTION CONNEXION
 Route::post('/login',
-[UsagersController::class, 'login'])->name('login');
+[UsagerController::class, 'login'])->name('login');
 
  // ACTION DECONNEXION
  Route::post('/logout',
- [UsagersController::class, 'logout'])->name('logout')->middleware('auth');
+ [UsagerController::class, 'logout'])->name('logout')->middleware('auth');
 
 
- Route::get('/connexion', function () {
-    return view('Auth.dashboard');
-});
+ Route::get('/connexion',
+ [UsagerController::class, 'usagerindex'])->name('usagerindex');
+ 

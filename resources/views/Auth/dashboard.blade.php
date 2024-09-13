@@ -6,8 +6,16 @@
 @vite('resources/css/app.css') 
 
 @auth
-
-<h1>Connecter</h1>
+    <div class="w-full p-2 bg-cyan-400">
+    @if(session('message'))
+        <div class="alert alert-success center">
+            {{ session('message') }}
+        </div>
+    @endif
+    </div>
+        <div>
+            <h1>Connecter</h1>
+        </div>
 @endauth
 
 @endsection

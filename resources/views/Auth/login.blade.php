@@ -5,6 +5,14 @@
 @section('contenu')
 @vite('resources/css/app.css') 
 <div class="w-full p-2">
+
+@if(session('message'))
+    <div class="alert alert-success center">
+        {{ session('message') }}
+    </div>
+@endif
+
+
 <div class="relative flex items-center justify-center w-full h-screen ">
 <!--
     <div class="absolute inset-0">
