@@ -21,8 +21,9 @@
             <strong>Deconnexion</strong>
             </button>
           </form>
-          @endauth
+      @endauth
     </header>
+    
     @yield('contenu')
 </body>
 </html>

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UsagerController;
+use App\Http\Controllers\UsagersController;
 use Illuminate\Support\Facades\Log;
 
 
@@ -13,23 +13,41 @@ Route::get('/', function () {
 Route::get('/admin', function () {
     return view('admin.admin');
 });
-/*Route::get('/connexionEmployer', function () {
-    return view('Auth.connexion');
-});*/
 
 // FORMULAIRE CONNEXION
 Route::get('/login',
-[UsagerController::class, 'index'])->name('showLoginForm');
+[UsagersController::class, 'index'])->name('showLoginForm');
 
 // ACTION CONNEXION
 Route::post('/login',
-[UsagerController::class, 'login'])->name('login');
+[UsagersController::class, 'login'])->name('login');
 
  // ACTION DECONNEXION
  Route::post('/logout',
- [UsagerController::class, 'logout'])->name('logout')->middleware('auth');
+ [UsagersController::class, 'logout'])->name('logout')->middleware('auth');
 
 
- Route::get('/connexion',
- [UsagerController::class, 'usagerindex'])->name('usagerindex');
+// PAGE USAGER DETAIL
+Route::get('/usagers/{usager}', 
+[UsagersController::class, 'show'])->name('usager.show')->middleware('auth');
+
+Route::get('/usagers', 
+[UsagersController::class, 'usagerindex'])->name('usagerindex')->middleware('auth');
+
+Route::get('/creation/usagers',
+[UsagersController::class, 'create'])->name('usagers.create')->middleware('auth');
+
+Route::post('/creation/usagers',
+[UsagersController::class, 'store'])->name('usagers.store')->middleware('auth');
+
+  // FORMULAIRE MODIFICATION USAGER
+Route::get('/usagers/{usager}/modifier/',
+[UsagersController::class, 'edit'])->name('usagers.edit')->middleware('auth');
  
+Route::patch('/usagers/{usager}/modifier',
+[UsagersController::class, 'update'])->name('usagers.update')->middleware('auth');
+ 
+Route::delete('/usagers/{usager}/supprimer', 
+[UsagersController::class, 'destroy'])->name('usagers.destroy')->middleware('auth');
+
+//Route::get('/usager/index', [UsagersController::class, 'index'])->name('usagerindex');
