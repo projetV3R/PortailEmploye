@@ -3,7 +3,6 @@
 @section('title', 'Connexion Employer')
 
 @section('contenu')
-@vite('resources/css/app.css') 
 <div class="w-full p-2">
 <div class="relative flex items-center justify-center w-full h-screen ">
 
