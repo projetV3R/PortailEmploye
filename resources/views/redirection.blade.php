@@ -9,7 +9,7 @@
         <a href="/" class="">
             <span class="iconify size-10" data-icon="ion:arrow-undo" data-inline="false"></span>
         </a>
-        <h1 class="m-10 text-2xl text-center">
+        <h1 class="m-10 text-4xl text-center font-Alumni">
             <b>Vous n'avez pas accès à cette page.</b>
         </h1>
     </div>
