@@ -37,11 +37,12 @@ class UsagerController extends Controller
             'password' => 'required',
         ]);
 
+
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password]))
         {
             return redirect()->intended('dashboard');
         }
-        //return redirect()->route('showLoginForm')->with("message1",'Déconnexion réussi');
+        return redirect()->route('showLoginForm')->with("message",'ind réussi');
 
        // return back()->withErrors(['email' => 'Les identifiants ne correspondent pas.']);
     }

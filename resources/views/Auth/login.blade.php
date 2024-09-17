@@ -33,9 +33,11 @@
                         <label for="email" class="form-label block mb-2"><strong>Adresse courriel professionel</strong></label>
                         <input type="text" name="email" id="email" autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-blue-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2" placeholder="Votre adresse courriel">
                         <!-- MESSAGE ERREUR SI le MAIL N'A PAS DE @ -->
-                        @error('email')
-                            <span>{{ $message }}</span>
-                        @enderror
+                        @if(session('message'))
+                            <div class="alert alert-success center">
+                                {{ session('message') }}
+                            </div>
+                        @endif
                         <a class="text-blue-500 hover:underline text-xs md:text-sm" href="#">Adresse courriel oublié?</a>
                     </div>   
 
