@@ -3,7 +3,6 @@
 @section('title', 'Connexion Employer')
 
 @section('contenu')
-@vite('resources/css/app.css') 
 <div class="w-full p-2">
 
 @if(session('message'))
@@ -14,14 +13,7 @@
 
 
 <div class="relative flex items-center justify-center w-full h-screen ">
-<!--
-    <div class="absolute inset-0">
-        <img src="{{asset('images/Vector.png')}}" alt="" class="absolute w-1/2 right-0 z-0">
-        <div class="relative hidden sm:block">
-        <img src="{{asset('images/gifCollab.gif')}}" alt="" class="absolute top-0 right-20 z-0">
-        </div>
 
-    </div>-->
     <div class="w-full lg:w-3/4 xl:w-2/3 mx-auto lg:ml-4 xl:ml-8">
         <div class="relative flex flex-col items-center justify-left p-4 shadow-lg max-w-md mx-auto z-10">
             <div class="flex flex-col items-center justify-center p-4">
@@ -40,21 +32,25 @@
                     <div class="p-4">
                         <label for="email" class="form-label block mb-2"><strong>Adresse courriel professionel</strong></label>
                         <input type="text" name="email" id="email" autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-blue-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2" placeholder="Votre adresse courriel">
+                        <!-- MESSAGE ERREUR SI le MAIL N'A PAS DE @ -->
+                        @error('email')
+                            <span>{{ $message }}</span>
+                        @enderror
                         <a class="text-blue-500 hover:underline text-xs md:text-sm" href="#">Adresse courriel oublié?</a>
                     </div>   
 
                     <div class="p-4">
                         <label for="password" class="form-label block mb-2"><strong>Votre mot de passe</strong></label>
                         <input type="password" name="password" id="password" autocomplete="password" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-blue-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2" placeholder="Votre mot de passe">
+                        @error('password')
+                            <span>{{ $message }}</span>
+                        @enderror
                         <a class="text-blue-500 hover:underline text-xs md:text-sm text-right" href="#">Mot de passe oublié?</a>
                     </div>
                     <div class="p-4">
                         <button type="submit" class="block w-full py-2 px-4 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm">
                             <strong>Suivant</strong>
                         </button>
-                        <!--<a class="hover:underline text-xs text-right" href="#">Première connexion ou NEQ non trouvée? <br> 
-                            <strong class="text-blue-500">Soumettre une demande !</strong> 
-                        </a>-->
                     </div>
                 </form> 
             </div></div>

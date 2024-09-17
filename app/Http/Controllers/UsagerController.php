@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -11,21 +10,20 @@ use App\Models\Usager;
 use App\Http\Requests\UsagerRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+
 
 class UsagerController extends Controller
 {
     
     public function index()
     {
-        $fillable = Usager::all();
-        return view('Auth.login', compact('fillable'));        
+        return view('Auth.login');        
     }
 
     public function usagerindex()
     {
-        $fillable = Usager::all();
-        $usagers = Usager::all();
-        return view('Auth.dashboard', compact('usagers','fillable'));
+        
     }
 
     /**
@@ -33,18 +31,19 @@ class UsagerController extends Controller
      */
     public function login(Request $request)
     {
-        $reussi = Auth::attempt(['email' => $request->email, 'password' => $request->password]);
+        $validatedData = $request->validate
+        ([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-        //Log::debug(''.$reussi);
-        if($reussi)
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password]))
         {
-            return redirect()->route('usagerindex')->with("message",'Connexion réussi');
+            return redirect()->intended('dashboard');
         }
-        else
-            {
-                Session::flush();
-                return redirect()->route('showLoginForm')->with("message",'Informations invalides');
-            }
+        //return redirect()->route('showLoginForm')->with("message1",'Déconnexion réussi');
+
+       // return back()->withErrors(['email' => 'Les identifiants ne correspondent pas.']);
     }
     public function logout (Request $request)
     {        
