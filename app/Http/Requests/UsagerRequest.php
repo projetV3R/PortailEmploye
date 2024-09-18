@@ -3,10 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use App\Models\Usager;
 
 class UsagerRequest extends FormRequest
 {

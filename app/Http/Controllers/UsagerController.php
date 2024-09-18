@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Usager;
 use App\Http\Requests\UsagerRequest;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 
 
 class UsagerController extends Controller
@@ -43,9 +41,7 @@ class UsagerController extends Controller
         ]);
     
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            //return redirect()->intended('dashboard');
             return view('Auth.dashboard');    
-
         }
     
         return back()->withErrors([
