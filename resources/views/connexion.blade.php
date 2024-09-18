@@ -34,16 +34,14 @@
 
                     <div class="p-4">
                         <label for="password" class="form-label block mb-2"><strong>Votre mot de passe</strong></label>
-                        <input type="password" name="password" id="password" autocomplete="password" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-blue-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2" placeholder="Votre mot de passe">
+                        <input type="password" name="password" id="password" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-blue-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2" placeholder="Votre mot de passe">
                         <a class="text-blue-500 hover:underline text-xs md:text-sm text-right" href="#">Mot de passe oublié?</a>
                     </div>
                     <div class="p-4">
                         <button type="submit" class="block w-full py-2 px-4 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm">
                             <strong>Suivant</strong>
                         </button>
-                        <!--<a class="hover:underline text-xs text-right" href="#">Première connexion ou NEQ non trouvée? <br> 
-                            <strong class="text-blue-500">Soumettre une demande !</strong> 
-                        </a>-->
+                        
                     </div>
                 </form> 
             </div></div>
