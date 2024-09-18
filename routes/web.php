@@ -6,3 +6,7 @@ use App\Http\Controllers\UsagerController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/connexionEmployer', function () {
+    return view('connexion');
+});
