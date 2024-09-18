@@ -31,21 +31,29 @@ class UsagerController extends Controller
      */
     public function login(Request $request)
     {
-        $validatedData = $request->validate
-        ([
+        $validatedData = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
+        ], [
+            'email.required' => 'Le champ email est obligatoire.',
+            // message different pour le mail sans le @
+            'email.email' => 'Informations invalide.',
+            'password.required' => 'Le champ mot de passe est obligatoire.',
+            'password.password' => 'Informations invalide.',
         ]);
+    
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            //return redirect()->intended('dashboard');
+            return view('Auth.dashboard');    
 
-
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password]))
-        {
-            return redirect()->intended('dashboard');
         }
-        return redirect()->route('showLoginForm')->with("message",'ind réussi');
-
-       // return back()->withErrors(['email' => 'Les identifiants ne correspondent pas.']);
+    
+        return back()->withErrors([
+            'email' => 'Les identifiants ne correspondent pas.',
+        ])->withInput($request->only('email'));
     }
+    
+
     public function logout (Request $request)
     {        
         Auth::logout();
