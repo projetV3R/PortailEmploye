@@ -7,6 +7,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
 // FORMULAIRE CONNEXION
 Route::get('/loginForm',
 [UsagerController::class, 'index'])->name('showLoginForm');
@@ -26,6 +27,3 @@ Route::get('/dashboard', function () {
 Route::get('/redirection', function () {
     return view('redirection');});
     
-Route::get('/connexionEmployer', function () {
-    return view('connexion');
-});
