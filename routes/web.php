@@ -13,5 +13,8 @@ Route::get('/admin', function () {
 });
 
 Route::get('/redirection', function () {
-    return view('redirection');
+    return view('redirection');});
+    
+Route::get('/connexionEmployer', function () {
+    return view('connexion');
 });
