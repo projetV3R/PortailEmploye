@@ -24,5 +24,8 @@ Route::get('/dashboard', function () {
     return view('Auth.dashboard')->name('coco');
 });
 Route::get('/redirection', function () {
-    return view('redirection');
+    return view('redirection');});
+    
+Route::get('/connexionEmployer', function () {
+    return view('connexion');
 });
