@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Usager;
 use App\Http\Requests\UsagerRequest;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
 
 class UsagersController extends Controller
 {
