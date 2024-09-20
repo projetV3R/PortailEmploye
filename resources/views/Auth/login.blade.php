@@ -26,7 +26,7 @@
                 </div>
             @endif
             <div class="flex flex-col items-center justify-center p-4 md:p-10">
-                <form method="post" action="{{route('login')}}" class="w-full">
+                <form method="post" action="{{route('connexion')}}" class="w-full">
                 @csrf 
                     <div class="p-4">
                         <label for="email" class="form-label block mb-2"><strong>Adresse courriel professionel</strong></label>

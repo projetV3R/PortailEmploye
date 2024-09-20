@@ -19,9 +19,9 @@ class UsagerController extends Controller
         return view('Auth.login');        
     }
 
-    public function usagerindex()
+    public function dashboard()
     {
-        
+        return view('Auth.dashboard');
     }
 
     /**
@@ -41,7 +41,7 @@ class UsagerController extends Controller
         ]);
     
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            return view('Auth.dashboard');    
+            return redirect()->route('dashboard');     
         }
     
         return back()->withErrors([
@@ -54,7 +54,7 @@ class UsagerController extends Controller
     {        
         Auth::logout();
         Session::flush();
-        return redirect()->route('showLoginForm')->with("message",'Déconnexion réussi');
+        return redirect()->route('login')->with("message",'Déconnexion réussi');
     }
     public function store(UsagerRequest $request)
     {

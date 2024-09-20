@@ -10,20 +10,19 @@ Route::get('/', function () {
 
 // FORMULAIRE CONNEXION
 Route::get('/loginForm',
-[UsagerController::class, 'index'])->name('showLoginForm');
+[UsagerController::class, 'index'])->name('login');
 
 // ACTION CONNEXION
 Route::post('/login',
-[UsagerController::class, 'login'])->name('login');
+[UsagerController::class, 'login'])->name('connexion');
 
  // ACTION DECONNEXION
  Route::post('/logout',
  [UsagerController::class, 'logout'])->name('logout')->middleware('auth');
 
-//ACCES PAGE DASHBOARD APRES ACTION LOGIN
-Route::get('/dashboard', function () {
-    return view('Auth.dashboard')->name('coco');
-});
+Route::get('/dashboard',
+[UsagerController::class, 'dashboard'])->name('dashboard')->middleware('auth');
+
 Route::get('/redirection', function () {
     return view('redirection');});
     
