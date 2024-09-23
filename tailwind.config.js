@@ -10,6 +10,9 @@ export default {
       fontFamily: {
         Alumni: ["Alumni Sans", "sans-serif"],
     },
+    colors: {
+      'blueV3R': '#0B2341',
+    },
     },
   },
   plugins: [],

@@ -11,10 +11,16 @@
   
 </head>
 
-<body class="flex h-screen w-full ">
+<body class="flex flex-col h-screen w-full ">
     <!-- HEADER -->
     <header>
-
+      @yield('header')
+      <div class="flex  w-full bg-blueV3R h-32">
+        
+      </div>
+      <div class="flex p-4 absolute top-5 left-20">
+        <img class="w-36 h-36 bg-white shadow-lg" src="https://upload.wikimedia.org/wikipedia/fr/thumb/c/ce/Logo_de_Trois-Rivi%C3%A8res_2022.png/600px-Logo_de_Trois-Rivi%C3%A8res_2022.png?20220917132718" alt="">
+        </div>
     </header>
     @yield('contenu')
 </body>
