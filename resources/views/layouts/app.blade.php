@@ -15,13 +15,20 @@
     <!-- HEADER -->
     <header>
       @yield('header')
-      <div class="flex  w-full bg-blueV3R h-32">
-        
+      <div class="flex w-full bg-blueV3R h-32"> 
+        <div class="flex p-4 cursor-pointer">
+        <img class="bg-white flex lg:hidden " src="https://upload.wikimedia.org/wikipedia/fr/thumb/c/ce/Logo_de_Trois-Rivi%C3%A8res_2022.png/600px-Logo_de_Trois-Rivi%C3%A8res_2022.png?20220917132718" alt="">    
       </div>
-      <div class="flex p-4 absolute top-5 left-20">
+      </div>
+
+      <div class="flex p-4 absolute top-5 left-20 hidden lg:flex cursor-pointer">
         <img class="w-36 h-36 bg-white shadow-lg" src="https://upload.wikimedia.org/wikipedia/fr/thumb/c/ce/Logo_de_Trois-Rivi%C3%A8res_2022.png/600px-Logo_de_Trois-Rivi%C3%A8res_2022.png?20220917132718" alt="">
-        </div>
+      </div>
+
     </header>
+
+
+
     @yield('contenu')
 </body>
 </html>
