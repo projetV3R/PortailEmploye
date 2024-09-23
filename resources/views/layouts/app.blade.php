@@ -11,17 +11,10 @@
   
 </head>
 
-<body>
+<body class="flex h-screen w-full ">
     <!-- HEADER -->
     <header>
-      @auth
-          <form method="post" action="{{route('logout')}}">
-            @csrf
-            <button type="submit" class="block py-2 px-4 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm">
-            <strong>Deconnexion</strong>
-            </button>
-          </form>
-          @endauth
+
     </header>
     @yield('contenu')
 </body>
