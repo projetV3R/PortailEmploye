@@ -20,9 +20,16 @@ Route::post('/login',
  Route::post('/logout',
  [UsagerController::class, 'logout'])->name('logout')->middleware('auth');
 
+ 
+
 Route::get('/dashboard',
 [UsagerController::class, 'dashboard'])->name('dashboard')->middleware('auth');
 
 Route::get('/redirection', function () {
     return view('redirection');});
+    
+
+    
+Route::get('/admin', function () {
+    return view('admin.admin');});
     
