@@ -11,10 +11,12 @@
     @vite('resources/css/app.css')
 </head>
 
+
 <body class="flex flex-col h-screen w-full bg-white dark:bg-gray-900 text-black dark:text-white">
     <!-- HEADER -->
 
     <header>
+
         @yield('header')
         <div class="flex w-full bg-blueV3R h-32 items-center justify-between p-4 relative">
             <div class="flex items-center">
@@ -142,6 +144,7 @@
                 </nav>
             </div>
         </div>
+
     </header>
 
     @yield('contenu')
