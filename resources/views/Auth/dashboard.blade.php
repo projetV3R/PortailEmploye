@@ -2,6 +2,8 @@
  
 @section('title', "Accueil")
  
+@section('header')
+@endsection
 @section('contenu')
 
 @auth
