@@ -13,9 +13,15 @@ use Illuminate\Support\Facades\Hash;
 class UsagerController extends Controller
 {
     
-    public function index()
+    public function index(Request $request)
     {
         // TODO PAGINATION
+        $usagers = Usager::paginate(4);
+
+        if ($request->ajax()) {
+            return response()->json($usagers);
+        }
+        return view('admin.admin', compact('usagers'));
     }
 
     public function store(UsagerRequest $request)

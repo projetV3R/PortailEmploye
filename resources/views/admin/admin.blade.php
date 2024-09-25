@@ -38,12 +38,102 @@
     </div>
 
 
-    <div class="flex flex-col justify-center w-full h-full bg-red-500" id="usersDiv"></div>
+    <div class="flex flex-col justify-center w-full h-full bg-red-500" id="usersDiv">
+    <div class="container mx-auto px-4">
+        <h1 class="">Liste des Usagers</h1>
+        
+        <div class="grid grid-cols-3 gap-3">
+            <table class="">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="">Email</th>
+                        <th class="">Role</th>
+                        <th class="">Modifier</th>
+                        <th class="">Supprimer</th>
+                    </tr>
+                </thead>
+                <tbody id="usagers-table" class="bg-white divide-y divide-gray-200">
+                    <!-- Les Usagers seront chargés ici via Ajax -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="pagination-links" class="mt-4">
+            <!-- Les liens de pagination seront affichés ici via Ajax -->
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            function loadUsagers(page = 1) {
+                $.ajax({
+                    url: "{{ route('admin.admin') }}?page=" + page,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        var usagerRows = '';
+                        $.each(data.data, function(index, usager) {
+                            usagerRows += `
+                                <tr>
+                                    <td class="">${usager.email}</td>
+                                    <td class="">${usager.role}</td>
+                                    <td class="">
+                                        <a href="#" class="text-indigo-600 hover:text-indigo-900">Modifier</a>
+                                    </td>
+                                    <td class="">
+                                        <a href="#" class="text-red-600 hover:text-red-900">Supprimer</a>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                        $('#usagers-table').html(usagerRows);
+
+                        // Gérer les liens de pagination
+                        var paginationLinks = '';
+                        $.each(data.links, function(index, link) {
+                            paginationLinks += `
+                                <a href="#" class="px-2 py-1 ${link.active ? 'bg-blue-500 text-white' : 'bg-gray-200'}" data-page="${link.label}">
+                                    ${link.label}
+                                </a>
+                            `;
+                        });
+                        $('#pagination-links').html(paginationLinks);
+                    },
+                    error: function(err) {
+                        console.log(err);
+                    }
+                });
+            }
+
+            // Charger la première page des Usagers
+            loadUsagers();
+
+            // Gestion des clics sur les liens de pagination
+            $(document).on('click', '#pagination-links a', function(e) {
+                e.preventDefault();
+                var page = $(this).data('page');
+                loadUsagers(page);
+            });
+        });
+    </script>
+    </div>
     <div class="flex flex-col justify-center w-full h-full bg-yellow-500 hidden" id="suppliersDiv"></div>
     <div class="flex flex-col justify-center w-full h-full bg-blue-500 hidden" id="settingsDiv"></div>
 
 </div>
-
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="crf-token"]').attr('content')
+        }
+    });
+</script>
+<script>
+    $(document).ready(function()
+    {
+        
+    });
+</script>
 <script>
 
     document.getElementById('dropdownToggle').addEventListener('click', function() {

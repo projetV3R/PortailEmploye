@@ -8,9 +8,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/admin', function () {
-    return view('admin.admin');
-});
+Route::get('/admin', 
+[UsagerController::class, 'index'])->name('admin.admin');
 
 Route::get('/redirection', function () {
     return view('redirection');
