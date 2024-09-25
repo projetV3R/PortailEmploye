@@ -17,7 +17,8 @@ class UsagerController extends Controller
     public function index(Request $request)
     {
         // TODO PAGINATION
-        $usagers = Usager::paginate(4);
+        $usagers = Usager::select('id', 'email', 'role')
+                    ->paginate(4);
 
         if ($request->ajax()) {
             return response()->json($usagers);
