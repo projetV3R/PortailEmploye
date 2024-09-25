@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./resources/**/*.blade.php",
     "./resources/**/*.js",
@@ -10,6 +11,9 @@ export default {
     extend: {
       fontFamily: {
         Alumni: ["Alumni Sans", "sans-serif"],
+    },
+    colors: {
+      'blueV3R': '#0B2341',
     },
     },
   },
