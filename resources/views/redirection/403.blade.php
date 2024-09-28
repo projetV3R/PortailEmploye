@@ -1,12 +1,10 @@
-@extends('layouts.app')
-
-@section('title', 'Redirection')
-
-@section('contenu')
-
+<script src="https://code.iconify.design/3/3.0.0/iconify.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="icon" type="image/png" href="https://www.v3r.net/wp-content/uploads/2023/06/favicon.png" />
+<title>Erreur 403 - Page non-autorisée</title>
 <div class="w-full">
     <div class="absolute inset-x-0 z-10">
-        <a href="/" class="">
+        <a href="/dashboard" class="">
             <span class="iconify size-10" data-icon="ion:arrow-undo" data-inline="false"></span>
         </a>
         <h1 class="m-10 text-4xl text-center font-Alumni">
@@ -23,4 +21,3 @@
 
 
 
-@endsection
