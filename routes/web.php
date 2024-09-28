@@ -27,11 +27,13 @@ Route::get('/dashboard',
 
 Route::get('/redirection', function () {
     return view('redirection.403');});
+
     
 
     
 Route::get('/admin', function () {
     return view('admin.admin');});
+
     
 
 
