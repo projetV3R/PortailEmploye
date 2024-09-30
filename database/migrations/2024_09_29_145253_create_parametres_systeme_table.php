@@ -4,7 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-
 return new class extends Migration
 {
     /**
@@ -12,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('usagers', function (Blueprint $table) {
+        Schema::create('parametres_systeme', function (Blueprint $table) {
             $table->id();
-            $table->string('email',191)->unique();
-            $table->string('password',60); //TODO Retirer quand SSO implementer 
-            $table->string('nom',191);
-            $table->string('prenom',191);
-            $table->set('role',['admin','responsable','commis'])->default('commis');
+            $table->string('cle');
+            $table->string('valeur')->nullable(); // Pour les emails
+            $table->integer('valeur_numerique')->nullable(); // Pour les mois de revision et taille fichier max
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('usagers');
+        Schema::dropIfExists('parametres_systeme');
     }
 };
