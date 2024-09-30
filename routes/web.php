@@ -10,14 +10,15 @@ Route::get('/', function () {
 });
 
 Route::get('/admin', 
-[UsagerController::class, 'index'])->name('admin.admin');
+[UsagerController::class, 'index'])->name('admin.admin')->middleware('auth');
 Route::post('/usagers/update', 
 [UsagerController::class, 'update'])->name('usagers.update');
 
 // FORMULAIRE CONNEXION
-Route::get('/loginForm',
-[UsagerController::class, 'index'])->name('login');
 
+Route::get('/loginForm', function () {
+    return view('Auth.login');
+});
 // ACTION CONNEXION
 Route::post('/login',
 [UsagerController::class, 'login'])->name('connexion');
@@ -32,11 +33,6 @@ Route::get('/dashboard',
 Route::get('/redirection', function () {
     return view('redirection.403');});
 
-    
-
-    
-Route::get('/admin', function () {
-    return view('admin.admin');});
 
     
     //STORE PARAMETRE SYSTEME  TODO RAJOUTER CHECK ROLE ADMIN

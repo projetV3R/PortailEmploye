@@ -16,7 +16,7 @@ class UsagerController extends Controller
     
     public function index(Request $request)
     {
-            $usagers = Usager::paginate(2); 
+            $usagers = Usager::paginate(10); 
             return view('admin.admin', compact('usagers'))->render();
         
     }
