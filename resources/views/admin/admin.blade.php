@@ -20,7 +20,7 @@
             <div class="flex flex-row cursor-pointer hover:bg-gray-200 p-4 px-2 w-full justify-center md:justify-start items-center gap-3 menu" data-target="usersDiv" onclick="SelectedMenu(this)">
                 <span class="iconify text-xl w-8" data-icon="material-symbols:format-list-bulleted" data-inline="false"></span>
                 <span class="text-xl">Utilisateurs</span>
-                <span class="iconify text-xl w-6 hidden arrow" data-icon="material-symbols:arrow-forward-ios-rounded"></span>
+                <span class="iconify text-xl w-6  arrow" data-icon="material-symbols:arrow-forward-ios-rounded"></span>
             </div>
 
             <div class="flex flex-row cursor-pointer hover:bg-gray-200 p-4 px-2 w-full justify-center md:justify-start items-center gap-3 menu" data-target="suppliersDiv" onclick="SelectedMenu(this)">
@@ -106,7 +106,45 @@
 </div>
 </div>
     <div class="flex flex-col justify-center w-full h-full bg-yellow-500 hidden" id="suppliersDiv"></div>
-    <div class="flex flex-col justify-center w-full h-full bg-blue-500 hidden" id="settingsDiv"></div>
+    <div class="flex flex-col justify-center w-full h-full  hidden" id="settingsDiv">
+        <div class="flex flex-col w-full h-full px-4 mt-10">
+            <h2 class="text-2xl font-bold mb-6 flex justify-center">Gestion des paramètres</h2>
+        
+            <div class="border p-6 rounded-lg shadow-md">
+                <form id="parametres-form">
+                    @csrf
+                    
+                    <div class="mb-4">
+                        <label for="email_approvisionnement" class="block font-medium text-lg">Courriel de l'Approvisionnement</label>
+                        <input type="email" name="email_approvisionnement" id="email_approvisionnement"
+                            class="w-full border rounded p-2 mt-1">
+                    </div>
+        
+                    <div class="mb-4">
+                        <label for="mois_revision" class="block font-medium text-lg">Délai avant la révision (mois)</label>
+                        <input type="number" name="mois_revision" id="mois_revision" min="1" max="36"
+                            class="w-full border rounded p-2 mt-1">
+                    </div>
+        
+                    <div class="mb-4">
+                        <label for="taille_fichier" class="block font-medium text-lg">Taille maximale des fichiers joints (Mo)</label>
+                        <input type="number" name="taille_fichier" id="taille_fichier" min="1" max="75"
+                            class="w-full border rounded p-2 mt-1">
+                    </div>
+        
+                    <div class="mb-4">
+                        <label for="email_finances" class="block font-medium text-lg">Courriel des Finances</label>
+                        <input type="email" name="email_finances" id="email_finances"
+                            class="w-full border rounded p-2 mt-1">
+                    </div>
+        
+                    <button type="submit" class="w-full bg-blue-500 text-white rounded p-2 hover:bg-blue-600">Enregistrer</button>
+                </form>
+            </div>
+        </div>
+        <!-- Script gestion parametres systemes  -->
+            <script src="{{ asset('js/Admin/parametres.js') }}"></script>
+      
 
 </div>
 
