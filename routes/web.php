@@ -9,6 +9,8 @@ Route::get('/', function () {
 
 Route::get('/admin', 
 [UsagerController::class, 'index'])->name('admin.admin');
+Route::post('/usagers/update', 
+[UsagerController::class, 'update'])->name('usagers.update');
 
 // FORMULAIRE CONNEXION
 Route::get('/loginForm',
@@ -27,4 +29,3 @@ Route::get('/dashboard',
 
 Route::get('/redirection', function () {
     return view('redirection');});
-    

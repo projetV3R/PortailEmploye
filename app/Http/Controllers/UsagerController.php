@@ -16,14 +16,9 @@ class UsagerController extends Controller
     
     public function index(Request $request)
     {
-        // TODO PAGINATION
-        $usagers = Usager::select('id', 'email', 'role')
-                    ->paginate(4);
-
-        if ($request->ajax()) {
-            return response()->json($usagers);
-        }
-        return view('admin.admin', compact('usagers'));
+            $usagers = Usager::paginate(2); 
+            return view('admin.admin', compact('usagers'))->render();
+        
     }
 
     public function dashboard()
@@ -107,10 +102,32 @@ class UsagerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        Log::debug('1');
+        // Récupérer les données du formulaire
+        $usagersData = $request->input('usagers');
+    
+        // Parcourir chaque utilisateur soumis dans le formulaire
+        foreach ($usagersData as $usagerData) {
+            // Validation des rôles
+            $request->validate([
+                'usagers.*.role' => 'required|in:admin,responsable,commis',
+            ]);
+    
+            // Récupérer l'usager par son ID
+            $usager = Usager::findOrFail($usagerData['id']);
+            // Mettre à jour le rôle
+            $usager->role = $usagerData['role'];
+            // Sauvegarder les changements
+            Log::debug('Message de débogage');
+            $usager->save();
+        }
+    
+        // Retourner une réponse JSON de succès
+        return response()->json(['success' => true]);
     }
+    
 
     /**
      * Remove the specified resource from storage.

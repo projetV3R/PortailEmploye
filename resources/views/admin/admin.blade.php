@@ -56,41 +56,50 @@
           </div>
         </div>
         <div class="overflow-hidden">
-          <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
-            <thead class="bg-gray-50 dark:bg-neutral-700">
-              <tr>
-                <th scope="col" class="py-3 px-4 pe-0">
-                  <div class="flex items-center h-5">
-                    <input id="hs-table-pagination-checkbox-all" type="checkbox" class="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-neutral-700 dark:border-neutral-500 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800">
-                    <label for="hs-table-pagination-checkbox-all" class="sr-only">Checkbox</label>
-                  </div>
-                </th>
-                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Name</th>
-                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Age</th>
-                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Address</th>
-                <th scope="col" class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Action</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
-              
-            </tbody>
-          </table>
+        <form id="update-roles-form">
+    @csrf 
+    
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
+        <thead class="bg-gray-50 dark:bg-neutral-700">
+            <tr>
+                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">ID</th>
+                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Mail</th>
+                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Role</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
+            @foreach($usagers as $usager)
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                        {{$usager->id}}
+                        <input type="hidden" name="usagers[{{ $usager->id }}][id]" value="{{ $usager->id }}">
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                        {{$usager->email}}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                        <select name="usagers[{{ $usager->id }}][role]" class="role-dropdown">
+                            <option value="admin" {{ $usager->role == 'admin' ? 'selected' : '' }}>Admin</option>
+                            <option value="responsable" {{ $usager->role == 'responsable' ? 'selected' : '' }}>Responsable</option>
+                            <option value="commis" {{ $usager->role == 'commis' ? 'selected' : '' }}>Commis</option>
+                        </select>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    <div class="py-4">
+        <button type="button" id="save-roles-btn" class="bg-blue-500 text-white px-4 py-2 rounded">Enregistrer toutes les modifications</button>
+    </div>
+</form>
+
+
+            <div class="py-1 px-4">
+                {{ $usagers->links('pagination::tailwind') }}
+            </div>
         </div>
-        <div class="py-1 px-4">
-          <nav class="flex items-center space-x-1" aria-label="Pagination">
-            <button type="button" class="p-2.5 min-w-[40px] inline-flex justify-center items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700" aria-label="Previous">
-              <span aria-hidden="true">«</span>
-              <span class="sr-only">Previous</span>
-            </button>
-            <button type="button" class="min-w-[40px] flex justify-center items-center text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 py-2.5 text-sm rounded-full disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:focus:bg-neutral-700 dark:hover:bg-neutral-700" aria-current="page">1</button>
-            <button type="button" class="min-w-[40px] flex justify-center items-center text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 py-2.5 text-sm rounded-full disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:focus:bg-neutral-700 dark:hover:bg-neutral-700">2</button>
-            <button type="button" class="min-w-[40px] flex justify-center items-center text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 py-2.5 text-sm rounded-full disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:focus:bg-neutral-700 dark:hover:bg-neutral-700">3</button>
-            <button type="button" class="p-2.5 min-w-[40px] inline-flex justify-center items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700" aria-label="Next">
-              <span class="sr-only">Next</span>
-              <span aria-hidden="true">»</span>
-            </button>
-          </nav>
-        </div>
+        
       </div>
     </div>
   </div>
@@ -100,6 +109,54 @@
     <div class="flex flex-col justify-center w-full h-full bg-blue-500 hidden" id="settingsDiv"></div>
 
 </div>
+
+<script>
+$(document).ready(function() {
+    $('#save-roles-btn').click(function(e) {
+        e.preventDefault(); // Empêche le rechargement de la page
+
+        let formData = $('#update-roles-form').serialize(); // Sérialise les données du formulaire
+        
+        $.ajax({
+            url: "{{ route('usagers.update') }}", // Route définie pour le contrôleur
+            type: "POST",
+            data: formData,
+            success: function(response) {
+                if(response.success) {
+                    alert('Modifications enregistrées avec succès.');
+                } else {
+                    alert('Une erreur est survenue.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText); // Affiche l'erreur dans la console pour débogage
+                alert('Une erreur est survenue.');
+            }
+        });
+    });
+});
+
+
+
+
+// Gestion de la pagination avec Ajax
+$(document).on('click', '.pagination a', function(event) {
+    event.preventDefault();
+    let page = $(this).attr('href').split('page=')[1];
+    fetch_data(page);
+});
+
+function fetch_data(page) {
+    $.ajax({
+        url: "/admin?page=" + page,
+        success: function(data) {
+            $('tbody').html(data);  // Recharge le tableau avec les nouvelles données
+        }
+    });
+}
+
+</script>
+
 <script>
 
     document.getElementById('dropdownToggle').addEventListener('click', function() {
