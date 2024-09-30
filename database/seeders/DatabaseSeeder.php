@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Database\Seeders\UsagerSeeder;
+use Database\Seeders\ParametreSystemeSeeder;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -14,5 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(UsagerSeeder::class);
+        $this->call(ParametreSystemeSeeder::class);
+        
     }
 }
