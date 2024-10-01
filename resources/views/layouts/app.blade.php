@@ -11,6 +11,7 @@
 
     <link rel="icon" type="image/png" href="https://www.v3r.net/wp-content/uploads/2023/06/favicon.png" />
     @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
 </head>
 
 

@@ -55,25 +55,25 @@
                     
                     <div class="mb-4">
                         <label for="email_approvisionnement" class="block font-medium text-lg">Courriel de l'Approvisionnement</label>
-                        <input type="email" name="email_approvisionnement" id="email_approvisionnement"
+                        <input type="email" name="email_approvisionnement" id="email_approvisionnement" required
                             class="w-full border rounded p-2 mt-1">
                     </div>
         
                     <div class="mb-4">
                         <label for="mois_revision" class="block font-medium text-lg">Délai avant la révision (mois)</label>
-                        <input type="number" name="mois_revision" id="mois_revision" min="1" max="36"
+                        <input type="number" name="mois_revision" id="mois_revision" min="1" max="36" required
                             class="w-full border rounded p-2 mt-1">
                     </div>
         
                     <div class="mb-4">
                         <label for="taille_fichier" class="block font-medium text-lg">Taille maximale des fichiers joints (Mo)</label>
-                        <input type="number" name="taille_fichier" id="taille_fichier" min="1" max="75"
+                        <input type="number" name="taille_fichier" id="taille_fichier" min="1" max="75" required
                             class="w-full border rounded p-2 mt-1">
                     </div>
         
                     <div class="mb-4">
                         <label for="email_finances" class="block font-medium text-lg">Courriel des Finances</label>
-                        <input type="email" name="email_finances" id="email_finances"
+                        <input type="email" name="finance_approvisionnement" id="finance_approvisionnement" required
                             class="w-full border rounded p-2 mt-1">
                     </div>
                     <button type="submit" class="w-full bg-blue-500 text-white rounded p-2 hover:bg-blue-600">Enregistrer</button>
