@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('type');
             $table->string('objet');
             $table->text('body');
-            $table->bool('actif');
+            $table->boolean('actif');
             $table->timestamps();
         });
     }

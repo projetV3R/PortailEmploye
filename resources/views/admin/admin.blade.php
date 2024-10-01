@@ -86,15 +86,40 @@
 
 </div>
 
-<div class="flex flex-col justify-center w-full h-screen p-4 lg:p-8  hidden gap-y-4 " id="courrielsDiv">
-    <div class="flex w-full h-full  justify-center border-2 border-dashed ">
-        Modele courriel 
+<div class="flex flex-col justify-center w-full p-4 lg:p-8 gap-y-4" id="courrielsDiv">
+    <!-- Select pour choisir le modèle d'email -->
+    <div class="flex gap-x-4">
+        <select id="modelesSelect" class="border p-2" onchange="afficherModele()">
+            <!-- Les options seront générées dynamiquement avec Axios -->
+        </select>
+        <button class="bg-green-300 rounded-md p-2 px-4">Ajouter</button>
+        <button class="bg-red-300 rounded-md p-2 px-4">Supprimer</button>
     </div>
 
-    <div class="flex w-full h-full justify-center border-2 border-dashed ">
-    Lien entre les modeles de courriels qui est le courriel d'inscription etc etc genre le modele de courriel actif qui vas servir a l'inscription etc etc ?? a confirmer mercredi    
+    <!-- Div pour afficher l'objet et le contenu du modèle sélectionné -->
+    <div id="contenuModele" class="flex flex-col w-full h-full border-2 border-dashed p-4 gap-y-4">
+ 
+        <div class="flex flex-col">
+            <label for="modeleObjet" class="font-bold mb-2">Objet du modèle</label>
+            <input type="text" id="modeleObjet" class="border p-2 rounded-md">
+        </div>
+
+        <!-- Textarea pour le body -->
+        <div class="flex flex-col  h-full ">
+            <label for="modeleBody" class="font-bold mb-2">Contenu du modèle</label>
+            <textarea id="modeleBody" rows="5" class="border p-2 rounded-md  h-full"></textarea>
+        </div>
     </div>
-    
+
+ 
+    <button class="bg-blue-300 rounded-md p-2 px-4">Enregistrer les modifications</button>
+</div>
+
+<!-- Script gestion paramètres systèmes -->
+<script src="{{ asset('js/Admin/courriels.js') }}"></script>
+
+
+
 </div>
 
 
