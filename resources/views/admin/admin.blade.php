@@ -73,24 +73,24 @@
             @foreach($usagers as $usager)
                 <tr>
                     
-                        <td class="relative hidden lg:block px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                        <td class="relative hidden lg:block px-3 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                             {{$usager->id}}
                             <input type="hidden" name="usagers[{{ $usager->id }}][id]" value="{{ $usager->id }}">
                         </td>
                     
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default">
+                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default">
                         {{$usager->email}}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                         <select name="usagers[{{ $usager->id }}][role]" class="role-dropdown">
                             <option value="admin" {{ $usager->role == 'admin' ? 'selected' : '' }}>Admin</option>
                             <option value="responsable" {{ $usager->role == 'responsable' ? 'selected' : '' }}>Responsable</option>
                             <option value="commis" {{ $usager->role == 'commis' ? 'selected' : '' }}>Commis</option>
                         </select>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default">
+                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default">
                         <div class="relative block lg:hidden">
-                            <button type="button" id="save-roles-btn" ><img src="{{asset('images/poubelle.png')}}" class="h-10 w-10"></button>
+                            <button type="button" id="save-roles-btn" ><img src="{{asset('images/poubelle.png')}}" class="h-8 w-8"></button>
                         </div>    
                         <div class="relative hidden lg:block">Supprimer employer</div>
                     </td>
