@@ -85,7 +85,8 @@
       
 
 </div>
-
+<!-- Script gestion paramètres systèmes -->
+<script src="{{ asset('js/Admin/courriels.js') }}"></script>
 <div class="flex flex-col justify-center w-full p-4 lg:p-8 gap-y-4" id="courrielsDiv">
     <!-- Select pour choisir le modèle d'email -->
     <div class="flex gap-x-4">
@@ -107,16 +108,15 @@
         <!-- Textarea pour le body -->
         <div class="flex flex-col  h-full ">
             <label for="modeleBody" class="font-bold mb-2">Contenu du modèle</label>
-            <textarea id="modeleBody" rows="5" class="border p-2 rounded-md  h-full"></textarea>
+            <div id="editor"  class="border p-2 rounded-md  h-full"></div>
         </div>
     </div>
 
  
     <button class="bg-blue-300 rounded-md p-2 px-4">Enregistrer les modifications</button>
-</div>
+</div> 
 
-<!-- Script gestion paramètres systèmes -->
-<script src="{{ asset('js/Admin/courriels.js') }}"></script>
+
 
 
 

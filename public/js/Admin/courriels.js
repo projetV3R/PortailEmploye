@@ -1,6 +1,71 @@
+
+var quill;
+
 document.addEventListener('DOMContentLoaded', function () {
+   
+    quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: {
+                container: [
+                    [{ 'header': [1, 2, false] }],
+                    ['bold', 'italic', 'underline'],
+                    ['link', 'blockquote', 'code-block'],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    ['clean'],
+                    [{ 'variable': 'select' }] 
+                ],
+                handlers: {
+                    'variable': function() {
+                        
+                        insertVariable();
+                    }
+                }
+            }
+        }
+    });
+
+
     chargerModeles();
+
+    
+    document.querySelector('.bg-blue-300').addEventListener('click', function() {
+        enregistrerModifications();
+    });
+
+    const variableSelect = document.createElement('select');
+    variableSelect.id = 'variableSelect';
+    variableSelect.className = 'ql-variable';  
+    variableSelect.innerHTML = `
+    <option value="">-- Insérer une variable --</option>
+    <option value="{usager-&gt;nom}">{usager-&gt;nom}</option>
+    <option value="{usager-&gt;prenom}">{usager-&gt;prenom}</option>
+    <option value="{commande-&gt;numero}">{commande-&gt;numero}</option>
+`;
+
+  
+    document.querySelector('.ql-toolbar').appendChild(variableSelect);
+
+ 
+    variableSelect.addEventListener('change', function() {
+        insertVariable();
+    });
 });
+
+
+function insertVariable() {
+    const variableSelect = document.getElementById('variableSelect');
+    const selectedVariable = variableSelect.value;
+
+    if (selectedVariable) {
+        const range = quill.getSelection(); 
+        if (range) {
+            quill.insertText(range.index, selectedVariable);
+        }
+        variableSelect.value = '';  
+    }
+}
+
 
 
 function chargerModeles() {
@@ -8,7 +73,6 @@ function chargerModeles() {
         .then(function (response) {
             const modeles = response.data;
             const selectElement = document.getElementById('modelesSelect');
-
 
             selectElement.innerHTML = '';
 
@@ -34,14 +98,16 @@ function afficherModele() {
     afficherModeleParId(modeleId);
 }
 
+
 function afficherModeleParId(modeleId) {
     axios.get(`/modeles/${modeleId}`)
         .then(function (response) {
             const modele = response.data;
 
-       
+        
             document.getElementById('modeleObjet').value = modele.objet;
-            document.getElementById('modeleBody').value = modele.body;
+
+            quill.clipboard.dangerouslyPasteHTML(modele.body);
         })
         .catch(function (error) {
             console.error('Erreur lors de l\'affichage du modèle:', error);
@@ -52,7 +118,7 @@ function afficherModeleParId(modeleId) {
 function enregistrerModifications() {
     const modeleId = document.getElementById('modelesSelect').value;
     const updatedObjet = document.getElementById('modeleObjet').value;
-    const updatedBody = document.getElementById('modeleBody').value;
+    const updatedBody = quill.root.innerHTML; 
 
     axios.put(`/modeles/${modeleId}`, {
         objet: updatedObjet,
@@ -65,9 +131,8 @@ function enregistrerModifications() {
             title: "Modèle mis à jour avec succès",
             showConfirmButton: false,
             timer: 1500
-          });
-        
-    
+        });
+
         chargerModeles();
     })
     .catch(function (error) {
@@ -75,5 +140,3 @@ function enregistrerModifications() {
         alert('Erreur lors de la mise à jour du modèle');
     });
 }
-
-document.querySelector('.bg-blue-300').addEventListener('click', enregistrerModifications);
