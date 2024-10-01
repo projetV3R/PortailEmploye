@@ -2,7 +2,7 @@
 var quill;
 
 document.addEventListener('DOMContentLoaded', function () {
-   
+    chargerModeles();
     quill = new Quill('#editor', {
         theme: 'snow',
         modules: {
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
-    chargerModeles();
+   
 
     
     document.querySelector('.bg-blue-300').addEventListener('click', function() {
