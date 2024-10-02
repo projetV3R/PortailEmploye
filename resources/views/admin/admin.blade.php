@@ -38,83 +38,73 @@
     </div>
 
 
-    <div class="flex flex-col justify-center w-full h-full" id="usersDiv">
-    <div class="flex flex-col w-full h-full px-4 mt-10">
-        <h2 class="text-2xl font-bold mb-6 flex justify-center">Liste Employer</h2>
-  <div class="-m-1.5 overflow-x-auto">
-    <div class="p-1.5 min-w-full inline-block align-middle">
-      <div class="border rounded-lg divide-y divide-gray-200 dark:border-neutral-700 dark:divide-neutral-700">
-        <div class="py-3 px-4">
-          <div class="relative max-w-xs">
-            <label class="sr-only">Search</label>
-            <input type="text" name="hs-table-with-pagination-search" id="hs-table-with-pagination-search" class="py-2 px-3 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Search for items">
-                <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
-                <svg class="size-4 text-gray-400 dark:text-neutral-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <path d="m21 21-4.3-4.3"></path>
-                </svg>
+    <div class="flex flex-col justify-center w-full h-full p-10" id="usersDiv">
+        <div class="flex flex-col w-full h-full px-4 mt-2">            
+        <div class="-m-1.5 overflow-x-auto">
+            <div class="p-1.5 min-w-full inline-block align-middle">
+            <div class="border rounded-lg divide-y divide-gray-200 dark:border-neutral-700 dark:divide-neutral-700">
+                
+                <div class="overflow-hidden">
+                    <form id="update-roles-form">
+                        @csrf 
+                        <div class="flex justify-between items-center">
+                            <div class="px-2 py-2">
+                                <button type="button" id="#" class="bg-blue-500 text-white px-2 py-1 rounded">Ajouter</button>
+                            </div>
+                            <h2 class="flex-grow text-center text-2xl font-bold">Liste Employer</h2>
+                            <div class="px-2 py-2">
+                                <button type="button" id="save-roles-btn" class="bg-blue-500 text-white px-2 py-1 rounded">Enregistrer</button>
+                            </div>
+                        </div>
+                        
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
+                            <thead class="bg-gray-50 dark:bg-neutral-700">
+                                <tr>
+                                    <th scope="col" class="relative hidden lg:block px-2 py-1 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">ID</th>
+                                    <th scope="col" class="px-2 py-1 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Mail</th>
+                                    <th scope="col" class="px-2 py-1 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Role</th>
+                                    <th scope="col" class="px-2 py-1 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500 flex justify-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
+                                @foreach($usagers as $usager)
+                                    <tr>
+                                        
+                                            <td class="relative hidden lg:block px-2 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                                {{$usager->id}}
+                                                <input type="hidden" name="usagers[{{ $usager->id }}][id]" value="{{ $usager->id }}">
+                                            </td>
+                                        
+                                        <td class="px-2 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default">
+                                            {{$usager->email}}
+                                        </td>
+                                        <td class="px-2 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                            <select name="usagers[{{ $usager->id }}][role]" class="role-dropdown">
+                                                <option value="admin" {{ $usager->role == 'admin' ? 'selected' : '' }}>Admin</option>
+                                                <option value="responsable" {{ $usager->role == 'responsable' ? 'selected' : '' }}>Responsable</option>
+                                                <option value="commis" {{ $usager->role == 'commis' ? 'selected' : '' }}>Commis</option>
+                                            </select>
+                                        </td>
+                                        <td class="px-2 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default flex justify-center">
+                                            <div class="relative block lg:hidden">
+                                                <button type="button" id="save-roles-btn" ><img src="{{asset('images/poubelle.png')}}" class="h-8 w-8"></button>
+                                            </div>    
+                                            <div class="relative hidden lg:block">Supprimer employer</div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </form>
+                    <div class="py-1 px-4 flex justify-center">
+                        {{ $usagers->links('pagination::tailwind') }}
+                    </div>
                 </div>
-          </div>
-        </div>
-        <div class="overflow-hidden">
-        <form id="update-roles-form">
-    @csrf 
-    
-    <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
-        <thead class="bg-gray-50 dark:bg-neutral-700">
-            <tr>
-                <th scope="col" class="relative hidden lg:block px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">ID</th>
-                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Mail</th>
-                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Role</th>
-                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Action</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
-            @foreach($usagers as $usager)
-                <tr>
-                    
-                        <td class="relative hidden lg:block px-3 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                            {{$usager->id}}
-                            <input type="hidden" name="usagers[{{ $usager->id }}][id]" value="{{ $usager->id }}">
-                        </td>
-                    
-                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default">
-                        {{$usager->email}}
-                    </td>
-                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                        <select name="usagers[{{ $usager->id }}][role]" class="role-dropdown">
-                            <option value="admin" {{ $usager->role == 'admin' ? 'selected' : '' }}>Admin</option>
-                            <option value="responsable" {{ $usager->role == 'responsable' ? 'selected' : '' }}>Responsable</option>
-                            <option value="commis" {{ $usager->role == 'commis' ? 'selected' : '' }}>Commis</option>
-                        </select>
-                    </td>
-                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default">
-                        <div class="relative block lg:hidden">
-                            <button type="button" id="save-roles-btn" ><img src="{{asset('images/poubelle.png')}}" class="h-8 w-8"></button>
-                        </div>    
-                        <div class="relative hidden lg:block">Supprimer employer</div>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-    <div class="py-4">
-        <button type="button" id="save-roles-btn" class="bg-blue-500 text-white px-4 py-2 rounded">Enregistrer toutes les modifications</button>
-    </div>
-</form>
-
-
-            <div class="py-1 px-4">
-                {{ $usagers->links('pagination::tailwind') }}
+            </div>
             </div>
         </div>
-        
-      </div>
+        </div>
     </div>
-  </div>
-</div>
-</div>
     <div class="flex flex-col justify-center w-full h-full bg-yellow-500 hidden" id="suppliersDiv"></div>
     <div class="flex flex-col justify-center w-full h-full  hidden" id="settingsDiv">
         <div class="flex flex-col w-full h-full px-4 mt-10">
@@ -161,31 +151,34 @@
 <script>
 $(document).ready(function() {
     $('#save-roles-btn').click(function(e) {
-        e.preventDefault(); // Empêche le rechargement de la page
+        e.preventDefault();
 
-        let formData = $('#update-roles-form').serialize(); // Sérialise les données du formulaire
-        
+        let formData = $('#update-roles-form').serialize();
+
         $.ajax({
-            url: "{{ route('usagers.update') }}", // Route définie pour le contrôleur
+            url: "{{ route('usagers.update') }}",
             type: "POST",
             data: formData,
             success: function(response) {
-                if(response.success) {
-                    alert('Modifications enregistrées avec succès.');
-                } else {
-                    alert('Une erreur est survenue.');
-                }
+                Swal.fire({
+                    title: response.title,
+                    text: response.text,
+                    icon: response.icon,
+                    timer: 2000
+                });
             },
             error: function(xhr, status, error) {
-                console.error(xhr.responseText); // Affiche l'erreur dans la console pour débogage
-                alert('Une erreur est survenue.');
+                console.error(xhr.responseText);
+                Swal.fire({
+                    title: 'Erreur',
+                    text: 'La modification ne fonctionne pas.',
+                    icon: 'error',
+                    timer: 2000
+                });
             }
         });
     });
 });
-
-
-
 
 // Gestion de la pagination avec Ajax
 $(document).on('click', '.pagination a', function(event) {
@@ -198,11 +191,10 @@ function fetch_data(page) {
     $.ajax({
         url: "/admin?page=" + page,
         success: function(data) {
-            $('tbody').html(data);  // Recharge le tableau avec les nouvelles données
+            $('tbody').html(data);
         }
     });
 }
-
 </script>
 
 <script>

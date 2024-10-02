@@ -105,27 +105,28 @@ class UsagerController extends Controller
     public function update(Request $request)
     {
         Log::debug('1');
-        // Récupérer les données du formulaire
         $usagersData = $request->input('usagers');
     
-        // Parcourir chaque utilisateur soumis dans le formulaire
         foreach ($usagersData as $usagerData) {
-            // Validation des rôles
             $request->validate([
                 'usagers.*.role' => 'required|in:admin,responsable,commis',
             ]);
     
-            // Récupérer l'usager par son ID
             $usager = Usager::findOrFail($usagerData['id']);
-            // Mettre à jour le rôle
             $usager->role = $usagerData['role'];
-            // Sauvegarder les changements
             Log::debug('Message de débogage');
             $usager->save();
         }
     
         // Retourner une réponse JSON de succès
-        return response()->json(['success' => true]);
+        //return response()->json(['success' => true]);
+        return response()->json([
+            'title' => 'Parfait!',
+            'text' => 'La modification est enregistré!',
+            'icon' => 'success',
+        ]);
+        
+        
     }
     
 
