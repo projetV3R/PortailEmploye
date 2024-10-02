@@ -88,17 +88,17 @@
 <!-- Script gestion paramètres systèmes -->
 <script src="{{ asset('js/Admin/courriels.js') }}"></script>
 <div class="flex flex-col justify-center w-full p-4 lg:p-8 gap-y-4" id="courrielsDiv">
-   
-    <div class="flex gap-x-4">
-        <select id="modelesSelect" class="border p-2" onchange="afficherModele()">
+    <h2 class="text-2xl font-bold mb-6 flex justify-center">Gestion des modèles de courriels</h2>
+    <div class="flex  gap-x-2 md:gap-x-4">
+        <select id="modelesSelect" class="border-2  rounded-md shadow-sm" onchange="afficherModele()">
         
         </select>
-        <button class="bg-green-300 rounded-md p-2 px-4">Ajouter</button>
-        <button class="bg-red-300 rounded-md p-2 px-4">Supprimer</button>
+        <button class="bg-green-300 rounded-md p-2 px-2 hover:text-white hover:bg-green-700"><span class=" hidden md:block">Ajouter</span>  <span class="block md:hidden iconify size-6" data-icon="material-symbols-light:post-add" data-inline="false"></span></button>
+        <button class="bg-red-300 rounded-md p-2 px-2 hover:text-white hover:bg-red-700"><span class="hidden md:block">Supprimer</span> <span class="block md:hidden iconify size-6" data-icon="mdi:bin" data-inline="false"></button>
     </div>
 
  
-    <div id="contenuModele" class="flex flex-col w-full h-full border-2 border-dashed p-4 gap-y-4">
+    <div id="contenuModele" class="flex flex-col w-full h-full border-2  rounded-lg shadow-lg p-4 gap-y-4">
  
         <div class="flex flex-col">
             <label for="modeleObjet" class="font-bold mb-2">Objet du modèle</label>
@@ -114,7 +114,7 @@
     </div>
 
  
-    <button class="bg-blue-300 rounded-md p-2 px-4">Enregistrer les modifications</button>
+    <button class="bg-blue-300 rounded-md p-2 px-4 hover:bg-blue-500 hover:text-white">Enregistrer les modifications</button>
 </div> 
 
 
