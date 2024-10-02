@@ -104,7 +104,6 @@ class UsagerController extends Controller
      */
     public function update(Request $request)
     {
-        Log::debug('1');
         $usagersData = $request->input('usagers');
     
         foreach ($usagersData as $usagerData) {
@@ -114,18 +113,8 @@ class UsagerController extends Controller
     
             $usager = Usager::findOrFail($usagerData['id']);
             $usager->role = $usagerData['role'];
-            Log::debug('Message de débogage');
             $usager->save();
-        }
-    
-        // Retourner une réponse JSON de succès
-        //return response()->json(['success' => true]);
-        return response()->json([
-            'title' => 'Parfait!',
-            'text' => 'La modification est enregistré!',
-            'icon' => 'success',
-        ]);
-        
+        }      
         
     }
     
@@ -134,7 +123,9 @@ class UsagerController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
-    {
-        //
-    }
+{
+    $usager = Usager::findOrFail($id);
+    $usager->delete();
+}
+
 }

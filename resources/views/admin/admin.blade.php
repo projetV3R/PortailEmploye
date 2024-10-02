@@ -36,24 +36,28 @@
             </div>
         </div>
     </div>
-
-
-    <div class="flex flex-col justify-center w-full h-full p-10" id="usersDiv">
-        <div class="flex flex-col w-full h-full px-4 mt-2">            
+    
+    <div class="flex flex-col justify-center w-full h-full lg:px-40 lg:py-10" id="usersDiv">
+    <div class="relative hidden lg:block">
+        <h2 class="text-align text-center text-2xl font-bold pt-1 pb-2">Liste Employer</h2>
+    </div>
+    <div class="flex flex-col w-full h-full px-4 mt-2">            
         <div class="-m-1.5 overflow-x-auto">
             <div class="p-1.5 min-w-full inline-block align-middle">
             <div class="border rounded-lg divide-y divide-gray-200 dark:border-neutral-700 dark:divide-neutral-700">
-                
                 <div class="overflow-hidden">
                     <form id="update-roles-form">
                         @csrf 
                         <div class="flex justify-between items-center">
                             <div class="px-2 py-2">
-                                <button type="button" id="#" class="bg-blue-500 text-white px-2 py-1 rounded">Ajouter</button>
+                                <button type="button" id="#" class="bg-blueV3R text-white px-2 py-1 rounded">Ajouter</button>
                             </div>
+                            <div class="relative block lg:hidden">
                             <h2 class="flex-grow text-center text-2xl font-bold">Liste Employer</h2>
+                            </div>
+
                             <div class="px-2 py-2">
-                                <button type="button" id="save-roles-btn" class="bg-blue-500 text-white px-2 py-1 rounded">Enregistrer</button>
+                                <button type="button" id="save-roles-btn" class="bg-blueV3R text-white px-2 py-1 rounded">Enregistrer</button>
                             </div>
                         </div>
                         
@@ -79,7 +83,7 @@
                                             {{$usager->email}}
                                         </td>
                                         <td class="px-2 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                            <select name="usagers[{{ $usager->id }}][role]" class="role-dropdown">
+                                            <select name="usagers[{{ $usager->id }}][role]" class="role-dropdown dark:text-neutral-500 dark:bg-blueV3R">
                                                 <option value="admin" {{ $usager->role == 'admin' ? 'selected' : '' }}>Admin</option>
                                                 <option value="responsable" {{ $usager->role == 'responsable' ? 'selected' : '' }}>Responsable</option>
                                                 <option value="commis" {{ $usager->role == 'commis' ? 'selected' : '' }}>Commis</option>
@@ -87,10 +91,15 @@
                                         </td>
                                         <td class="px-2 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default flex justify-center">
                                             <div class="relative block lg:hidden">
-                                                <button type="button" id="save-roles-btn" ><img src="{{asset('images/poubelle.png')}}" class="h-8 w-8"></button>
+                                                <button type="button" class="delete-user" data-id="{{ $usager->id }}">
+                                                <span class="iconify h-10 w-10" data-icon="mdi:bin" data-inline="false"></span>
+                                                </button>
                                             </div>    
-                                            <div class="relative hidden lg:block">Supprimer employer</div>
+                                            <div class="relative hidden lg:block">
+                                                <button type="button" class="delete-user" data-id="{{ $usager->id }}">Supprimer employer</button>
+                                            </div>
                                         </td>
+
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -99,6 +108,7 @@
                     <div class="py-1 px-4 flex justify-center">
                         {{ $usagers->links('pagination::tailwind') }}
                     </div>
+
                 </div>
             </div>
             </div>
@@ -108,7 +118,7 @@
     <div class="flex flex-col justify-center w-full h-full bg-yellow-500 hidden" id="suppliersDiv"></div>
     <div class="flex flex-col justify-center w-full h-full  hidden" id="settingsDiv">
         <div class="flex flex-col w-full h-full px-4 mt-10">
-            <h2 class="text-2xl font-bold mb-6 flex justify-center">Gestion des paramètres</h2>
+            <h1 class="text-2xl font-bold mb-6 flex justify-center">Gestion des paramètres</h1>
         
             <div class="border p-6 rounded-lg shadow-md">
                 <form id="parametres-form">
@@ -144,58 +154,12 @@
         </div>
         <!-- Script gestion parametres systemes  -->
             <script src="{{ asset('js/Admin/parametres.js') }}"></script>
-      
+            <script>
+    var updateUsagerUrl = "{{ route('usagers.update') }}";
+</script>
+<script src="{{ asset('js/Admin/admin.js') }}"></script>
 
 </div>
-
-<script>
-$(document).ready(function() {
-    $('#save-roles-btn').click(function(e) {
-        e.preventDefault();
-
-        let formData = $('#update-roles-form').serialize();
-
-        $.ajax({
-            url: "{{ route('usagers.update') }}",
-            type: "POST",
-            data: formData,
-            success: function(response) {
-                Swal.fire({
-                    title: response.title,
-                    text: response.text,
-                    icon: response.icon,
-                    timer: 2000
-                });
-            },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-                Swal.fire({
-                    title: 'Erreur',
-                    text: 'La modification ne fonctionne pas.',
-                    icon: 'error',
-                    timer: 2000
-                });
-            }
-        });
-    });
-});
-
-// Gestion de la pagination avec Ajax
-$(document).on('click', '.pagination a', function(event) {
-    event.preventDefault();
-    let page = $(this).attr('href').split('page=')[1];
-    fetch_data(page);
-});
-
-function fetch_data(page) {
-    $.ajax({
-        url: "/admin?page=" + page,
-        success: function(data) {
-            $('tbody').html(data);
-        }
-    });
-}
-</script>
 
 <script>
 

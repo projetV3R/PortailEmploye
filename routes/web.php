@@ -11,8 +11,9 @@ Route::get('/', function () {
 
 Route::get('/admin', 
 [UsagerController::class, 'index'])->name('admin.admin')->middleware('auth');
-Route::post('/usagers/update', 
-[UsagerController::class, 'update'])->name('usagers.update');
+Route::post('/usagers/update', [UsagerController::class, 'update'])->name('usagers.update');
+Route::delete('/admin/usager/{id}', [UsagerController::class, 'destroy']);
+
 
 // FORMULAIRE CONNEXION
 
