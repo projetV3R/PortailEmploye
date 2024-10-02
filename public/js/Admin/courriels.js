@@ -1,4 +1,6 @@
 var quill;
+var originalObjet = '';
+var originalBody = '';
 
 document.addEventListener('DOMContentLoaded', function () {
     chargerModeles();
@@ -32,10 +34,16 @@ document.addEventListener('DOMContentLoaded', function () {
     variableSelect.className = 'ql-variable';  
     variableSelect.innerHTML = `
     <option value="">-- Insérer une variable --</option>
-    <option value="{usager-&gt;nom}">{usager-&gt;nom}</option>
-    <option value="{usager-&gt;prenom}">{usager-&gt;prenom}</option>
-    <option value="{commande-&gt;numero}">{commande-&gt;numero}</option>
-`;
+    <option value="{fiche_fournisseurs-&gt;nom_entreprise}">{Nom de l'entreprise}</option>
+    <option value="{fiche_fournisseurs-&gt;neq}">{NEQ de l'entreprise}</option>
+    <option value="{fiche_fournisseurs-&gt;etat}">{Statut du dossier}</option>
+    <option value="{fiche_fournisseurs-&gt;raison_refus}">{Raison du refus}</option>
+    <option value="{finances-&gt;numero_tps}">{Numéro de TPS}</option>
+    <option value="{finances-&gt;numero_tvq}">{Numéro de TVQ}</option>
+    <option value="{finances-&gt;condition_paiement}">{Condition de paiement}</option>
+    <option value="{finances-&gt;devise}">{Devise}</option>
+    <option value="{finances-&gt;mode_communication}">{Mode de communication}</option>
+    `;
 
     document.querySelector('.ql-toolbar').appendChild(variableSelect);
 
@@ -93,15 +101,31 @@ function afficherModeleParId(modeleId) {
 
             document.getElementById('modeleObjet').value = modele.objet;
             quill.clipboard.dangerouslyPasteHTML(modele.body);
+
+           
+            originalObjet = modele.objet;
+            originalBody = quill.root.innerHTML;
         })
         .catch(function (error) {
             console.error('Erreur lors de l\'affichage du modèle:', error);
         });
 }
+
 function enregistrerModifications() {
     const modeleId = document.getElementById('modelesSelect').value;
     const updatedObjet = document.getElementById('modeleObjet').value;
-    const updatedBody = quill.root.innerHTML; 
+    const updatedBody = quill.root.innerHTML;
+
+//Verifier si une modification a etait faites 
+    if (updatedObjet === originalObjet && updatedBody === originalBody) {
+        Swal.fire({
+            icon: "info",
+            title: "Aucune modification",
+            text: "Vous n'avez rien modifié."
+        });
+        return;  
+    }
+
 
     axios.put(`/modeles/${modeleId}`, {
         objet: updatedObjet,
@@ -116,12 +140,15 @@ function enregistrerModifications() {
             timer: 1500
         });
 
+       
+        originalObjet = updatedObjet;
+        originalBody = updatedBody;
+
         afficherModeleParId(modeleId);
     })
     .catch(function (error) {
         let errorMessage = "Une erreur est survenue.";
 
-       
         if (error.response && error.response.data && error.response.data.errors) {
             const errors = error.response.data.errors;
             errorMessage = Object.values(errors).map((errorMessages) => errorMessages.join('<br>')).join('<br>');
@@ -136,4 +163,3 @@ function enregistrerModifications() {
         });
     });
 }
-
