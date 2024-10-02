@@ -88,28 +88,29 @@
 <!-- Script gestion paramètres systèmes -->
 <script src="{{ asset('js/Admin/courriels.js') }}"></script>
 <div class="flex flex-col justify-center w-full p-4 lg:p-8 gap-y-4" id="courrielsDiv">
-    <!-- Select pour choisir le modèle d'email -->
+   
     <div class="flex gap-x-4">
         <select id="modelesSelect" class="border p-2" onchange="afficherModele()">
-            <!-- Les options seront générées dynamiquement avec Axios -->
+        
         </select>
         <button class="bg-green-300 rounded-md p-2 px-4">Ajouter</button>
         <button class="bg-red-300 rounded-md p-2 px-4">Supprimer</button>
     </div>
 
-    <!-- Div pour afficher l'objet et le contenu du modèle sélectionné -->
+ 
     <div id="contenuModele" class="flex flex-col w-full h-full border-2 border-dashed p-4 gap-y-4">
  
         <div class="flex flex-col">
             <label for="modeleObjet" class="font-bold mb-2">Objet du modèle</label>
-            <input type="text" id="modeleObjet" class="border p-2 rounded-md">
+            <input type="text" id="modeleObjet" class="border p-2 rounded-md" required>
         </div>
 
         <!-- Textarea pour le body -->
-        <div class="flex flex-col  h-full ">
+        <div class="flex flex-col h-full">
             <label for="modeleBody" class="font-bold mb-2">Contenu du modèle</label>
-            <div id="editor"  class="border p-2 rounded-md  h-full"></div>
+            <div id="editor" class="border p-2 rounded-md h-full max-h-96 overflow-auto"></div>
         </div>
+        
     </div>
 
  
@@ -117,19 +118,7 @@
 </div> 
 
 
-
-
-
 </div>
-
-
-
-
-
-
-
-
-
 
 
 <script>

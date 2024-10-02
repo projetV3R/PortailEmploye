@@ -1,4 +1,3 @@
-
 var quill;
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -17,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 ],
                 handlers: {
                     'variable': function() {
-                        
                         insertVariable();
                     }
                 }
@@ -25,10 +23,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-
-   
-
-    
     document.querySelector('.bg-blue-300').addEventListener('click', function() {
         enregistrerModifications();
     });
@@ -43,15 +37,12 @@ document.addEventListener('DOMContentLoaded', function () {
     <option value="{commande-&gt;numero}">{commande-&gt;numero}</option>
 `;
 
-  
     document.querySelector('.ql-toolbar').appendChild(variableSelect);
 
- 
     variableSelect.addEventListener('change', function() {
         insertVariable();
     });
 });
-
 
 function insertVariable() {
     const variableSelect = document.getElementById('variableSelect');
@@ -66,8 +57,6 @@ function insertVariable() {
     }
 }
 
-
-
 function chargerModeles() {
     axios.get('/modeles')
         .then(function (response) {
@@ -79,7 +68,7 @@ function chargerModeles() {
             modeles.forEach(modele => {
                 let option = document.createElement('option');
                 option.value = modele.id;
-                option.text = modele.objet;
+                option.text = modele.type;
                 selectElement.appendChild(option);
             });
 
@@ -92,29 +81,23 @@ function chargerModeles() {
         });
 }
 
-
 function afficherModele() {
     const modeleId = document.getElementById('modelesSelect').value;
     afficherModeleParId(modeleId);
 }
-
 
 function afficherModeleParId(modeleId) {
     axios.get(`/modeles/${modeleId}`)
         .then(function (response) {
             const modele = response.data;
 
-        
             document.getElementById('modeleObjet').value = modele.objet;
-
             quill.clipboard.dangerouslyPasteHTML(modele.body);
         })
         .catch(function (error) {
             console.error('Erreur lors de l\'affichage du modèle:', error);
         });
 }
-
-
 function enregistrerModifications() {
     const modeleId = document.getElementById('modelesSelect').value;
     const updatedObjet = document.getElementById('modeleObjet').value;
@@ -133,10 +116,24 @@ function enregistrerModifications() {
             timer: 1500
         });
 
-        chargerModeles();
+        afficherModeleParId(modeleId);
     })
     .catch(function (error) {
-        console.error('Erreur lors de la mise à jour du modèle:', error);
-        alert('Erreur lors de la mise à jour du modèle');
+        let errorMessage = "Une erreur est survenue.";
+
+       
+        if (error.response && error.response.data && error.response.data.errors) {
+            const errors = error.response.data.errors;
+            errorMessage = Object.values(errors).map((errorMessages) => errorMessages.join('<br>')).join('<br>');
+        } else if (error.message) {
+            errorMessage = error.message;
+        }
+
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            html: errorMessage 
+        });
     });
 }
+

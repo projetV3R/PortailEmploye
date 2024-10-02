@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Modele;
+use App\Http\Requests\ModeleRequest;
 
 class ModelesController extends Controller
 {
@@ -24,23 +25,18 @@ class ModelesController extends Controller
        
         return response()->json($modele);
     }
-    public function update(Request $request, $id)
+    public function update(ModeleRequest $request, $id)
     {
-      
-        $request->validate([
-            'objet' => 'required|string|max:255',
-            'body' => 'required|string',
-        ]);
-
-        // Trouver le modèle à mettre à jour
+        $validatedData = $request->validated();
+       
         $modele = Modele::findOrFail($id);
-
-        // Mettre à jour les champs objet et body
-        $modele->objet = $request->input('objet');
-        $modele->body = $request->input('body');
+    
+     
+        $modele->objet = $validatedData['objet'];
+        $modele->body = $validatedData['body'];
         $modele->save();
-
-
+    
         return response()->json(['message' => 'Modèle mis à jour avec succès'], 200);
     }
+    
 }
