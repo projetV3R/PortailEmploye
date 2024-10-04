@@ -37,7 +37,7 @@
         </div>
     </div>
     
-    <div class="flex flex-col justify-center w-full h-full lg:px-40 lg:py-10" id="usersDiv">
+    <div class="flex flex-col justify-center w-full h-full" id="usersDiv">
     <div class="relative hidden lg:block">
         <h2 class="text-align text-center text-2xl font-bold pt-1 pb-2">Liste Employer</h2>
     </div>
@@ -45,15 +45,27 @@
         <div class="-m-1.5 overflow-x-auto">
             <div class="p-1.5 min-w-full inline-block align-middle">
             <div class="border rounded-lg divide-y divide-gray-200 dark:border-neutral-700 dark:divide-neutral-700">
-                <div class="overflow-hidden">
+            <div class="py-3 px-4">
+                <div class="relative max-w-xs">
+                    <label class="sr-only">Search</label>
+                    <input type="text" name="hs-table-with-pagination-search" id="hs-table-with-pagination-search" class="py-2 px-3 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Search for items">
+                    <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
+                    <svg class="size-4 text-gray-400 dark:text-neutral-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.3-4.3"></path>
+                    </svg>
+                    </div>
+                </div>
+            </div>    
+            <div class="overflow-hidden">
                     <form id="update-roles-form">
                         @csrf 
                         <div class="flex justify-between items-center">
                             <div class="px-2 py-2">
-                                <button type="button" id="#" class="bg-blueV3R text-white px-2 py-1 rounded">Ajouter</button>
+                                <button type="button" id="create-user" class="bg-blueV3R text-white px-2 py-1 rounded">Ajouter</button>
                             </div>
                             <div class="relative block lg:hidden">
-                            <h2 class="flex-grow text-center text-2xl font-bold">Liste Employer</h2>
+                            <h2 class="flex gap-y-2 text-center text-2xl font-bold">Liste Employer</h2>
                             </div>
 
                             <div class="px-2 py-2">
@@ -64,51 +76,61 @@
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
                             <thead class="bg-gray-50 dark:bg-neutral-700">
                                 <tr>
-                                    <th scope="col" class="relative hidden lg:block px-2 py-1 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">ID</th>
-                                    <th scope="col" class="px-2 py-1 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Mail</th>
-                                    <th scope="col" class="px-2 py-1 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Role</th>
-                                    <th scope="col" class="px-2 py-1 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500 flex justify-center">Action</th>
+                                    <th scope="col" class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Mail</th>
+                                    <th scope="col" class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Role</th>
+                                    <th scope="col" class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase dark:text-neutral-500 flex justify-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
                                 @foreach($usagers as $usager)
                                     <tr>
-                                        
-                                            <td class="relative hidden lg:block px-2 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                                {{$usager->id}}
-                                                <input type="hidden" name="usagers[{{ $usager->id }}][id]" value="{{ $usager->id }}">
-                                            </td>
-                                        
-                                        <td class="px-2 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default">
+                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default">
                                             {{$usager->email}}
                                         </td>
-                                        <td class="px-2 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                        <td class="px-4 py-2 text-center whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                        <input type="hidden" name="usagers[{{ $usager->id }}][id]" value="{{ $usager->id }}">
                                             <select name="usagers[{{ $usager->id }}][role]" class="role-dropdown dark:text-neutral-500 dark:bg-blueV3R">
                                                 <option value="admin" {{ $usager->role == 'admin' ? 'selected' : '' }}>Admin</option>
                                                 <option value="responsable" {{ $usager->role == 'responsable' ? 'selected' : '' }}>Responsable</option>
                                                 <option value="commis" {{ $usager->role == 'commis' ? 'selected' : '' }}>Commis</option>
                                             </select>
                                         </td>
-                                        <td class="px-2 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default flex justify-center">
-                                            <div class="relative block lg:hidden">
-                                                <button type="button" class="delete-user" data-id="{{ $usager->id }}">
-                                                <span class="iconify h-10 w-10" data-icon="mdi:bin" data-inline="false"></span>
+                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default flex justify-center items-center flex-row">
+                                                <button type="button" class="delete-user px-2 flex items-center bg-gray-300" data-id="{{ $usager->id }}">
+                                                    <span class="iconify size-10 lg:size-6" data-icon="mdi:bin" data-inline="false"></span>
+                                                    <span class="delete-user relative hidden lg:block" data-id="{{ $usager->id }}">Supprimer employer</span>
                                                 </button>
-                                            </div>    
-                                            <div class="relative hidden lg:block">
-                                                <button type="button" class="delete-user" data-id="{{ $usager->id }}">Supprimer employer</button>
-                                            </div>
                                         </td>
-
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </form>
-                    <div class="py-1 px-4 flex justify-center">
-                        {{ $usagers->links('pagination::tailwind') }}
-                    </div>
+                    <div class="flex justify-center">
+                        <nav class="flex items-center gap-x-1" aria-label="Pagination">
+                        <button type="button" class="min-h-[38px] min-w-[38px] py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10" aria-label="Previous" id="prevButton" onclick="goToPage(currentPage - 1)" {{ $usagers->onFirstPage() ? 'disabled' : '' }}>
+                            <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m15 18-6-6 6-6"></path>
+                            </svg>
+                            <span class="sr-only">Previous</span>
+                        </button>
 
+                        <div class="flex items-center gap-x-1">
+                            @for ($i = 1; $i <= $usagers->lastPage(); $i++)
+                            <button type="button" class="min-h-[38px] min-w-[38px] flex justify-center items-center {{ $i == $usagers->currentPage() ? 'bg-gray-200 text-gray-800' : 'text-gray-800 hover:bg-gray-100' }} py-2 px-3 text-sm rounded-lg focus:outline-none focus:bg-gray-300" onclick="goToPage({{ $i }})">
+                                {{ $i }}
+                            </button>
+                            @endfor
+                        </div>
+
+                        <button type="button" class="min-h-[38px] min-w-[38px] py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10" aria-label="Next" id="nextButton" onclick="goToPage(currentPage + 1)" {{ $usagers->hasMorePages() ? '' : 'disabled' }}>
+                            <span class="sr-only">Next</span>
+                            <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m9 18 6-6-6-6"></path>
+                            </svg>
+                        </button>
+                        </nav>
+                    </div>
                 </div>
             </div>
             </div>
@@ -150,16 +172,25 @@
         
                     <button type="submit" class="w-full bg-blue-500 text-white rounded p-2 hover:bg-blue-600">Enregistrer</button>
                 </form>
+                
             </div>
         </div>
         <!-- Script gestion parametres systemes  -->
             <script src="{{ asset('js/Admin/parametres.js') }}"></script>
-            <script>
-    var updateUsagerUrl = "{{ route('usagers.update') }}";
-</script>
-<script src="{{ asset('js/Admin/admin.js') }}"></script>
+            <script>var updateUsagerUrl = "{{ route('usagers.update') }}";</script>
+            <script src="{{ asset('js/Admin/admin.js') }}"></script>
 
-</div>
+    </div>
+
+<script>
+  let currentPage = {{ $usagers->currentPage() }};
+
+  function goToPage(page) {
+    if (page < 1 || page > {{ $usagers->lastPage() }}) return;
+
+    window.location.href = `{{ url()->current() }}?page=${page}`;
+  }
+</script>
 
 <script>
 
