@@ -18,8 +18,7 @@ class UsagerController extends Controller
     public function index(Request $request)
     {
             $usagers = Usager::paginate(10); 
-            return view('admin.admin', compact('usagers'))->render();
-        
+            return view('admin.admin', compact('usagers'));
     }
 
     public function dashboard()
@@ -59,66 +58,45 @@ class UsagerController extends Controller
         Session::flush();
         return redirect()->route('login')->with("message",'Déconnexion réussi');
     }
+
+
     public function store(UsagerRequest $request)
     {
         $validatedData = $request->validated();
+    
         try {
             Usager::create([
                 'email' => $validatedData['email'],
-                'password' => Hash::make($validatedData['password']),// TODO retirer quand le sso vas etre la
+                'password' => Hash::make($validatedData['password']),
                 'nom' => $validatedData['nom'],
                 'prenom' => $validatedData['prenom'],
                 'role' => $validatedData['role'],
             ]);
     
-            return redirect()->back()->with('success', 'Utilisateur ajouté avec succès!');
+            return response()->json(['success' => 'Utilisateur ajouté avec succès!'], 201);
         } catch (\Exception $e) {
-            Log::error('Erreur lors de la création d\'un utilisateur : ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Une erreur est survenue lors de l\'ajout de l\'utilisateur.');
+    
+            if ($e instanceof \Illuminate\Database\QueryException && $e->errorInfo[1] == 1062) {
+                return response()->json(['errors' => ['email' => ['L\'email est déjà utilisé.']]], 422);
+            }
+    
+            return response()->json(['errors' => ['email' => ['Une erreur est survenue lors de l\'ajout de l\'utilisateur.']]], 500);
         }
     }
+    
+        public function countAdmins()
+    {
+        $count = Usager::where('role', 'admin')->count();
+        return response()->json($count);
+    }
+
+
  /**
      * Show the form for creating a new resource.
      */
     public function create(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:usagers,email',
-            'password' => 'required|string|min:6',
-            'nom' => 'required|string|max:191',
-            'prenom' => 'required|string|max:191',
-            'role' => 'required|in:admin,responsable,commis',
-        ], [
-            'email.required' => 'Le champ email est obligatoire.',
-            'email.email' => 'Informations invalides.',
-            'email.unique' => 'Cet email est déjà utilisé.',
-            'password.required' => 'Le champ mot de passe est obligatoire.',
-            'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
-            'nom.required' => 'Le champ nom est obligatoire.',
-            'prenom.required' => 'Le champ prénom est obligatoire.',
-            'role.required' => 'Le champ rôle est obligatoire.',
-        ]);
         
-        try {
-            $usager = new Usager();
-            $usager->email = $request->email;
-            $usager->password = Hash::make($request->password);
-            $usager->nom = $request->nom;
-            $usager->prenom = $request->prenom;
-            $usager->role = $request->role;
-            $usager->save();
-    
-            return response()->json(['message' => 'Utilisateur créé avec succès.'], 201);
-        } catch (\Exception $e) {
-            if ($e->getCode() === '23000') {
-                return response()->json(['errors' => ['email' => ['Cet email est déjà utilisé.']]], 422);
-            }
-            elseif($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], 422);
-            }
-    
-            return response()->json(['errors' => ['message' => 'Une erreur s\'est produite.']], 500);
-        }
     }
     
     /**
@@ -155,15 +133,23 @@ class UsagerController extends Controller
         }      
         
     }
-    
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+public function destroy(string $id)
 {
+    $currentUserId = Auth::id();
+
+    if ($id == $currentUserId) {
+        return response()->json(['message' => 'Vous ne pouvez pas supprimer votre propre compte.'], 403);
+    }
+
     $usager = Usager::findOrFail($id);
     $usager->delete();
+
+    return response()->json(['message' => 'Utilisateur supprimé avec succès.'], 200);
 }
+
 
 }

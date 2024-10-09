@@ -25,7 +25,7 @@
             </div>
 
             <div class="flex flex-col items-center justify-center p-4 md:p-10">
-                <form action="" class="w-full">
+                <form action="{{ route('connexion') }}" method="POST" class="w-full">
                     <div class="p-4">
                         <label for="neq" class="form-label block mb-2"><strong>Adresse courriel professionel</strong></label>
                         <input type="text" name="neq" id="neq" autocomplete="neq" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-blue-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2" placeholder="Votre adresse courriel">

@@ -23,10 +23,25 @@ class UsagerRequest extends FormRequest
     {
         return [
             'email'=>'required|email|unique:usagers,email',
-            'password'=>'required|confirmed',
+            'password'=>'required|string|min:6',
             'nom'=>'required|string|',
             'prenom'=>'required|string|',
             'role'=>'required|in:admin,responsable,commis'
+        ];
+    }
+    public function messages(): array
+    {
+        return [
+            'email.required' => '1',
+            'email.email' => 'Informations invalides.',
+            'email.unique' => 'Cet email est déjà utilisé.',
+            'password.required' => 'Le champ mot de passe est obligatoire.',
+            'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
+            'nom.required' => 'Le champ nom est obligatoire.',
+            'prenom.required' => 'Le champ prénom est obligatoire.',
+            'nom.string' => 'Le champ nom est obligatoirement en caratère.',
+            'prenom.string' => 'Le champ prénom est obligatoire  en caratère.',
+            'role.required' => 'Le champ rôle est obligatoire.',
         ];
     }
 }
