@@ -23,7 +23,10 @@ Route::get('/dashboard',
 Route::get('/redirection', function () {
     return view('redirection.403');});
 
-Route::get('/admin', [UsagerController::class, 'index']);
+Route::get('/usagers', [UsagerController::class, 'index']);
+
+Route::get('/admin', function () {
+    return view('admin.admin');});
 
 Route::post('/usagers/update', 
 [UsagerController::class, 'update'])->name('usagers.update');

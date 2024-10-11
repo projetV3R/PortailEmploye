@@ -49,7 +49,7 @@
     <div class="flex flex-col w-full h-full px-4 mt-2">            
         <div class="-m-1.5 overflow-x-auto">
             <div class="p-1.5 min-w-full inline-block align-middle">
-            <div class="border rounded-lg divide-y divide-gray-200 dark:border-neutral-700 dark:divide-neutral-700">
+            <div class="border-2 rounded-lg shadow-lg divide-y divide-gray-200 dark:border-neutral-700 dark:divide-neutral-700">
             <div class="py-3 px-4">
                 <div class="relative max-w-xs">
                     <label class="sr-only">Recherche (mail ou role)</label>
@@ -87,57 +87,12 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
-                                @foreach($usagers as $usager)
-                                    <tr>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default">
-                                            {{$usager->email}}
-                                        </td>
-                                        <td class="px-4 py-2 text-center whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                        <input type="hidden" name="usagers[{{ $usager->id }}][id]" value="{{ $usager->id }}">
-                                            <select name="usagers[{{ $usager->id }}][role]" class="role-dropdown dark:text-neutral-500 dark:bg-blueV3R">
-                                                <option value="admin" {{ $usager->role == 'admin' ? 'selected' : '' }}>Admin</option>
-                                                <option value="responsable" {{ $usager->role == 'responsable' ? 'selected' : '' }}>Responsable</option>
-                                                <option value="commis" {{ $usager->role == 'commis' ? 'selected' : '' }}>Commis</option>
-                                            </select>
-                                        </td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default flex justify-center items-center flex-row">
-                                                <button type="button" class="delete-user px-2 flex items-center bg-gray-300" data-id="{{ $usager->id }}">
-                                                    <span class="iconify size-10 lg:size-6" data-icon="mdi:bin" data-inline="false"></span>
-                                                    <span class="delete-user relative hidden lg:block" data-id="{{ $usager->id }}">Supprimer employer</span>
-                                                </button>
-                                        </td>
-                                    </tr>
-                                @endforeach
                             </tbody>
                         </table>
                     </form>
-                    <div class="flex justify-center">
-                        <nav class="flex items-center gap-x-1" aria-label="Pagination">
-                        <button type="button" class="min-h-[38px] min-w-[38px] py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10" aria-label="Previous" id="prevButton" onclick="goToPage(currentPage - 1)" {{ $usagers->onFirstPage() ? 'disabled' : '' }}>
-                            <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="m15 18-6-6 6-6"></path>
-                            </svg>
-                            <span class="sr-only">Previous</span>
-                        </button>
-
-                        <div class="flex items-center gap-x-1">
-                            @for ($i = 1; $i <= $usagers->lastPage(); $i++)
-                            <button type="button" class="min-h-[38px] min-w-[38px] flex justify-center items-center {{ $i == $usagers->currentPage() ? 'bg-gray-200 text-gray-800' : 'text-gray-800 hover:bg-gray-100' }} py-2 px-3 text-sm rounded-lg focus:outline-none focus:bg-gray-300" onclick="goToPage({{ $i }})">
-                                {{ $i }}
-                            </button>
-                            @endfor
-                        </div>
-
-                        <button type="button" class="min-h-[38px] min-w-[38px] py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10" aria-label="Next" id="nextButton" onclick="goToPage(currentPage + 1)" {{ $usagers->hasMorePages() ? '' : 'disabled' }}>
-                            <span class="sr-only">Next</span>
-                            <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="m9 18 6-6-6-6"></path>
-                            </svg>
-                        </button>
-                        </nav>
-                    </div>
                 </div>
             </div>
+            <nav class="flex justify-center gap-x-1" aria-label="Pagination"></nav>
             </div>
         </div>
         </div>
@@ -187,7 +142,7 @@
 </div>
 <!-- Script gestion paramètres systèmes -->
 <script src="{{ asset('js/Admin/courriels.js') }}"></script>
-<div class="flex flex-col justify-center w-full p-4 lg:p-8 gap-y-4" id="courrielsDiv">
+<div class="flex flex-col justify-center w-full p-4 lg:p-8 gap-y-4 hidden" id="courrielsDiv">
     <h2 class="text-2xl font-bold mb-6 flex justify-center">Gestion des modèles de courriels</h2>
     <div class="flex  gap-x-2 md:gap-x-4">
         <select id="modelesSelect" class="border-2  rounded-md shadow-sm" onchange="afficherModele()">
@@ -222,15 +177,7 @@
 
     </div>
 
-<script>
-  let currentPage = {{ $usagers->currentPage() }};
 
-  function goToPage(page) {
-    if (page < 1 || page > {{ $usagers->lastPage() }}) return;
-
-    window.location.href = `{{ url()->current() }}?page=${page}`;
-  }
-</script>
 
 <script>
     

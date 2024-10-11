@@ -18,7 +18,8 @@ class UsagerController extends Controller
     public function index(Request $request)
     {
             $usagers = Usager::paginate(10); 
-            return view('admin.admin', compact('usagers'));
+            return response()->json($usagers);
+           // return view('admin.admin', compact('usagers'));
     }
 
     public function dashboard()
@@ -120,19 +121,28 @@ class UsagerController extends Controller
      */
     public function update(Request $request)
     {
-        $usagersData = $request->input('usagers');
-    
-        foreach ($usagersData as $usagerData) {
+        try {
             $request->validate([
+                'usagers.*.id' => 'required|exists:usagers,id',
                 'usagers.*.role' => 'required|in:admin,responsable,commis',
             ]);
     
-            $usager = Usager::findOrFail($usagerData['id']);
-            $usager->role = $usagerData['role'];
-            $usager->save();
-        }      
-        
+            $usagersData = $request->input('usagers');
+    
+            foreach ($usagersData as $usagerData) {
+                $usager = Usager::findOrFail($usagerData['id']);
+                $usager->role = $usagerData['role'];
+                $usager->save();
+            }
+    
+            return response()->json(['message' => 'Rôles mis à jour avec succès'], 200);
+        } catch (\Exception $e) {
+            // Log l'erreur
+            \Log::error("Erreur lors de la mise à jour des rôles: " . $e->getMessage());
+            return response()->json(['error' => 'Erreur lors de la mise à jour des rôles'], 500);
+        }
     }
+    
 
     /**
      * Remove the specified resource from storage.

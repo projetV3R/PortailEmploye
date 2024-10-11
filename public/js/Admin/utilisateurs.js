@@ -1,3 +1,59 @@
+document.addEventListener('DOMContentLoaded', function() {
+    loadUsers(); // Charger les utilisateurs au démarrage
+});
+
+function loadUsers(page = 1) {
+    axios.get(`/usagers?page=${page}`)
+        .then(response => {
+            const usagers = response.data.data;
+            const totalPages = response.data.last_page;
+            const currentPage = response.data.current_page;
+
+            let tbody = document.querySelector('#usagers tbody');
+            tbody.innerHTML = ''; // Effacer le contenu précédent
+
+            usagers.forEach(usager => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">${usager.email}</td>
+                    <td class="px-4 py-2 text-center whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                        <select name="usagers[${usager.id}][role]" class="pr-2 role-dropdown dark:text-neutral-500 dark:bg-blueV3R">
+                            <option value="admin" ${usager.role == 'admin' ? 'selected' : ''}>Admin</option>
+                            <option value="responsable" ${usager.role == 'responsable' ? 'selected' : ''}>Responsable</option>
+                            <option value="commis" ${usager.role == 'commis' ? 'selected' : ''}>Commis</option>
+                        </select>
+                    </td>
+                    <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default flex justify-center items-center flex-row">
+                        <button type="button" class="delete-user px-2 flex items-center bg-gray-300" data-id="${usager.id}">
+                            <span class="iconify size-10 lg:size-6" data-icon="mdi:bin" data-inline="false"></span>
+                            <span class="delete-user relative hidden lg:block" data-id="${usager.id}">Supprimer employer</span>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            updatePagination(totalPages, currentPage);
+        })
+        .catch(error => {
+            console.error("Il y a eu un problème avec la requête Axios", error);
+        });
+}
+
+function updatePagination(totalPages, currentPage) {
+    const pagination = document.querySelector('nav[aria-label="Pagination"]');
+    pagination.innerHTML = '';
+
+    for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `min-h-[38px] min-w-[38px] flex justify-center items-center py-2 px-3 text-sm rounded-lg ${i == currentPage ? 'bg-gray-200 text-gray-800' : 'text-gray-800 hover:bg-gray-100'}`;
+        button.textContent = i;
+        button.onclick = () => loadUsers(i);
+        pagination.appendChild(button);
+    }
+}
+
 $(document).ready(function() {
     // Configuration AJAX
     $.ajaxSetup({
