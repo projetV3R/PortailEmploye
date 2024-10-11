@@ -78,7 +78,7 @@
                         @csrf
                         <div class="flex items-center space-x-4 hover:animate-bounce">
                             <button class="ml-4 text-white">
-                                <span class="iconify size-8 lg:size-10" data-icon="mdi:logout" data-inline="false"></span>
+                                <span class="iconify size-8 lg:size-10" data-icon="mdi:logout" data-inline="false" onclick="removeItemsLocalStorage()"></span>
                             </button>
                         </div>
                     </form>
@@ -187,6 +187,12 @@
         } else {
             document.documentElement.classList.remove('dark');
         }
+
+        function removeItemsLocalStorage(){
+          localStorage.removeItem('selectedMenu');
+        }
+
+
     </script>
 </body>
 
