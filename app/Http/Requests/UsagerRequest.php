@@ -23,7 +23,7 @@ class UsagerRequest extends FormRequest
     {
         return [
             'email'=>'required|email|unique:usagers,email',
-            'password'=>'required|string|min:6',
+            'password'=>'required|min:6|confirmed',
             'nom'=>'required|string|',
             'prenom'=>'required|string|',
             'role'=>'required|in:admin,responsable,commis'
