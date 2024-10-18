@@ -43,8 +43,8 @@
     </div>
    
     <div class="flex flex-col justify-center w-full h-full" id="usersDiv">
-    <div class="relative hidden lg:block">
-        <h2 class="text-align text-center text-2xl font-bold pt-1 pb-2">Liste Employer</h2>
+    <div class="relative pt-10 hidden lg:block">
+        <h2 class="text-align text-center text-2xl font-bold pt-1">Liste Employer</h2>
     </div>
     <div class="flex flex-col w-full h-full px-4 mt-2">            
         <div class="-m-1.5 overflow-x-auto">

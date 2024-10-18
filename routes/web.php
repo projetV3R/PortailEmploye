@@ -12,10 +12,12 @@ Route::get('/', function () {
     return view('Auth.login');})->name('login');
  
 // ACTION CONNEXION
-Route::post('/login', [UsagerController::class, 'login'])->name('connexion');
+Route::post('/login', 
+[UsagerController::class, 'login'])->name('connexion');
  
 // ACTION DECONNEXION
-Route::post('/logout', [UsagerController::class, 'logout'])->name('logout')->middleware('auth');
+Route::post('/logout', 
+[UsagerController::class, 'logout'])->name('logout')->middleware('auth');
  
 Route::get('/dashboard',
 [UsagerController::class, 'dashboard'])->name('dashboard')->middleware('auth');
@@ -23,7 +25,8 @@ Route::get('/dashboard',
 Route::get('/redirection', function () {
     return view('redirection.403');});
  
-Route::get('/usagers', [UsagerController::class, 'index']);
+Route::get('/usagers', 
+[UsagerController::class, 'index']);
  
 Route::get('/admin', function () {
     return view('admin.admin');});
@@ -34,9 +37,11 @@ Route::post('/usagers/update',
 Route::delete('/admin/usager/{id}',
 [UsagerController::class, 'destroy']);
  
-Route::post('/storeusager', [UsagerController::class, 'store'])->middleware('auth');
+Route::post('/storeusager', 
+[UsagerController::class, 'store'])->middleware('auth');
  
-Route::get('/usagers/count-admins', [UsagerController::class, 'countAdmins']);
+Route::get('/usagers/count-admins', 
+[UsagerController::class, 'countAdmins']);
  
     //STORE PARAMETRE SYSTEME  TODO RAJOUTER CHECK ROLE ADMIN
 Route::post('/parametres/store', [ParametresSystemeController::class, 'store']);

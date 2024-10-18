@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    loadUsers(); // Charger les utilisateurs au démarrage
+    loadUsers();
 
-
-// Gestion du clic sur le bouton de suppression
+//SUPPRIMER
 document.addEventListener('click', function(e) {
     if (e.target.closest('.delete-user')) {
         const userId = e.target.closest('.delete-user').getAttribute('data-id');
@@ -24,8 +23,7 @@ document.addEventListener('click', function(e) {
                             text: response.data.message,
                             icon: "success"
                         });
-                        // Supprimer la ligne de la table
-                        loadUsers(); // Recharge les utilisateurs pour mettre à jour la liste
+                        loadUsers();
                     })
                     .catch(error => {
                         if (error.response && error.response.status === 403) {
@@ -48,6 +46,7 @@ document.addEventListener('click', function(e) {
 });
 });
 
+// AFFICHAGE
 function loadUsers(page = 1) {
     axios.get(`/usagers?page=${page}`)
         .then(response => {
@@ -56,15 +55,15 @@ function loadUsers(page = 1) {
             const currentPage = response.data.current_page;
 
             let tbody = document.querySelector('#usagers tbody');
-            tbody.innerHTML = ''; // Effacer le contenu précédent
+            tbody.innerHTML = '';
 
             usagers.forEach(usager => {
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                    <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                         ${usager.email}
                     </td>
-                    <td class="px-4 py-2 text-center whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                    <td class="px-4 py-1 text-center whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                         <input type="hidden" value="${usager.id}"> <!-- Ajout de l'input caché -->
                         <select name="usagers[${usager.id}][role]" class="pr-2 role-dropdown dark:text-neutral-500 dark:bg-blueV3R">
                             <option value="admin" ${usager.role == 'admin' ? 'selected' : ''}>Admin</option>
@@ -72,8 +71,8 @@ function loadUsers(page = 1) {
                             <option value="commis" ${usager.role == 'commis' ? 'selected' : ''}>Commis</option>
                         </select>
                     </td>
-                    <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default flex justify-center items-center flex-row">
-                        <button type="button" class="delete-user px-2 flex items-center bg-gray-300" data-id="${usager.id}">
+                    <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default flex justify-center items-center flex-row">
+                        <button type="button" class="delete-user px-2 flex items-center bg-red-300" data-id="${usager.id}">
                             <span class="iconify size-10 lg:size-6" data-icon="mdi:bin" data-inline="false"></span>
                             <span class="delete-user relative hidden lg:block" data-id="${usager.id}">Supprimer employé</span>
                         </button>
@@ -83,8 +82,6 @@ function loadUsers(page = 1) {
             });
 
             updatePagination(totalPages, currentPage);
-
-            // Initialiser les rôles après le chargement des utilisateurs
             initializeRoles();
         })
         .catch(error => {
@@ -92,11 +89,10 @@ function loadUsers(page = 1) {
         });
 }
 
-// Fonction pour initialiser les rôles
+// MODIFICATION ROLE
 let initialRoles = {};
 
 function initializeRoles() {
-    // Enregistrer les rôles initiaux
     document.querySelectorAll('.role-dropdown').forEach(function(dropdown) {
         const hiddenInput = dropdown.closest('tr').querySelector('input[type="hidden"]');
         if (hiddenInput) {
@@ -107,21 +103,18 @@ function initializeRoles() {
         }
     });
 
-    // Gestion du clic sur le bouton "Enregistrer"
     document.getElementById('save-roles-btn').addEventListener('click', function(e) {
         e.preventDefault();
 
         let hasChanges = false;
         let formData = new FormData();
 
-        // Vérifier les changements de rôle
         document.querySelectorAll('.role-dropdown').forEach(function(dropdown) {
             const hiddenInput = dropdown.closest('tr').querySelector('input[type="hidden"]');
             if (hiddenInput) {
                 const usagerId = hiddenInput.value;
                 const selectedRole = dropdown.value;
 
-                // Vérifiez si le rôle sélectionné a changé
                 if (selectedRole !== initialRoles[usagerId]) {
                     hasChanges = true;
                     formData.append(`usagers[${usagerId}][id]`, usagerId);
@@ -132,29 +125,44 @@ function initializeRoles() {
             }
         });
 
-        // Si aucun changement n'a été détecté
         if (!hasChanges) {
-            console.log("Aucune modification détectée."); // Logging si aucune modification
+            console.log("Aucune modification détectée.");
             Swal.fire({
                 title: 'Aucune modification',
                 text: 'Il n\'y a rien de modifié à enregistrer.',
                 icon: 'info',
                 timer: 2000
             });
-            return; // Arrête l'exécution ici, donc la requête n'est pas envoyée
+            return;
         }
 
-        // Envoi de la requête avec Axios
+        // Vérifier le nombre d'administrateurs existants
+        const adminCount = Object.values(initialRoles).filter(role => role === 'admin').length;
+        const newAdminCount = Array.from(document.querySelectorAll('.role-dropdown')).filter(dropdown => dropdown.value === 'admin').length;
+
+        if (newAdminCount > 2) {
+            Swal.fire({
+                title: 'Erreur!',
+                text: 'Impossible d\'ajouter plus que 2 administrateurs.',
+                icon: 'error',
+                timer: 5000
+            }).then(() => loadUsers() );
+            console.log('pa 2');
+
+            return;
+        }
+
+
         axios.post('/usagers/update', formData)
             .then(function(response) {
-                // Mettre à jour initialRoles après une sauvegarde réussie
-                initializeRoles(); // Récupérer les rôles mis à jour
                 Swal.fire({
                     title: 'Parfait!',
                     text: 'La modification est enregistrée!',
                     icon: 'success',
                     timer: 2000
                 });
+                loadUsers();
+                console.log('pa 1');
             })
             .catch(function(error) {
                 Swal.fire({
@@ -167,7 +175,9 @@ function initializeRoles() {
             });
     });
 }
-// Création d'un utilisateur
+
+    
+// CREATION
 document.getElementById('create-user').addEventListener('click', function(e) {
     e.preventDefault();
 
@@ -242,7 +252,7 @@ document.getElementById('create-user').addEventListener('click', function(e) {
 function checkAdminCount(data) {
     return axios.get('/usagers/count-admins')
         .then(response => response.data < 2)
-        .catch(() => true); // Si une erreur se produit, on suppose qu'on peut ajouter
+        .catch(() => true);
 }
 
 function validateUserData(data) {
@@ -316,6 +326,7 @@ function handleAxiosValidationError(error) {
     }
 }
 
+//PAGINATION
 function updatePagination(totalPages, currentPage) {
     const pagination = document.querySelector('nav[aria-label="Pagination"]');
     pagination.innerHTML = '';
@@ -330,25 +341,14 @@ function updatePagination(totalPages, currentPage) {
     }
 }
 
- /*
-$(document).ready(function() {
-    // Configuration AJAX
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+//RECHERCHE
+document.getElementById('hs-table-with-pagination-search').addEventListener('input', function() {
+    const searchValue = this.value.toLowerCase();
+    const rows = document.querySelectorAll('table tbody tr');
+
+    rows.forEach(row => {
+        const email = row.cells[0].textContent.toLowerCase();
+        const role = row.cells[1].querySelector('select').options[row.cells[1].querySelector('select').selectedIndex].text.toLowerCase();
+        row.style.display = (email.includes(searchValue) || role.includes(searchValue)) ? '' : 'none';
     });
-   
-    // Recherche dans le tableau
-    document.getElementById('hs-table-with-pagination-search').addEventListener('input', function() {
-        const searchValue = this.value.toLowerCase();
-        const rows = document.querySelectorAll('table tbody tr');
- 
-        rows.forEach(row => {
-            const email = row.cells[0].textContent.toLowerCase();
-            const role = row.cells[1].querySelector('select').value.toLowerCase();
- 
-            row.style.display = (email.includes(searchValue) || role.includes(searchValue)) ? '' : 'none';
-        });
-    });
-});*/
+});
