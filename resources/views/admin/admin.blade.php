@@ -52,8 +52,8 @@
             <div class="border-2 rounded-lg shadow-lg divide-y divide-gray-200 dark:border-neutral-700 dark:divide-neutral-700">
             <div class="py-3 px-4">
                 <div class="relative max-w-xs">
-                    <label class="sr-only">Recherche (mail ou role)</label>
-                    <input type="text" name="hs-table-with-pagination-search" id="hs-table-with-pagination-search" class="py-2 px-3 ps-9 block w-full border-gray-200 shadow-md rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Recherche (email ou role)">
+                    <label class="sr-only block font-Alumni text-md md:text-lg mb-2">Recherche (mail ou role)</label>
+                    <input type="text" id="recherche" class="py-2 px-3 ps-9 block w-full border-gray-200 shadow-md rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Recherche (email ou role)">
                     <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
                     <svg class="size-4 text-gray-400 dark:text-neutral-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
@@ -72,13 +72,13 @@
                             <div class="relative block lg:hidden">
                             <h2 class="flex gap-y-2 text-center text-2xl font-bold">Liste Employer</h2>
                             </div>
- 
+                            
                             <div class="px-2 py-2">
                                 <button type="button" id="save-roles-btn" class="bg-blueV3R text-white px-2 py-1 rounded">Enregistrer</button>
                             </div>
                         </div>
-                       
-                        <table id="usagers" class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
+                       <div id="usagers">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
                             <thead class="bg-gray-50 dark:bg-neutral-700">
                                 <tr>
                                     <th scope="col" class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Mail</th>
@@ -89,10 +89,12 @@
                             <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
                             </tbody>
                         </table>
+                       </div>
+                        
                     </form>
                 </div>
             </div>
-            <nav class="flex justify-center gap-x-1" aria-label="Pagination"></nav>
+            <div id="pagination" class="mt-4 flex justify-center items-center gap-x-2"></div>
             </div>
         </div>
         </div>

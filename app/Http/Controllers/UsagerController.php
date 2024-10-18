@@ -15,13 +15,27 @@ use Illuminate\Support\Facades\Validator;
 class UsagerController extends Controller
 {
    
-    public function index(Request $request)
+    /*public function index(Request $request)
     {
             $usagers = Usager::paginate(10);
             return response()->json($usagers);
            // return view('admin.admin', compact('usagers'));
+    }*/
+
+
+    public function index(Request $request)
+    {
+        $query = trim($request->get('recherche', ''));
+        $usagers = Usager::where(function($queryBuilder) use ($query) {
+            if ($query) {
+                $queryBuilder->where('role', 'LIKE', '%' . $query . '%')
+                             ->orWhere('email', 'LIKE', '%' . $query . '%');
+            }
+        })->paginate(10);
+    
+        return response()->json($usagers);
     }
- 
+   
     public function dashboard()
     {
         return view('Auth.dashboard');
