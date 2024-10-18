@@ -103,7 +103,14 @@ function initializeRoles() {
         }
     });
 
-    document.getElementById('save-roles-btn').addEventListener('click', function(e) {
+    const saveRolesBtn = document.getElementById('save-roles-btn');
+
+    // Supprimer tous les écouteurs d'événements précédents
+    const newSaveRolesBtn = saveRolesBtn.cloneNode(true);
+    saveRolesBtn.parentNode.replaceChild(newSaveRolesBtn, saveRolesBtn);
+
+    // Ajouter l'écouteur sur le nouveau bouton sans accumulation
+    newSaveRolesBtn.addEventListener('click', function(e) {
         e.preventDefault();
 
         let hasChanges = false;
@@ -137,7 +144,6 @@ function initializeRoles() {
         }
 
         // Vérifier le nombre d'administrateurs existants
-        const adminCount = Object.values(initialRoles).filter(role => role === 'admin').length;
         const newAdminCount = Array.from(document.querySelectorAll('.role-dropdown')).filter(dropdown => dropdown.value === 'admin').length;
 
         if (newAdminCount > 2) {
@@ -146,12 +152,10 @@ function initializeRoles() {
                 text: 'Impossible d\'ajouter plus que 2 administrateurs.',
                 icon: 'error',
                 timer: 5000
-            }).then(() => loadUsers() );
+            }).then(() => loadUsers());
             console.log('pa 2');
-
             return;
         }
-
 
         axios.post('/usagers/update', formData)
             .then(function(response) {
@@ -175,6 +179,7 @@ function initializeRoles() {
             });
     });
 }
+
 
     
 // CREATION
