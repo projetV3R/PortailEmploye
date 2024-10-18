@@ -89,7 +89,6 @@ function loadUsers(page = 1) {
         });
 }
 
-// MODIFICATION ROLE
 let initialRoles = {};
 
 function initializeRoles() {
@@ -105,16 +104,16 @@ function initializeRoles() {
 
     const saveRolesBtn = document.getElementById('save-roles-btn');
 
-    // Supprimer tous les écouteurs d'événements précédents
     const newSaveRolesBtn = saveRolesBtn.cloneNode(true);
     saveRolesBtn.parentNode.replaceChild(newSaveRolesBtn, saveRolesBtn);
 
-    // Ajouter l'écouteur sur le nouveau bouton sans accumulation
     newSaveRolesBtn.addEventListener('click', function(e) {
         e.preventDefault();
 
         let hasChanges = false;
         let formData = new FormData();
+
+        const existingAdminCount = Array.from(document.querySelectorAll('.role-dropdown')).filter(dropdown => dropdown.value === 'admin').length;
 
         document.querySelectorAll('.role-dropdown').forEach(function(dropdown) {
             const hiddenInput = dropdown.closest('tr').querySelector('input[type="hidden"]');
@@ -123,9 +122,15 @@ function initializeRoles() {
                 const selectedRole = dropdown.value;
 
                 if (selectedRole !== initialRoles[usagerId]) {
-                    hasChanges = true;
-                    formData.append(`usagers[${usagerId}][id]`, usagerId);
-                    formData.append(`usagers[${usagerId}][role]`, selectedRole);
+
+                    if (selectedRole === 'admin' && existingAdminCount >= 2) {
+
+                        dropdown.value = initialRoles[usagerId];
+                    } else {
+                        hasChanges = true;
+                        formData.append(`usagers[${usagerId}][id]`, usagerId);
+                        formData.append(`usagers[${usagerId}][role]`, selectedRole);
+                    }
                 }
             } else {
                 console.error("Input caché non trouvé pour la ligne de rôle.");
@@ -143,19 +148,6 @@ function initializeRoles() {
             return;
         }
 
-        // Vérifier le nombre d'administrateurs existants
-        const newAdminCount = Array.from(document.querySelectorAll('.role-dropdown')).filter(dropdown => dropdown.value === 'admin').length;
-
-        if (newAdminCount > 2) {
-            Swal.fire({
-                title: 'Erreur!',
-                text: 'Impossible d\'ajouter plus que 2 administrateurs.',
-                icon: 'error',
-                timer: 5000
-            }).then(() => loadUsers());
-            console.log('pa 2');
-            return;
-        }
 
         axios.post('/usagers/update', formData)
             .then(function(response) {
@@ -166,7 +158,6 @@ function initializeRoles() {
                     timer: 2000
                 });
                 loadUsers();
-                console.log('pa 1');
             })
             .catch(function(error) {
                 Swal.fire({

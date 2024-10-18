@@ -37,6 +37,7 @@ class UsagerRequest extends FormRequest
             'email.unique' => 'Cet email est déjà utilisé.',
             'password.required' => 'Le champ mot de passe est obligatoire.',
             'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
+            'password.confirmed' => 'Le mot de passe doit être identique à celui de la confirmation!',
             'nom.required' => 'Le champ nom est obligatoire.',
             'prenom.required' => 'Le champ prénom est obligatoire.',
             'nom.string' => 'Le champ nom est obligatoirement en caratère.',
