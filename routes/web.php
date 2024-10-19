@@ -3,12 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsagerController;
 use App\Http\Controllers\ParametresSystemeController;
-use App\Http\Controllers\ModelesController;
-
 
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return view('welcome');
 });
 
 
@@ -44,13 +42,6 @@ Route::post('/parametres/store', [ParametresSystemeController::class, 'store']);
 
 //AFFICHER PARAMETRE LISTE  TODO RAJOUTER CHECK ROLE ADMIN
  Route::get('/parametres/', [ParametresSystemeController::class, 'index']);
-
- // Route pour récupérer les modèles de mail
-Route::get('/modeles', [ModelesController::class, 'index']);
-
-Route::get('/modeles/{id}', [ModelesController::class, 'show']);
-
-Route::put('/modeles/{id}', [ModelesController::class, 'update']);
 
     //!!! ROUTE DE REDIRECTION ERREUR 404 TOUJOURS A LA FIN DU FICHIER DE ROUTE NE JAMAIS AVOIR DE ROUTE APRES !!!!
  Route::fallback(function () {

@@ -1,83 +1,59 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Requête GET pour récupérer les paramètres
-    axios.get('/parametres/')
-        .then(function(response) {
-            const data = response.data;
-        
-            document.getElementById('email_approvisionnement').value = data.email_approvisionnement;
-            document.getElementById('mois_revision').value = data.mois_revision;
-            document.getElementById('taille_fichier').value = data.taille_fichier;
-            document.getElementById('finance_approvisionnement').value = data.finance_approvisionnement;
-        })
-        .catch(function(error) {
+$(document).ready(function() {
+    $.ajax({
+        url: "/parametres/",
+        method: 'GET',
+        success: function(data) {
+            $('#email_approvisionnement').val(data.email_approvisionnement);
+            $('#mois_revision').val(data.mois_revision);
+            $('#taille_fichier').val(data.taille_fichier);
+            $('#email_finances').val(data.finance_approvisionnement);
+        },
+        error: function() {
             alert('Erreur lors du chargement des paramètres.');
-            console.error(error);
-        });
+        }
+    });
 
-
-    document.getElementById('parametres-form').addEventListener('submit', function(event) {
+    
+    $('#parametres-form').on('submit', function(event) {
         event.preventDefault();
-
-        const csrfToken = document.querySelector('input[name="_token"]').value;
-
-        const formData = [
+        
+        let formData = [
             {
-                '_token': csrfToken,
+                //Important token pour valider le crsf
+                //.val sert a recupere la valeur a l'interieur de l'input
+                '_token': $('input[name="_token"]').val(),
                 'cle': 'email_approvisionnement',
-                'valeur': document.getElementById('email_approvisionnement').value
+                'valeur': $('#email_approvisionnement').val()
             },
             {
-                '_token': csrfToken,
+                '_token': $('input[name="_token"]').val(),
                 'cle': 'mois_revision',
-                'valeur_numerique': document.getElementById('mois_revision').value
+                'valeur_numerique': $('#mois_revision').val()
             },
             {
-                '_token': csrfToken,
+                '_token': $('input[name="_token"]').val(),
                 'cle': 'taille_fichier',
-                'valeur_numerique': document.getElementById('taille_fichier').value
+                'valeur_numerique': $('#taille_fichier').val()
             },
             {
-                '_token': csrfToken,
+                '_token': $('input[name="_token"]').val(),
                 'cle': 'finance_approvisionnement',
-                'valeur': document.getElementById('finance_approvisionnement').value
+                'valeur': $('#email_finances').val()
             }
         ];
 
-        // Envoyer toutes les requêtes et attendre leur réponse
-        const requests = formData.map(function(param) {
-            return axios.post('/parametres/store', param);
-        });
-
-        Promise.all(requests)
-            .then(function(responses) {
-                Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: "Les modifications sont bien enregistrées",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            })
-            .catch(function(error) {
-                console.log(error.response);
-            
-                let errorMessage = "Une erreur s'est produite!";
-                
-                if (error.response && error.response.data && error.response.data.errors) {
-                    const errors = error.response.data.errors;
-            
-                    // Récupére tous les messages d'erreur dans un seul message
-                    errorMessage = Object.keys(errors)
-                        .map(field => errors[field].join(", "))
-                        .join("\n");
+        formData.forEach(function(param) {
+            $.ajax({
+                url: "/parametres/store",
+                method: 'POST',
+                data: param,
+                success: function(response) {
+                    console.log(response.message);
+                },
+                error: function(response) {
+                    alert('Erreur lors de l\'enregistrement des paramètres.');
                 }
-            
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: errorMessage,
-                });
             });
-            
+        });
     });
 });
