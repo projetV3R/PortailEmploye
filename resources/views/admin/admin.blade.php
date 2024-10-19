@@ -34,6 +34,11 @@
                 <span class="text-xl">Paramètres</span>
                 <span class="iconify text-xl w-6 hidden arrow" data-icon="material-symbols:arrow-forward-ios-rounded"></span>
             </div>
+            <div class="flex flex-row cursor-pointer hover:bg-gray-200 p-4 px-2 w-full justify-center md:justify-start items-center gap-3 menu" data-target="courrielsDiv" onclick="SelectedMenu(this)">
+                <span class="iconify text-xl w-8" data-icon="material-symbols:mail" data-inline="false"></span>
+                <span class="text-xl">Courriels</span>
+                <span class="iconify text-xl w-6 hidden arrow" data-icon="material-symbols:arrow-forward-ios-rounded"></span>
+            </div>
         </div>
     </div>
 
@@ -50,28 +55,27 @@
                     
                     <div class="mb-4">
                         <label for="email_approvisionnement" class="block font-medium text-lg">Courriel de l'Approvisionnement</label>
-                        <input type="email" name="email_approvisionnement" id="email_approvisionnement"
+                        <input type="email" name="email_approvisionnement" id="email_approvisionnement" required
                             class="w-full border rounded p-2 mt-1">
                     </div>
         
                     <div class="mb-4">
                         <label for="mois_revision" class="block font-medium text-lg">Délai avant la révision (mois)</label>
-                        <input type="number" name="mois_revision" id="mois_revision" min="1" max="36"
+                        <input type="number" name="mois_revision" id="mois_revision" min="1" max="36" required
                             class="w-full border rounded p-2 mt-1">
                     </div>
         
                     <div class="mb-4">
                         <label for="taille_fichier" class="block font-medium text-lg">Taille maximale des fichiers joints (Mo)</label>
-                        <input type="number" name="taille_fichier" id="taille_fichier" min="1" max="75"
+                        <input type="number" name="taille_fichier" id="taille_fichier" min="1" max="75" required
                             class="w-full border rounded p-2 mt-1">
                     </div>
         
                     <div class="mb-4">
                         <label for="email_finances" class="block font-medium text-lg">Courriel des Finances</label>
-                        <input type="email" name="email_finances" id="email_finances"
+                        <input type="email" name="finance_approvisionnement" id="finance_approvisionnement" required
                             class="w-full border rounded p-2 mt-1">
                     </div>
-        
                     <button type="submit" class="w-full bg-blue-500 text-white rounded p-2 hover:bg-blue-600">Enregistrer</button>
                 </form>
             </div>
@@ -81,39 +85,85 @@
       
 
 </div>
+<!-- Script gestion paramètres systèmes -->
+<script src="{{ asset('js/Admin/courriels.js') }}"></script>
+<div class="flex flex-col justify-center w-full p-4 lg:p-8 gap-y-4" id="courrielsDiv">
+    <h2 class="text-2xl font-bold mb-6 flex justify-center">Gestion des modèles de courriels</h2>
+    <div class="flex  gap-x-2 md:gap-x-4">
+        <select id="modelesSelect" class="border-2  rounded-md shadow-sm" onchange="afficherModele()">
+        
+        </select>
+        <button class="bg-green-300 rounded-md p-2 px-2 hover:text-white hover:bg-green-700"><span class=" hidden md:block">Ajouter</span>  <span class="block md:hidden iconify size-6" data-icon="material-symbols-light:post-add" data-inline="false"></span></button>
+        <button class="bg-red-300 rounded-md p-2 px-2 hover:text-white hover:bg-red-700"><span class="hidden md:block">Supprimer</span> <span class="block md:hidden iconify size-6" data-icon="mdi:bin" data-inline="false"></button>
+    </div>
+
+ 
+    <div id="contenuModele" class="flex flex-col w-full h-full border-2  rounded-lg shadow-lg p-4 gap-y-4">
+ 
+        <div class="flex flex-col">
+            <label for="modeleObjet" class="font-bold mb-2">Objet du modèle</label>
+            <input type="text" id="modeleObjet" class="border p-2 rounded-md" required>
+        </div>
+
+        <!-- Textarea pour le body -->
+        <div class="flex flex-col h-full">
+            <label for="modeleBody" class="font-bold mb-2">Contenu du modèle</label>
+            <div id="editor" class="border p-2 rounded-md h-full max-h-96 overflow-auto"></div>
+        </div>
+        
+    </div>
+
+ 
+    <button class="bg-blue-300 rounded-md p-2 px-4 hover:bg-blue-500 hover:text-white">Enregistrer les modifications</button>
+</div> 
+
+
+</div>
+
 
 <script>
+    
+    function loadSelectedMenu() {
+        const selectedMenu = localStorage.getItem('selectedMenu');
+        if (selectedMenu) {
+       
+            const menuItem = document.querySelector(`.menu[data-target="${selectedMenu}"]`);
+            if (menuItem) {
+                SelectedMenu(menuItem);
+            }
+        }
+    }
 
     document.getElementById('dropdownToggle').addEventListener('click', function() {
         var menu = document.getElementById('menuDropdown');
-        if (menu.classList.contains('hidden')) {
-            menu.classList.remove('hidden');
-        } else {
-            menu.classList.add('hidden');
-        }
+        menu.classList.toggle('hidden');
     });
-
 
     function SelectedMenu(element) {
         let items = document.querySelectorAll('.menu');
         let targetId = element.getAttribute('data-target');
 
-   
+
         items.forEach(item => {
             item.classList.remove('bg-gray-200');
             item.querySelector('.arrow').classList.add('hidden');
         });
 
-    
         let contentDivs = document.querySelectorAll('[id$="Div"]');
         contentDivs.forEach(div => {
             div.classList.add('hidden');
         });
 
+    
+        localStorage.setItem('selectedMenu', targetId);
+
         element.classList.add('bg-gray-200');
         element.querySelector('.arrow').classList.remove('hidden');
         document.getElementById(targetId).classList.remove('hidden');
     }
+
+    window.onload = loadSelectedMenu;
 </script>
+
 
 @endsection
