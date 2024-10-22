@@ -46,49 +46,7 @@ document.addEventListener('click', function(e) {
 });
 });
 
-// AFFICHAGE
-/*
-function loadUsers(page = 1) {
-    axios.get(`/usagers?page=${page}`)
-        .then(response => {
-            const usagers = response.data.data;
-            const totalPages = response.data.last_page;
-            const currentPage = response.data.current_page;
 
-            let tbody = document.querySelector('#usagers tbody');
-            tbody.innerHTML = '';
-
-            usagers.forEach(usager => {
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                        ${usager.email}
-                    </td>
-                    <td class="px-4 py-1 text-center whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                        <input type="hidden" value="${usager.id}"> <!-- Ajout de l'input caché -->
-                        <select name="usagers[${usager.id}][role]" class="pr-2 role-dropdown dark:text-neutral-500 dark:bg-blueV3R">
-                            <option value="admin" ${usager.role == 'admin' ? 'selected' : ''}>Admin</option>
-                            <option value="responsable" ${usager.role == 'responsable' ? 'selected' : ''}>Responsable</option>
-                            <option value="commis" ${usager.role == 'commis' ? 'selected' : ''}>Commis</option>
-                        </select>
-                    </td>
-                    <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default flex justify-center items-center flex-row">
-                        <button type="button" class="delete-user px-2 flex items-center bg-red-300" data-id="${usager.id}">
-                            <span class="iconify size-10 lg:size-6" data-icon="mdi:bin" data-inline="false"></span>
-                            <span class="delete-user relative hidden lg:block" data-id="${usager.id}">Supprimer employé</span>
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            initializeRoles();
-        })
-        .catch(error => {
-            console.error("Il y a eu un problème avec la requête Axios", error);
-        });
-}
-*/
 let initialRoles = {};
 
 function initializeRoles() {
@@ -139,7 +97,16 @@ function initializeRoles() {
             }
         });
 
-        
+        if (overAdmin && !hasChanges) {
+            console.log("Aucune modification détectée.");
+            Swal.fire({
+                title: 'Attention!',
+                text: 'Vous ne pouvez pas avois plus que 2 admin',
+                icon: 'info',
+                timer: 2000
+            });
+            return;
+        }
 
         if (!hasChanges) {
             console.log("Aucune modification détectée.");
@@ -152,10 +119,8 @@ function initializeRoles() {
             return;
         }
 
-
         axios.post('/usagers/update', formData)
             .then(function(response) {
-                
                 Swal.fire({
                     title: 'Parfait!',
                     text: 'La modification est enregistrée!',
@@ -166,8 +131,8 @@ function initializeRoles() {
                         if (overAdmin) {
                             console.log("Trop d'admin.");
                             return Swal.fire({
-                                title: '!!!!!!!!!!!!!!',
-                                text: '!!!!!!!!!!!!!',
+                                title: 'Attention!',
+                                text: 'Vous ne pouvez pas avois plus que 2 admin',
                                 icon: 'info',
                                 timer: 2000
                             });
@@ -188,8 +153,6 @@ function initializeRoles() {
     });
 }
 
-
-    
 // CREATION
 document.getElementById('create-user').addEventListener('click', function(e) {
     e.preventDefault();
