@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
 use App\Models\Usager;
 use App\Http\Requests\UsagerRequest;
-use Illuminate\Support\Facades\Bcrypt;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
  
  
@@ -82,7 +82,7 @@ class UsagerController extends Controller
         try {
             Usager::create([
                 'email' => $validatedData['email'],
-                'password' => Bcrypt::make($validatedData['password']),
+                'password' => Hash::make($validatedData['password']),
                 'nom' => $validatedData['nom'],
                 'prenom' => $validatedData['prenom'],
                 'role' => $validatedData['role'],

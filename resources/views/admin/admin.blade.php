@@ -138,7 +138,6 @@
         </div>
         <!-- Script gestion parametres systemes  -->
             <script src="{{ asset('js/Admin/parametres.js') }}"></script>
-            <script>var updateUsagerUrl = "{{ route('usagers.update') }}";</script>
             <script src="{{ asset('js/Admin/admin.js') }}"></script>
  
 </div>

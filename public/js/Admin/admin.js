@@ -231,13 +231,19 @@ function checkAdminCount(data) {
         .catch(() => true);
 }
 
-function validateUserData(data) {
+async function validateUserData(data) {
     const errors = [];
 
     if (!data.email) {
         errors.push("Le champ email est obligatoire.");
     } else if (!/\S+@\S+\.\S+/.test(data.email)) {
         errors.push("L'email est invalide.");
+    }else {
+        // Vérifie l'unicité de l'email
+        const isEmailUnique = await checkEmailUniqueness(data.email);
+        if (!isEmailUnique) {
+            errors.push("Cet email est déjà utilisé.");
+        }
     }
 
     if (!data.password) {
@@ -368,7 +374,7 @@ function paginationButtons(data, functionName) {
             class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-2 md:px-4
             ${!data.prev_page_url ? 'cursor-not-allowed' : ''}"
             onclick="${functionName}(${data.current_page - 1})" ${!data.prev_page_url ? 'disabled' : ''}>
-            <span class="md:hidden">&lt;</span>
+            <span>&lt;</span>
             <span class="hidden md:inline">Précédente</span>
         </button>
         <span class="text-xs font-bold mx-2">Page ${data.current_page} sur ${data.last_page}</span>
@@ -376,7 +382,7 @@ function paginationButtons(data, functionName) {
             class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-2 md:px-4
             ${!data.next_page_url ? 'cursor-not-allowed' : ''}"
             onclick="${functionName}(${data.current_page + 1})" ${!data.next_page_url ? 'disabled' : ''}>
-            <span class="md:hidden">&gt;</span>
+            <span>&gt;</span>
             <span class="hidden md:inline">Suivante</span>
         </button>
         <button type="button"

@@ -42,6 +42,9 @@ Route::post('/storeusager',
  
 Route::get('/usagers/count-admins', 
 [UsagerController::class, 'countAdmins']);
+
+Route::post('/api/check-email', [UsagerController::class, 'checkEmailExists']);
+
  
     //STORE PARAMETRE SYSTEME  TODO RAJOUTER CHECK ROLE ADMIN
 Route::post('/parametres/store', [ParametresSystemeController::class, 'store']);
