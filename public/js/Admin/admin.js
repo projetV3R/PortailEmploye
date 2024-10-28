@@ -160,7 +160,7 @@ document.getElementById('create-user').addEventListener('click', function(e) {
     Swal.fire({
         title: 'Ajouter un utilisateur',
         html: `
-            <input id="email" class="swal2-input" placeholder="Email" required>
+            <input id="email" class="swal2-input" placeholder="Courriel" required>
             <input id="password" type="password" class="swal2-input" placeholder="Mot de passe" required>
             <input id="password_confirmation" type="password" class="swal2-input" placeholder="Confirmer le mot de passe" required>
             <input id="nom" class="swal2-input" placeholder="Nom" required>
@@ -334,10 +334,10 @@ function afficherResultats(usagers) {
                         <option value="commis" ${usager.role == 'commis' ? 'selected' : ''}>Commis</option>
                     </select>
                 </td>
-                <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 cursor-default flex justify-center items-center flex-row">
-                    <button type="button" class="delete-user px-2 flex items-center bg-red-300" data-id="${usager.id}">
-                        <span class="iconify size-10 lg:size-6" data-icon="mdi:bin" data-inline="false"></span>
-                        <span class="delete-user relative hidden lg:block" data-id="${usager.id}">Supprimer employé</span>
+                <td class="px-4 py-1 whitespace-nowrap text-sm cursor-default flex justify-center items-center flex-row">
+                    <button type="button" class="delete-user flex items-center px-3 py-2 bg-red-500 hover:bg-red-600 text-gray-800 dark:text-neutral-200 rounded-lg shadow-md transition duration-200" data-id="${usager.id}">
+                        <span class="iconify size-10 lg:size-6 mr-1" data-icon="mdi:bin" data-inline="false"></span>
+                        <span class="delete-user hidden lg:block">Supprimer</span>
                     </button>
                 </td>
             `;
