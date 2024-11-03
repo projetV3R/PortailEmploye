@@ -40,28 +40,64 @@
     @endphp
 
     <div class="px-8 pt-16">
-        <!-- Boutons d'action en haut -->
-        <div id="action-buttons" class="mb-4 flex space-x-4 items-center">
-            <button class="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                <span class="iconify" data-icon="mdi:email-sync-outline"></span>
-                <span class="font-Alumni">Outlook</span>
-            </button>
-            <button class="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-                <span class="iconify" data-icon="mdi:file-excel"></span>
-                <span class="font-Alumni">Excel</span>
-            </button>
-            <button class="flex items-center space-x-2 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700">
-                <span class="iconify" data-icon="mdi:currency-usd"></span>
-                <span class="font-Alumni">Finances</span>
-            </button>
-            <button class="flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
-                <span class="iconify" data-icon="mdi:email-multiple"></span>
-                <span class="font-Alumni">Copier</span>
-            </button>
-            <div id="selected-companies" class="ml-auto text-sm text-gray-600">
+        <style>
+            /* Style pour le rectangle d'affichage des entreprises sélectionnées */
+            #selected-companies {
+                width: 300px;
+                /* Largeur fixe du rectangle */
+                height: 100px;
+                /* Hauteur fixe du rectangle */
+                padding: 8px;
+                background-color: #f9fafb;
+                /* Fond gris clair */
+                border: 1px solid #d1d5db;
+                /* Bordure grise */
+                border-radius: 8px;
+                /* Coins arrondis */
+                overflow-y: auto;
+                /* Défilement vertical si le contenu dépasse */
+                overflow-x: hidden;
+                /* Masquer le défilement horizontal */
+                white-space: normal;
+                /* Permettre le retour à la ligne du texte */
+                word-break: break-word;
+                /* Couper les mots trop longs pour éviter le débordement */
+            }
+        </style>
+
+        <div id="action-buttons" class="mb-4 flex justify-between items-center">
+            <!-- Boutons alignés à gauche -->
+            <div class="flex space-x-4">
+                <button id="outlook-button"
+                    class="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    <span class="iconify" data-icon="mdi:email-sync-outline"></span>
+                    <span class="font-Alumni">Outlook</span>
+                </button>
+                <button id="excel-button"
+                    class="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                    <span class="iconify" data-icon="mdi:file-excel"></span>
+                    <span class="font-Alumni">Excel</span>
+                </button>
+                <button class="flex items-center space-x-2 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700">
+                    <span class="iconify" data-icon="mdi:currency-usd"></span>
+                    <span class="font-Alumni">Finances</span>
+                </button>
+                <button id="copy-button"
+                    class="flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                    <span class="iconify" data-icon="mdi:email-multiple"></span>
+                    <span class="font-Alumni">Copier</span>
+                </button>
+            </div>
+
+            <!-- Cadre aligné à droite -->
+            <div id="selected-companies"
+                class="text-sm text-gray-600 w-52 h-16 p-2 bg-gray-100 border border-gray-300 rounded overflow-y-auto">
+                <p class="text-xs font-semibold text-gray-500 mb-1">Éléments sélectionnés</p>
                 <!-- Zone pour afficher les noms des entreprises sélectionnées -->
             </div>
         </div>
+
+
 
         <!-- Options de sélection du nombre d'éléments par page -->
         <div class="mb-4">
@@ -120,12 +156,9 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
     <script>
         const profilRoute = @json(route('profil', ['id' => ':id']));
-    </script>
-
-
-    <script>
         const etatStyles = @json($etatStyles);
         let selectedCompanies = [];
         let currentPage = 1;
@@ -157,6 +190,7 @@
                         row.classList.add('bg-white', 'border-b', 'hover:bg-gray-50');
                         row.dataset.id = fiche.id;
                         row.dataset.name = fiche.nom_entreprise;
+                        row.dataset.email = fiche.adresse_courriel;
 
                         const isChecked = selectedCompanies.some(item => item.id === fiche.id);
 
@@ -252,6 +286,90 @@
                 currentPage--;
                 fetchData();
             }
+        }
+
+        // Fonction pour vider la sélection
+        function clearSelections() {
+            selectedCompanies = [];
+            document.querySelectorAll('.row-checkbox').forEach(box => box.checked = false);
+            document.getElementById('checkbox-all').checked = false;
+            updateSelectedCompaniesDisplay();
+        }
+
+        // Fonctions pour les boutons d'action
+        document.getElementById('outlook-button').addEventListener('click', () => {
+            getSelectedCompanies();
+            const emails = selectedCompanies.map(company => company.email).join(';');
+            if (!emails) {
+                alert("Aucune entreprise sélectionnée.");
+                return;
+            }
+            window.location.href = `mailto:${emails}`;
+            clearSelections();
+        });
+
+        document.getElementById('excel-button').addEventListener('click', () => {
+            getSelectedCompanies();
+            if (selectedCompanies.length === 0) {
+                alert("Aucune entreprise sélectionnée.");
+                return;
+            }
+
+            // Préparez les données de manière structurée
+            const worksheetData = selectedCompanies.map(company => ({
+                Nom: company.name,
+                Email: company.email,
+            }));
+
+            // Créer le fichier Excel
+            const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+            const workbook = XLSX.utils.book_new();
+
+            // Ajouter la feuille au classeur
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Entreprises");
+
+            // Générer le fichier avec le bon encodage et format
+            try {
+                XLSX.writeFile(workbook, "entreprises.xlsx", {
+                    bookType: 'xlsx',
+                    type: 'binary'
+                });
+                alert("Fichier Excel téléchargé avec succès.");
+            } catch (error) {
+                console.error("Erreur lors de la génération du fichier Excel :", error);
+                alert("Une erreur s'est produite lors de la création du fichier Excel.");
+            }
+            clearSelections();
+        });
+
+        document.getElementById('copy-button').addEventListener('click', () => {
+            getSelectedCompanies();
+            const emails = selectedCompanies.map(company => company.email).join('; ');
+            if (!emails) {
+                alert("Aucune entreprise sélectionnée.");
+                return;
+            }
+            navigator.clipboard.writeText(emails).then(() => {
+                alert("Emails copiés dans le presse-papiers.");
+            }).catch(() => {
+                alert("Erreur lors de la copie des emails.");
+            });
+            clearSelections();
+        });
+
+        // Fonction pour récupérer les entreprises sélectionnées
+        function getSelectedCompanies() {
+            selectedCompanies = [];
+            document.querySelectorAll('.row-checkbox:checked').forEach(checkbox => {
+                const row = checkbox.closest('tr');
+                const email = row.dataset.email;
+                const companyName = row.dataset.name;
+
+                selectedCompanies.push({
+                    name: companyName,
+                    email: email,
+                });
+            });
         }
     </script>
 @endsection
