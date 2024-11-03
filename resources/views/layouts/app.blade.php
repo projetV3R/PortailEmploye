@@ -6,10 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>@yield('title')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="//unpkg.com/alpinejs" defer></script>
     <script src="https://code.iconify.design/3/3.0.0/iconify.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <link rel="icon" type="image/png" href="https://www.v3r.net/wp-content/uploads/2023/06/favicon.png" />
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
 </head>
@@ -77,7 +79,8 @@
                         @csrf
                         <div class="flex items-center space-x-4 hover:animate-bounce">
                             <button class="ml-4 text-white">
-                                <span class="iconify size-8 lg:size-10" data-icon="mdi:logout" data-inline="false" onclick="removeItemsLocalStorage()"></span>
+                                <span class="iconify size-8 lg:size-10" data-icon="mdi:logout" data-inline="false"
+                                    onclick="removeItemsLocalStorage()"></span>
                             </button>
                         </div>
                     </form>
@@ -88,7 +91,7 @@
                 </button>
             </div>
 
-           
+
             <div class="hidden lg:flex absolute top-5 left-20 ">
                 <a href="/dashboard">
                     <img class="w-36 h-36 bg-white shadow-lg"
@@ -98,11 +101,11 @@
             </div>
         </div>
 
-      
+
         <div id="mobile-menu"
             class="fixed inset-0 z-50 bg-blueV3R transform -translate-x-full transition-transform duration-300 md:hidden ">
             <div class="p-4 flex w-full h-full flex-col">
-                
+
                 <div class="flex items-center w-full">
                     <div class="flex justify-start w-full">
                         <a href="/dashboard">
@@ -157,12 +160,12 @@
         // Toogle menu mobile
         document.getElementById('menu-toggle').addEventListener('click', function() {
             const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.remove('-translate-x-full'); 
+            mobileMenu.classList.remove('-translate-x-full');
         });
 
         document.getElementById('close-menu').addEventListener('click', function() {
             const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.add('-translate-x-full'); 
+            mobileMenu.classList.add('-translate-x-full');
         });
         @endauth
         // Fonction pour les deux boutons darkMode
@@ -187,12 +190,13 @@
             document.documentElement.classList.remove('dark');
         }
 
-        function removeItemsLocalStorage(){
-          localStorage.removeItem('selectedMenu');
+        function removeItemsLocalStorage() {
+            localStorage.removeItem('selectedMenu');
         }
-
-
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+
 </body>
 
 </html>
