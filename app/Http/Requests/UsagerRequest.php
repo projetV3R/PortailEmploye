@@ -33,7 +33,7 @@ class UsagerRequest extends FormRequest
     {
         return [
             'email.required' => 'Le champ email obligatoire.',
-            'email.email' => 'Informations invalides.',
+            'email.email' => 'Information du champ email invalide.',
             'email.unique' => 'Cet email est déjà utilisé.',
             'password.required' => 'Le champ mot de passe est obligatoire.',
             'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
