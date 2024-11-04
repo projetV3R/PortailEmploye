@@ -14,15 +14,6 @@ use Illuminate\Support\Facades\Validator;
  
 class UsagerController extends Controller
 {
-   
-    /*public function index(Request $request)
-    {
-            $usagers = Usager::paginate(10);
-            return response()->json($usagers);
-           // return view('admin.admin', compact('usagers'));
-    }*/
-
-
     public function index(Request $request)
     {
         $query = trim($request->get('recherche', ''));
@@ -51,7 +42,6 @@ class UsagerController extends Controller
             'password' => 'required',
         ], [
             'email.required' => 'Le champ email est obligatoire.',
-            // message different pour le mail sans le @
             'email.email' => 'Informations invalide.',
             'password.required' => 'Le champ mot de passe est obligatoire.',
             'password.password' => 'Informations invalide.',
@@ -151,8 +141,7 @@ class UsagerController extends Controller
    
             return response()->json(['message' => 'Rôles mis à jour avec succès'], 200);
         } catch (\Exception $e) {
-            // Log l'erreur
-            \Log::error("Erreur lors de la mise à jour des rôles: " . $e->getMessage());
+            Log::error("Erreur lors de la mise à jour des rôles: " . $e->getMessage());
             return response()->json(['error' => 'Erreur lors de la mise à jour des rôles'], 500);
         }
     }
