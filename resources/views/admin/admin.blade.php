@@ -44,7 +44,7 @@
    
     <div class="flex flex-col justify-center w-full h-full" id="usersDiv">
     <div class="relative pt-10 hidden lg:block">
-        <h2 class="text-align text-center text-2xl font-bold pt-1">Les employés</h2>
+        <h2 class="font-Alumni text-align text-center text-2xl font-bold pt-1">Gestion des utilisateurs</h2>
     </div>
     <div class="flex flex-col w-full h-full px-4 mt-2">            
         <div class="-m-1.5 overflow-x-auto">
@@ -70,7 +70,7 @@
                                 <button type="button" id="create-user" class="bg-blueV3R text-white px-2 py-1 rounded">Ajouter</button>
                             </div>
                             <div class="relative block lg:hidden">
-                            <h2 class="flex gap-y-2 text-center text-2xl font-bold">Les employés</h2>
+                            <h2 class="font-Alumni flex gap-y-2 text-center text-2xl font-bold">Gestion des utilisateurs</h2>
                             </div>
                             
                             <div class="px-2 py-2">

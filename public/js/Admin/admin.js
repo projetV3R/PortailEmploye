@@ -101,7 +101,7 @@ function initializeRoles() {
             console.log("Aucune modification détectée.");
             Swal.fire({
                 title: 'Attention!',
-                text: 'Vous ne pouvez pas avois plus que 2 admin',
+                text: 'Vous ne pouvez pas avoir plus que 2 admin',
                 icon: 'info',
                 timer: 2000
             });
@@ -153,19 +153,18 @@ function initializeRoles() {
     });
 }
 
-// CREATION
-document.getElementById('create-user').addEventListener('click', function(e) {
+document.getElementById('create-user').addEventListener('click', function (e) {
     e.preventDefault();
 
     Swal.fire({
         title: 'Ajouter un utilisateur',
         html: `
-            <input id="email" class="swal2-input" placeholder="Courriel" required>
-            <input id="password" type="password" class="swal2-input" placeholder="Mot de passe" required>
-            <input id="password_confirmation" type="password" class="swal2-input" placeholder="Confirmer le mot de passe" required>
-            <input id="nom" class="swal2-input" placeholder="Nom" required>
-            <input id="prenom" class="swal2-input" placeholder="Prénom" required>
-            <select id="role" class="swal2-select" required>
+            <input id="email" class="font-Alumni swal2-input" placeholder="Courriel" required>
+            <input id="password" type="password" class="font-Alumni swal2-input" placeholder="Mot de passe" required>
+            <input id="password_confirmation" type="password" class="font-Alumni swal2-input" placeholder="Confirmer le mot de passe" required>
+            <input id="nom" class="font-Alumni swal2-input" placeholder="Nom" required>
+            <input id="prenom" class="font-Alumni swal2-input" placeholder="Prénom" required>
+            <select id="role" class="font-Alumni swal2-select" required>
                 <option value="">Sélectionnez un rôle</option>
                 <option value="commis">Commis</option>
                 <option value="responsable">Responsable</option>
@@ -186,18 +185,16 @@ document.getElementById('create-user').addEventListener('click', function(e) {
             if (result.value.role === 'admin') {
                 checkAdminCount(result.value).then(canAdd => {
                     if (canAdd) {
-                        if (validateUserData(result.value)) {
-                            axios.post('/storeusager', result.value)
-                                .then(() => {
-                                    Swal.fire({
-                                        title: 'Succès!',
-                                        text: 'Utilisateur ajouté avec succès.',
-                                        icon: 'success',
-                                        timer: 2000
-                                    }).then(() => performSearch());
-                                })
-                                .catch(handleAxiosValidationError);
-                        }
+                        axios.post('/storeusager', result.value)
+                            .then(() => {
+                                Swal.fire({
+                                    title: 'Succès!',
+                                    text: 'Utilisateur ajouté avec succès.',
+                                    icon: 'success',
+                                    timer: 2000
+                                }).then(() => performSearch());
+                            })
+                            .catch(handleAxiosValidationError);
                     } else {
                         Swal.fire({
                             title: 'Erreur!',
@@ -208,18 +205,16 @@ document.getElementById('create-user').addEventListener('click', function(e) {
                     }
                 });
             } else {
-                if (validateUserData(result.value)) {
-                    axios.post('/storeusager', result.value)
-                        .then(() => {
-                            Swal.fire({
-                                title: 'Succès!',
-                                text: 'Utilisateur ajouté avec succès.',
-                                icon: 'success',
-                                timer: 2000
-                            }).then(() => performSearch());
-                        })
-                        .catch(handleAxiosValidationError);
-                }
+                axios.post('/storeusager', result.value)
+                    .then(() => {
+                        Swal.fire({
+                            title: 'Succès!',
+                            text: 'Utilisateur ajouté avec succès.',
+                            icon: 'success',
+                            timer: 2000
+                        }).then(() => performSearch());
+                    })
+                    .catch(handleAxiosValidationError);
             }
         }
     });
@@ -229,56 +224,6 @@ function checkAdminCount(data) {
     return axios.get('/usagers/count-admins')
         .then(response => response.data < 2)
         .catch(() => true);
-}
-
-async function validateUserData(data) {
-    const errors = [];
-
-    if (!data.email) {
-        errors.push("Le champ email est obligatoire.");
-    } else if (!/\S+@\S+\.\S+/.test(data.email)) {
-        errors.push("L'email est invalide.");
-    }else {
-        // Vérifie l'unicité de l'email
-        const isEmailUnique = await checkEmailUniqueness(data.email);
-        if (!isEmailUnique) {
-            errors.push("Cet email est déjà utilisé.");
-        }
-    }
-
-    if (!data.password) {
-        errors.push("Le champ mot de passe est obligatoire.");
-    } else if (data.password.length < 6) {
-        errors.push("Le mot de passe doit contenir au moins 6 caractères.");
-    }
-
-    if (!data.nom) {
-        errors.push("Le champ nom est obligatoire.");
-    } else if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(data.nom)) {
-        errors.push("Le nom ne peut contenir que des lettres.");
-    }
-
-    if (!data.prenom) {
-        errors.push("Le champ prénom est obligatoire.");
-    } else if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(data.prenom)) {
-        errors.push("Le prénom ne peut contenir que des lettres.");
-    }
-
-    if (!data.role) {
-        errors.push("Le champ rôle est obligatoire.");
-    }
-
-    if (errors.length > 0) {
-        Swal.fire({
-            title: 'Erreurs de validation!',
-            text: errors.join('\n'),
-            icon: 'error',
-            timer: 5000
-        });
-        return false;
-    }
-
-    return true;
 }
 
 function handleAxiosValidationError(error) {
@@ -308,6 +253,7 @@ function handleAxiosValidationError(error) {
     }
 }
 
+
 //RECHERCHE et PAGINATION
 
 function performSearch(page = 1) {
@@ -329,10 +275,10 @@ function afficherResultats(usagers) {
         usagers.forEach(usager => {
             let tr = document.createElement('tr');
             tr.innerHTML = `
-                <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                <td class="font-Alumni px-4 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                     ${usager.email}
                 </td>
-                <td class="px-4 py-1 text-center whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                <td class="font-Alumni px-4 py-1 text-center whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                     <input type="hidden" value="${usager.id}"> <!-- Ajout de l'input caché -->
                     <select name="usagers[${usager.id}][role]" class="pr-2 role-dropdown dark:text-neutral-500 dark:bg-blueV3R">
                         <option value="admin" ${usager.role == 'admin' ? 'selected' : ''}>Admin</option>
@@ -340,10 +286,10 @@ function afficherResultats(usagers) {
                         <option value="commis" ${usager.role == 'commis' ? 'selected' : ''}>Commis</option>
                     </select>
                 </td>
-                <td class="px-4 py-1 whitespace-nowrap text-sm cursor-default flex justify-center items-center flex-row">
-                    <button type="button" class="delete-user flex items-center px-3 py-2 bg-red-500 hover:bg-red-600 text-gray-800 dark:text-neutral-200 rounded-lg shadow-md transition duration-200" data-id="${usager.id}">
-                        <span class="iconify size-10 lg:size-6 mr-1" data-icon="mdi:bin" data-inline="false"></span>
-                        <span class="delete-user hidden lg:block">Supprimer</span>
+                <td class="font-Alumni px-4 py-1 whitespace-nowrap text-sm cursor-default flex justify-center items-center flex-row">
+                    <button type="button" class="delete-user flex items-center px-2 bg-red-500 hover:bg-red-600 text-gray-800 dark:text-neutral-200 rounded-lg shadow-md transition duration-200" data-id="${usager.id}">
+                        <span class="iconify size-10 lg:size-6 mr-1" data-icon="mdi:bin" data-inline="false" data-id="${usager.id}"></span>
+                        <span class="delete-user hidden lg:block" data-id="${usager.id}">Supprimer</span>
                     </button>
                 </td>
             `;

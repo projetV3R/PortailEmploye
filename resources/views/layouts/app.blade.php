@@ -9,8 +9,6 @@
     <script src="https://code.iconify.design/3/3.0.0/iconify.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <link rel="icon" type="image/png" href="https://www.v3r.net/wp-content/uploads/2023/06/favicon.png" />
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')

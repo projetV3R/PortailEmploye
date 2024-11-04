@@ -32,7 +32,7 @@ class UsagerRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => '1',
+            'email.required' => 'Le champ email obligatoire.',
             'email.email' => 'Informations invalides.',
             'email.unique' => 'Cet email est déjà utilisé.',
             'password.required' => 'Le champ mot de passe est obligatoire.',

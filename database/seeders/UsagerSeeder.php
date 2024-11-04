@@ -46,7 +46,7 @@ class UsagerSeeder extends Seeder
                     'password' => Hash::make('password'),
                     'nom' => 'David',
                     'prenom' => 'Boucher',
-                    'role' => 'admin',
+                    'role' => 'responsable',
                 ],
                 [
                     'id' => 5,
@@ -70,7 +70,7 @@ class UsagerSeeder extends Seeder
                     'password' => Hash::make('password'),
                     'nom' => 'Gisèle',
                     'prenom' => 'Langlois',
-                    'role' => 'admin',
+                    'role' => 'responsable',
                 ],
                 [
                     'id' => 8,
@@ -94,7 +94,7 @@ class UsagerSeeder extends Seeder
                     'password' => Hash::make('password'),
                     'nom' => 'Jules',
                     'prenom' => 'Lefebvre',
-                    'role' => 'admin',
+                    'role' => 'responsable',
                 ],
                 [
                     'id' => 11,
@@ -118,7 +118,7 @@ class UsagerSeeder extends Seeder
                     'password' => Hash::make('password'),
                     'nom' => 'Marie',
                     'prenom' => 'Bourget',
-                    'role' => 'admin',
+                    'role' => 'responsable',
                 ],
                 [
                     'id' => 14,
@@ -142,7 +142,7 @@ class UsagerSeeder extends Seeder
                     'password' => Hash::make('password'),
                     'nom' => 'Pierre',
                     'prenom' => 'Desjardins',
-                    'role' => 'admin',
+                    'role' => 'responsable',
                 ],
                 [
                     'id' => 17,
@@ -166,7 +166,7 @@ class UsagerSeeder extends Seeder
                     'password' => Hash::make('password'),
                     'nom' => 'Sophie',
                     'prenom' => 'Roy',
-                    'role' => 'admin',
+                    'role' => 'responsable',
                 ],
                 [
                     'id' => 20,
@@ -190,7 +190,7 @@ class UsagerSeeder extends Seeder
                     'password' => Hash::make('password'),
                     'nom' => 'William',
                     'prenom' => 'Langlois',
-                    'role' => 'admin',
+                    'role' => 'responsable',
                 ],
                 [
                     'id' => 23,
@@ -214,7 +214,7 @@ class UsagerSeeder extends Seeder
                     'password' => Hash::make('password'),
                     'nom' => 'Zachary',
                     'prenom' => 'Fortier',
-                    'role' => 'admin',
+                    'role' => 'responsable',
                 ],
                 [
                     'id' => 26,
@@ -238,7 +238,7 @@ class UsagerSeeder extends Seeder
                     'password' => Hash::make('password'),
                     'nom' => 'Cathy',
                     'prenom' => 'Nicolas',
-                    'role' => 'admin',
+                    'role' => 'responsable',
                 ],
                 [
                     'id' => 29,

@@ -25,7 +25,7 @@ Route::get('/dashboard',
 Route::get('/redirection', function () {
     return view('redirection.403');});
  
-    Route::get('/usagers', [UsagerController::class, 'index']);
+Route::get('/usagers', [UsagerController::class, 'index']);
 
  
 Route::get('/admin', function () {
@@ -42,8 +42,6 @@ Route::post('/storeusager',
  
 Route::get('/usagers/count-admins', 
 [UsagerController::class, 'countAdmins']);
-
-Route::post('/api/check-email', [UsagerController::class, 'checkEmailExists']);
 
  
     //STORE PARAMETRE SYSTEME  TODO RAJOUTER CHECK ROLE ADMIN
