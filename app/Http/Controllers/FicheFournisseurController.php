@@ -16,13 +16,15 @@ class FicheFournisseurController extends Controller
     {
         $perPage = $request->input('perPage', 5);
         $fiches = FicheFournisseur::with('coordonnees')->paginate($perPage);
+        $selectedCompanies = session('selectedCompanies', []);
 
         if ($request->ajax()) {
             return response()->json($fiches);
         }
 
-        return view('Fournisseur.liste_fournisseur', compact('fiches'));
+        return view('Fournisseur.liste_fournisseur', compact('fiches', 'selectedCompanies'));
     }
+
 
     public function profil($id)
     {
@@ -32,6 +34,15 @@ class FicheFournisseurController extends Controller
 
         return view('Fournisseur/profil_fournisseur', compact('maxFileSize', 'fournisseur', 'licence'));
     }
+
+    public function updateSelection(Request $request)
+    {
+        $selectedCompanies = $request->input('selectedCompanies', []);
+        session(['selectedCompanies' => $selectedCompanies]);
+
+        return response()->json(['message' => 'Sélection mise à jour']);
+    }
+
 
     /**
      * Show the form for creating a new resource.

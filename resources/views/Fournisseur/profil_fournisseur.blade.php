@@ -43,9 +43,8 @@
     <div class="p-4 md:p-16">
         <div class="flex flex-col md:flex-row w-full">
             <div class="flex flex-col w-full md:w-1/2">
-                <h6 class="font-Alumni font-bold text-3xl md:text-5xl">Profil Utilisateur</h6>
-                <h1 class="font-Alumni font-semibold text-md md:text-lg mt-2">Vérifiez vos informations personnelles et les
-                    détails de votre compte</h1>
+                <h6 class="font-Alumni font-bold text-3xl md:text-5xl">{{ $fournisseur->nom_entreprise }}</h6>
+
             </div>
 
             <div class="{{ $etatStyle['bgColor'] }} mt-4 md:mt-0 md:ml-2 w-full md:w-1/2 py-4 px-6 flex items-center">
@@ -333,5 +332,10 @@
             </div>
         </div>
     </div>
+
+    <script>
+        sessionStorage.setItem('fromProfilePage', 'true');
+    </script>
+
 
 @endsection

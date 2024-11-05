@@ -41,62 +41,57 @@
 
     <div class="px-8 pt-16">
         <style>
-            /* Style pour le rectangle d'affichage des entreprises sélectionnées */
             #selected-companies {
                 width: 300px;
-                /* Largeur fixe du rectangle */
                 height: 100px;
-                /* Hauteur fixe du rectangle */
                 padding: 8px;
                 background-color: #f9fafb;
-                /* Fond gris clair */
                 border: 1px solid #d1d5db;
-                /* Bordure grise */
                 border-radius: 8px;
-                /* Coins arrondis */
                 overflow-y: auto;
-                /* Défilement vertical si le contenu dépasse */
                 overflow-x: hidden;
-                /* Masquer le défilement horizontal */
                 white-space: normal;
-                /* Permettre le retour à la ligne du texte */
                 word-break: break-word;
-                /* Couper les mots trop longs pour éviter le débordement */
             }
         </style>
 
-        <div id="action-buttons" class="mb-4 flex justify-between items-center">
-            <!-- Boutons alignés à gauche -->
-            <div class="flex space-x-4">
+        <div id="action-buttons" class="mb-4 flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+            <!-- Grille de boutons avec disposition responsive -->
+            <div class="grid grid-cols-2 gap-4 w-full md:flex md:space-x-4 md:w-auto">
                 <button id="outlook-button"
-                    class="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    class="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 w-full md:w-auto">
                     <span class="iconify" data-icon="mdi:email-sync-outline"></span>
                     <span class="font-Alumni">Outlook</span>
                 </button>
                 <button id="excel-button"
-                    class="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                    class="flex items-center justify-center space-x-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 w-full md:w-auto">
                     <span class="iconify" data-icon="mdi:file-excel"></span>
                     <span class="font-Alumni">Excel</span>
                 </button>
-                <button class="flex items-center space-x-2 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700">
+                <button
+                    class="flex items-center justify-center space-x-2 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 w-full md:w-auto">
                     <span class="iconify" data-icon="mdi:currency-usd"></span>
                     <span class="font-Alumni">Finances</span>
                 </button>
                 <button id="copy-button"
-                    class="flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                    class="flex items-center justify-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 w-full md:w-auto">
                     <span class="iconify" data-icon="mdi:email-multiple"></span>
                     <span class="font-Alumni">Copier</span>
                 </button>
             </div>
 
-            <!-- Cadre aligné à droite -->
-            <div id="selected-companies"
-                class="text-sm text-gray-600 w-52 h-16 p-2 bg-gray-100 border border-gray-300 rounded overflow-y-auto">
-                <p class="text-xs font-semibold text-gray-500 mb-1">Éléments sélectionnés</p>
-                <!-- Zone pour afficher les noms des entreprises sélectionnées -->
+            <div class="w-full md:w-auto mt-4 md:mt-0">
+                <div class="flex justify-between items-center mb-1">
+                    <p class="font-Alumni text-lg font-semibold text-gray-500">Éléments sélectionnés</p>
+                    <button onclick="clearSelections()"
+                        class="text-sm font-Alumni text-blue-500 hover:underline">Désélectionner tout</button>
+                </div>
+                <div id="selected-companies"
+                    class="text-sm text-gray-600 w-full md:w-60 h-16 p-2 bg-gray-100 border border-gray-300 rounded overflow-y-auto">
+                    <!-- Zone pour afficher les noms des entreprises sélectionnées -->
+                </div>
             </div>
         </div>
-
 
 
         <!-- Options de sélection du nombre d'éléments par page -->
@@ -163,8 +158,26 @@
         let selectedCompanies = [];
         let currentPage = 1;
         let perPage = 5;
+        let totalPages = 1;
 
         document.addEventListener("DOMContentLoaded", fetchData);
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchData();
+            setTimeout(() => {
+                selectedCompanies =
+                    @json($selectedCompanies); // charge les entreprises sélectionnées depuis la session
+
+                selectedCompanies.forEach(company => {
+                    const checkbox = document.querySelector(
+                        `.row-checkbox[data-id="${company.id}"]`);
+                    if (checkbox) checkbox.checked = true;
+                });
+                updateSelectedCompaniesDisplay();
+            }, 500);
+        });
+
+
 
         function updatePagination() {
             perPage = document.getElementById('items-per-page').value;
@@ -180,6 +193,8 @@
                     document.getElementById('total').textContent = data.total;
                     document.getElementById('current-count').textContent = data.to;
 
+                    totalPages = data.last_page;
+
                     data.data.forEach(fiche => {
                         const etatStyle = etatStyles[fiche.etat] || {
                             textColor: '',
@@ -192,33 +207,48 @@
                         row.dataset.name = fiche.nom_entreprise;
                         row.dataset.email = fiche.adresse_courriel;
 
-                        const isChecked = selectedCompanies.some(item => item.id === fiche.id);
+                        // Vérifie si l'entreprise est déjà sélectionnée ou si "Tout sélectionner" est activé
+                        const isChecked = selectedCompanies.some(item => item.id === fiche.id) || document
+                            .getElementById('checkbox-all').checked;
 
                         row.innerHTML = `
-                            <td class="w-4 p-4">
-                                <div class="flex items-center">
-                                    <input type="checkbox" 
-                                           class="row-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                                           onclick="toggleSelection(${fiche.id}, '${fiche.nom_entreprise}')"
-                                           ${isChecked ? 'checked' : ''}>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 font-medium text-gray-900">${fiche.nom_entreprise}</td>
-                            <td class="px-6 py-4">${fiche.coordonnees?.ville || ''}</td>
-                            <td class="px-6 py-4 ${etatStyle.textColor}">
-                                <span class="flex items-center">
-                                    <span class="iconify mr-1" data-icon="${etatStyle.icon}"></span>
-                                    <span>${etatStyle.text}</span>
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <a href="${profilRoute.replace(':id', fiche.id)}" class="font-medium text-blue-600 hover:underline">Ouvrir</a>
-                            </td>
-                        `;
+                    <td class="w-4 p-4">
+                        <div class="flex items-center">
+                            <input type="checkbox" 
+                                   class="row-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                   onclick="toggleSelection(${fiche.id}, '${fiche.nom_entreprise}')"
+                                   ${isChecked ? 'checked' : ''} data-id="${fiche.id}">
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 font-medium text-gray-900">${fiche.nom_entreprise}</td>
+                    <td class="px-6 py-4">${fiche.coordonnees?.ville || ''}</td>
+                    <td class="px-6 py-4 ${etatStyle.textColor}">
+                        <span class="flex items-center">
+                            <span class="iconify mr-1" data-icon="${etatStyle.icon}"></span>
+                            <span>${etatStyle.text}</span>
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <a href="${profilRoute.replace(':id', fiche.id)}" class="font-medium text-blue-600 hover:underline">Ouvrir</a>
+                    </td>
+                `;
                         document.getElementById('fiches-content').appendChild(row);
+
+                        // Si "Tout sélectionner" est activé, ajoute l'entreprise à la sélection si elle ne l'est pas déjà
+                        if (document.getElementById('checkbox-all').checked && !selectedCompanies.some(item =>
+                                item.id === fiche.id)) {
+                            selectedCompanies.push({
+                                id: fiche.id,
+                                name: fiche.nom_entreprise
+                            });
+                        }
                     });
 
-                    generatePageButtons(data.last_page);
+                    // Met à jour l'affichage des entreprises sélectionnées et la pagination
+                    updateSelectedCompaniesDisplay();
+                    generatePageButtons(totalPages);
+                    sessionStorage.setItem('selectedCompanies', JSON.stringify(selectedCompanies));
+                    updateCheckboxAllState(); // Vérifie si toutes les cases de la page sont cochées
                 })
                 .catch(error => console.error('Erreur lors de la récupération des données :', error));
         }
@@ -234,7 +264,19 @@
                 selectedCompanies.splice(index, 1);
             }
             updateSelectedCompaniesDisplay();
+            saveSelection(); // Sauvegarde en session après chaque modification
         }
+
+
+        function saveSelection() {
+            axios.post("{{ route('update.selection') }}", {
+                    selectedCompanies: selectedCompanies // Utilisez bien `selectedCompanies`
+                })
+                .then(response => console.log(response.data.message))
+                .catch(error => console.error('Erreur de mise à jour de la sélection :', error));
+        }
+
+
 
         function toggleSelectAll(checkbox) {
             selectedCompanies = [];
@@ -252,7 +294,9 @@
                 }
             });
             updateSelectedCompaniesDisplay();
+            saveSelection(); // Ajout pour sauvegarder la liste vide en session si tout est décoché
         }
+
 
         function updateSelectedCompaniesDisplay() {
             const selectedNames = selectedCompanies.map(company => company.name).join(', ');
@@ -267,7 +311,7 @@
                 const pageButton = document.createElement('button');
                 pageButton.textContent = i;
                 pageButton.className =
-                    `px-3 py-1 font-Alumni ${i === currentPage ? 'bg-secondary-300 text-white' : 'bg-primary-300 text-gray-700 hover:bg-secondary-300'}`;
+                    `px-3 py-1 font-Alumni ${i === currentPage ? 'bg-secondary-300 text-white' : ' hidden bg-primary-300 text-gray-700 hover:bg-secondary-300'}`;
                 pageButton.onclick = () => {
                     currentPage = i;
                     fetchData();
@@ -277,8 +321,10 @@
         }
 
         function nextPage() {
-            currentPage++;
-            fetchData();
+            if (currentPage < totalPages) {
+                currentPage++;
+                fetchData();
+            }
         }
 
         function previousPage() {
@@ -294,6 +340,7 @@
             document.querySelectorAll('.row-checkbox').forEach(box => box.checked = false);
             document.getElementById('checkbox-all').checked = false;
             updateSelectedCompaniesDisplay();
+            saveSelection();
         }
 
         // Fonctions pour les boutons d'action
@@ -301,63 +348,88 @@
             getSelectedCompanies();
             const emails = selectedCompanies.map(company => company.email).join(';');
             if (!emails) {
-                alert("Aucune entreprise sélectionnée.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Aucune sélection',
+                    text: 'Aucune entreprise sélectionnée.',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
             window.location.href = `mailto:${emails}`;
-            clearSelections();
         });
 
         document.getElementById('excel-button').addEventListener('click', () => {
             getSelectedCompanies();
             if (selectedCompanies.length === 0) {
-                alert("Aucune entreprise sélectionnée.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Aucune sélection',
+                    text: 'Aucune entreprise sélectionnée.',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
 
-            // Préparez les données de manière structurée
             const worksheetData = selectedCompanies.map(company => ({
                 Nom: company.name,
                 Email: company.email,
             }));
 
-            // Créer le fichier Excel
             const worksheet = XLSX.utils.json_to_sheet(worksheetData);
             const workbook = XLSX.utils.book_new();
-
-            // Ajouter la feuille au classeur
             XLSX.utils.book_append_sheet(workbook, worksheet, "Entreprises");
 
-            // Générer le fichier avec le bon encodage et format
             try {
                 XLSX.writeFile(workbook, "entreprises.xlsx", {
                     bookType: 'xlsx',
                     type: 'binary'
                 });
-                alert("Fichier Excel téléchargé avec succès.");
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Téléchargement réussi',
+                    text: 'Le fichier Excel a été téléchargé avec succès.',
+                    confirmButtonText: 'OK'
+                });
             } catch (error) {
-                console.error("Erreur lors de la génération du fichier Excel :", error);
-                alert("Une erreur s'est produite lors de la création du fichier Excel.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: 'Une erreur est survenue lors de la création du fichier Excel.',
+                    confirmButtonText: 'OK'
+                });
             }
-            clearSelections();
         });
 
         document.getElementById('copy-button').addEventListener('click', () => {
             getSelectedCompanies();
             const emails = selectedCompanies.map(company => company.email).join('; ');
             if (!emails) {
-                alert("Aucune entreprise sélectionnée.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Aucune sélection',
+                    text: 'Aucune entreprise sélectionnée.',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
             navigator.clipboard.writeText(emails).then(() => {
-                alert("Emails copiés dans le presse-papiers.");
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Copie réussie',
+                    text: 'Les emails ont été copiés dans le presse-papiers.',
+                    confirmButtonText: 'OK'
+                });
             }).catch(() => {
-                alert("Erreur lors de la copie des emails.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur de copie',
+                    text: 'Erreur lors de la copie des emails.',
+                    confirmButtonText: 'OK'
+                });
             });
-            clearSelections();
         });
 
-        // Fonction pour récupérer les entreprises sélectionnées
         function getSelectedCompanies() {
             selectedCompanies = [];
             document.querySelectorAll('.row-checkbox:checked').forEach(checkbox => {
@@ -371,5 +443,13 @@
                 });
             });
         }
+
+        window.addEventListener('pageshow', function(event) {
+            if (sessionStorage.getItem('fromProfilePage')) {
+                sessionStorage.removeItem(
+                    'fromProfilePage');
+                location.reload();
+            }
+        });
     </script>
 @endsection

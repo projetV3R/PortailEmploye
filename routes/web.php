@@ -71,3 +71,5 @@ Route::get('/listeFournisseur', [FicheFournisseurController::class, 'index'])->n
 //Route::get('/profil', [FicheFournisseurController::class, 'profil'])->name('profil');
 
 Route::get('/profil/{id}', [FicheFournisseurController::class, 'profil'])->name('profil');
+
+Route::post('/update-selection', [FicheFournisseurController::class, 'updateSelection'])->name('update.selection');
