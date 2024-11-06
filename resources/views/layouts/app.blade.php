@@ -15,7 +15,7 @@
 </head>
 
 
-<body class="flex flex-col h-screen w-full bg-white dark:bg-gray-900 text-black dark:text-white">
+<body class="flex flex-col h-screen w-full text-black bg-white daltonien:bg-blue-500 daltonien:text-white dark:bg-gray-900 dark:text-white">
     <!-- HEADER -->
 
     <header>
@@ -46,7 +46,9 @@
                         <span class="iconify size-10 " data-icon="circum:dark" data-inline="false"></span>
                     </button>
                 </div>
-
+                <button id="daltonien-toggle" class="text-white hover:animate-pulse">
+                    <span class="iconify size-10" data-icon="material-symbols:contrast" data-inline="false"></span>
+                </button>
             </div>
 
 
@@ -85,6 +87,9 @@
 
                 <button id="dark-mode-toggle-desktop" class="text-white hover:animate-pulse  ">
                     <span class="iconify size-8 lg:size-10" data-icon="circum:dark" data-inline="false"></span>
+                </button>
+                <button id="daltonien-toggle-desktop" class="text-white hover:animate-pulse">
+                    <span class="iconify size-8 lg:size-10" data-icon="material-symbols:contrast" data-inline="false"></span>
                 </button>
             </div>
 
@@ -179,6 +184,20 @@
 
         document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
         document.getElementById('dark-mode-toggle-desktop').addEventListener('click', toggleDarkMode);
+
+        const toggleDaltonien = () => {
+            const htmlElement = document.documentElement;
+            if (htmlElement.classList.contains('daltonien')) {
+                htmlElement.classList.remove('daltonien');
+                localStorage.setItem('theme', 'light');
+            } else {
+                htmlElement.classList.add('daltonien');
+                localStorage.setItem('theme', 'blue');
+            }
+        }
+
+        document.getElementById('daltonien-toggle').addEventListener('click', toggleDaltonien);
+        document.getElementById('daltonien-toggle-desktop').addEventListener('click', toggleDaltonien);
 
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme && savedTheme === 'dark') {
