@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     let initialRoles = {};
+    let currentPage = 1;
 
-    // Fonction pour initialiser les rôles
+// Fonction pour initialiser les rôles
     function initializeRoles() {
         document.querySelectorAll('.role-dropdown').forEach(function(dropdown) {
             const hiddenInput = dropdown.closest('tr').querySelector('input[type="hidden"]');
@@ -21,8 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             newSaveRolesBtn.addEventListener('click', function(e) {
                 e.preventDefault();
+                currentPage = getCurrentPage();
 
-                // Faire un appel d'API pour obtenir le nombre total d'admins depuis le backend
                 axios.get('/usagers/count-admins')
                     .then(function(response) {
                         const existingAdminCount = response.data;
@@ -80,12 +81,12 @@ document.addEventListener('DOMContentLoaded', function() {
                                     icon: 'success',
                                     timer: 2000,
                                     willClose: () => {
-                                        performSearch();
+                                        updateCurrentPageData();
                                         if (overAdmin) {
                                             console.log("Trop d'admin.");
                                             return Swal.fire({
                                                 title: 'Attention!',
-                                                text: 'Vous ne pouvez pas avois plus que 2 admin',
+                                                text: 'Vous ne pouvez pas avoir plus de 2 admins',
                                                 icon: 'info',
                                                 timer: 2000
                                             });
@@ -115,6 +116,54 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
+
+    function getCurrentPage() {
+        const activePageButton = document.querySelector('.pagination-button.active');
+        if (activePageButton) {
+            return parseInt(activePageButton.dataset.page);
+        }
+        return 1;
+    }
+
+    function updateCurrentPageData() {
+        axios.get(`/usagers?page=${currentPage}`)
+            .then(function(response) {
+                updateTableWithNewData(response.data);
+            })
+            .catch(function(error) {
+                console.error("Erreur lors de la récupération des usagers:", error);
+            });
+    }
+
+    function updateTableWithNewData(data) {
+        const tableBody = document.querySelector('#usagers-table tbody');
+        tableBody.innerHTML = '';
+        data.usagers.forEach(function(usager) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${usager.id}</td>
+                <td>${usager.mail}</td>
+                <td>
+                    <select class="role-dropdown">
+                        <option value="user" ${usager.role === 'user' ? 'selected' : ''}>Utilisateur</option>
+                        <option value="admin" ${usager.role === 'admin' ? 'selected' : ''}>Administrateur</option>
+                    </select>
+                    <input type="hidden" value="${usager.id}">
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+        initializeRoles();
+    }
+
+    document.querySelectorAll('.pagination-button').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const page = this.dataset.page;
+            currentPage = parseInt(page);
+            performSearch(currentPage);
+        });
+    });
+
 
     document.getElementById('create-user').addEventListener('click', function (e) {
         e.preventDefault();
