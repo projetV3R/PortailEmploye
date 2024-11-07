@@ -42,7 +42,7 @@
     <div class="px-8 pt-16">
         <style>
             #selected-companies {
-                width: 300px;
+
                 height: 100px;
                 padding: 8px;
                 background-color: #f9fafb;
@@ -53,11 +53,19 @@
                 white-space: normal;
                 word-break: break-word;
             }
+
+            .cursor-not-allowed {
+                cursor: not-allowed;
+            }
+
+            .opacity-50 {
+                opacity: 0.5;
+            }
         </style>
 
         <div id="action-buttons" class="mb-4 flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <!-- Grille de boutons avec disposition responsive -->
-            <div class="grid grid-cols-2 gap-4 w-full md:flex md:space-x-4 md:w-auto">
+            <div class="grid grid-cols-2 gap-1 w-full md:flex md:space-x-4 md:w-auto">
                 <button id="outlook-button"
                     class="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 w-full md:w-auto">
                     <span class="iconify" data-icon="mdi:email-sync-outline"></span>
@@ -82,12 +90,13 @@
 
             <div class="w-full md:w-auto mt-4 md:mt-0">
                 <div class="flex justify-between items-center mb-1">
-                    <p class="font-Alumni text-lg font-semibold text-gray-500">Éléments sélectionnés</p>
+                    <p class="font-Alumni text-lg font-semibold text-gray-500" id="counter">Éléments sélectionnés
+                        ({{ count($selectedCompanies) }})</p>
                     <button onclick="clearSelections()"
                         class="text-sm font-Alumni text-blue-500 hover:underline">Désélectionner tout</button>
                 </div>
                 <div id="selected-companies"
-                    class="text-sm text-gray-600 w-full md:w-60 h-16 p-2 bg-gray-100 border border-gray-300 rounded overflow-y-auto">
+                    class="text-sm text-gray-600 w-full md:w-60 h-16 p-2 bg-gray-100 border border-gray-300 rounded overflow-y-auto flex">
                     <!-- Zone pour afficher les noms des entreprises sélectionnées -->
                 </div>
             </div>
@@ -216,7 +225,7 @@
                         <div class="flex items-center">
                             <input type="checkbox" 
                                    class="row-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                                   onclick="toggleSelection(${fiche.id}, '${fiche.nom_entreprise}')"
+                                   onclick="toggleSelection(${fiche.id}, '${fiche.nom_entreprise}', '${fiche.adresse_courriel}' )"
                                    ${isChecked ? 'checked' : ''} data-id="${fiche.id}">
                         </div>
                     </td>
@@ -253,12 +262,13 @@
                 .catch(error => console.error('Erreur lors de la récupération des données :', error));
         }
 
-        function toggleSelection(ficheId, companyName) {
+        function toggleSelection(ficheId, companyName, email) {
             const index = selectedCompanies.findIndex(item => item.id === ficheId);
             if (index === -1) {
                 selectedCompanies.push({
                     id: ficheId,
-                    name: companyName
+                    name: companyName,
+                    email: email
                 });
             } else {
                 selectedCompanies.splice(index, 1);
@@ -278,7 +288,7 @@
 
 
 
-        function toggleSelectAll(checkbox) {
+        /*function toggleSelectAll(checkbox) {
             selectedCompanies = [];
             const checkboxes = document.querySelectorAll('.row-checkbox');
             checkboxes.forEach(box => {
@@ -295,17 +305,69 @@
             });
             updateSelectedCompaniesDisplay();
             saveSelection(); // Ajout pour sauvegarder la liste vide en session si tout est décoché
-        }
+        }*/
 
 
         function updateSelectedCompaniesDisplay() {
-            const selectedNames = selectedCompanies.map(company => company.name).join(', ');
-            document.getElementById('selected-companies').textContent = selectedNames;
+            const selectedListItems = selectedCompanies
+                .map((company, index) => `
+            <li style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+                ${company.name}
+                <button onclick="removeCompany(${index}, ${company.id})" style="margin-left: 10px; cursor: pointer;">❌</button>
+            </li>
+        `)
+                .join('');
+
+            const selectedCompaniesContainer = document.getElementById('selected-companies');
+            selectedCompaniesContainer.style.display = 'flex';
+            selectedCompaniesContainer.style.flexDirection = 'column';
+            selectedCompaniesContainer.innerHTML = selectedListItems;
+
+            document.getElementById('counter').textContent = `Elements selectionnees (${selectedCompanies.length})`;
         }
+
+
+        function removeCompany(index, companyId) {
+            // Supprime l'entreprise sélectionnée à l'index spécifié
+            selectedCompanies.splice(index, 1);
+
+            // Met à jour l'affichage des entreprises sélectionnées
+            updateSelectedCompaniesDisplay();
+
+            // Décoche la case correspondante dans le tableau principal
+            const checkbox = document.querySelector(`.row-checkbox[data-id="${companyId}"]`);
+            if (checkbox) {
+                checkbox.checked = false;
+            }
+
+            // Sauvegarde la sélection mise à jour
+            saveSelection();
+        }
+
 
         function generatePageButtons(totalPages) {
             const pageButtonsContainer = document.getElementById('page-buttons');
+            const previousButton = document.querySelector('button[onclick="previousPage()"]');
+            const nextButton = document.querySelector('button[onclick="nextPage()"]');
             pageButtonsContainer.innerHTML = '';
+
+            // Active/Désactive le bouton "Précédent"
+            if (currentPage === 1) {
+                previousButton.classList.add('cursor-not-allowed', 'opacity-50');
+                previousButton.disabled = true;
+            } else {
+                previousButton.classList.remove('cursor-not-allowed', 'opacity-50');
+                previousButton.disabled = false;
+            }
+
+            // Active/Désactive le bouton "Suivant"
+            if (currentPage === totalPages) {
+                nextButton.classList.add('cursor-not-allowed', 'opacity-50');
+                nextButton.disabled = true;
+            } else {
+                nextButton.classList.remove('cursor-not-allowed', 'opacity-50');
+                nextButton.disabled = false;
+            }
 
             for (let i = 1; i <= totalPages; i++) {
                 const pageButton = document.createElement('button');
@@ -343,11 +405,15 @@
             saveSelection();
         }
 
+        document.getElementById('counter').addEventListener
+
         // Fonctions pour les boutons d'action
         document.getElementById('outlook-button').addEventListener('click', () => {
-            getSelectedCompanies();
-            const emails = selectedCompanies.map(company => company.email).join(';');
-            if (!emails) {
+            // Récupère le contenu de la zone de texte
+            const selectedCompaniesText = document.getElementById('selected-companies').textContent;
+
+            // Transforme le contenu en un tableau d'objets (si nécessaire)
+            if (!selectedCompaniesText.trim()) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Aucune sélection',
@@ -356,11 +422,26 @@
                 });
                 return;
             }
-            window.location.href = `mailto:${emails}`;
+
+            // Crée un tableau des emails en extrayant les informations stockées dans `selectedCompanies`
+            const emails = selectedCompanies.map(company => company.email).join(';');
+
+            // Vérifie s'il y a des emails sélectionnés et ouvre le client de messagerie
+            if (emails) {
+                window.location.href = `mailto:${emails}`;
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Erreur',
+                    text: 'Aucune adresse e-mail trouvée pour les entreprises sélectionnées.',
+                    confirmButtonText: 'OK'
+                });
+            }
         });
 
+
         document.getElementById('excel-button').addEventListener('click', () => {
-            getSelectedCompanies();
+            //getSelectedCompanies();
             if (selectedCompanies.length === 0) {
                 Swal.fire({
                     icon: 'warning',
@@ -402,7 +483,7 @@
         });
 
         document.getElementById('copy-button').addEventListener('click', () => {
-            getSelectedCompanies();
+            //getSelectedCompanies();
             const emails = selectedCompanies.map(company => company.email).join('; ');
             if (!emails) {
                 Swal.fire({

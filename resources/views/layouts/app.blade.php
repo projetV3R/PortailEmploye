@@ -62,7 +62,7 @@
                             class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Panneau
                             Administration</a> |
                     @endrole
-                    <a href="/fournisseurs"
+                    <a href="{{ route('fiches.index') }}"
                         class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Fournisseurs</a>
                     |
                     <a href="/profil"

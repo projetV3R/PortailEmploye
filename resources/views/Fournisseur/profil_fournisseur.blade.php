@@ -337,5 +337,4 @@
         sessionStorage.setItem('fromProfilePage', 'true');
     </script>
 
-
 @endsection
