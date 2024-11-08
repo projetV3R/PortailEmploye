@@ -62,7 +62,7 @@
                             class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Panneau
                             Administration</a> |
                     @endrole
-                    <a href="/fournisseurs"
+                    <a href="{{ route('fiches.index') }}"
                         class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Fournisseurs</a>
                     |
                     <a href="/profil"
@@ -77,7 +77,8 @@
                         @csrf
                         <div class="flex items-center space-x-4 hover:animate-bounce">
                             <button class="ml-4 text-white">
-                                <span class="iconify size-8 lg:size-10" data-icon="mdi:logout" data-inline="false" onclick="removeItemsLocalStorage()"></span>
+                                <span class="iconify size-8 lg:size-10" data-icon="mdi:logout" data-inline="false"
+                                    onclick="removeItemsLocalStorage()"></span>
                             </button>
                         </div>
                     </form>
@@ -88,7 +89,7 @@
                 </button>
             </div>
 
-           
+
             <div class="hidden lg:flex absolute top-5 left-20 ">
                 <a href="/dashboard">
                     <img class="w-36 h-36 bg-white shadow-lg"
@@ -98,11 +99,11 @@
             </div>
         </div>
 
-      
+
         <div id="mobile-menu"
             class="fixed inset-0 z-50 bg-blueV3R transform -translate-x-full transition-transform duration-300 md:hidden ">
             <div class="p-4 flex w-full h-full flex-col">
-                
+
                 <div class="flex items-center w-full">
                     <div class="flex justify-start w-full">
                         <a href="/dashboard">
@@ -157,12 +158,12 @@
         // Toogle menu mobile
         document.getElementById('menu-toggle').addEventListener('click', function() {
             const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.remove('-translate-x-full'); 
+            mobileMenu.classList.remove('-translate-x-full');
         });
 
         document.getElementById('close-menu').addEventListener('click', function() {
             const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.add('-translate-x-full'); 
+            mobileMenu.classList.add('-translate-x-full');
         });
         @endauth
         // Fonction pour les deux boutons darkMode
@@ -187,12 +188,11 @@
             document.documentElement.classList.remove('dark');
         }
 
-        function removeItemsLocalStorage(){
-          localStorage.removeItem('selectedMenu');
+        function removeItemsLocalStorage() {
+            localStorage.removeItem('selectedMenu');
         }
-
-
     </script>
+
 </body>
 
 </html>
