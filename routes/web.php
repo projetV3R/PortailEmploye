@@ -1,5 +1,6 @@
 <?php
- 
+
+use App\Http\Controllers\FicheFournisseurController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsagerController;
 use App\Http\Controllers\ParametresSystemeController;
@@ -56,7 +57,18 @@ Route::get('/modeles', [ModelesController::class, 'index']);
 Route::get('/modeles/{id}', [ModelesController::class, 'show']);
  
 Route::put('/modeles/{id}', [ModelesController::class, 'update']);
- 
-    //!!! ROUTE DE REDIRECTION ERREUR 404 TOUJOURS A LA FIN DU FICHIER DE ROUTE NE JAMAIS AVOIR DE ROUTE APRES !!!!
- Route::fallback(function () {
-        return response()->view('redirection.404', [], 404);});
+
+
+
+Route::get('/listeFournisseur', [FicheFournisseurController::class, 'index'])->name('fiches.index');
+
+//Route::get('/profil', [FicheFournisseurController::class, 'profil'])->name('profil');
+
+Route::get('/profil/{id}', [FicheFournisseurController::class, 'profil'])->name('profil');
+
+Route::post('/update-selection', [FicheFournisseurController::class, 'updateSelection'])->name('update.selection');
+
+//!!! ROUTE DE REDIRECTION ERREUR 404 TOUJOURS A LA FIN DU FICHIER DE ROUTE NE JAMAIS AVOIR DE ROUTE APRES !!!!
+Route::fallback(function () {
+    return response()->view('redirection.404', [], 404);
+});
