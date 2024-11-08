@@ -34,66 +34,69 @@
 
             <div class="md:hidden flex items-center text-white gap-2">
                 @auth
-                    <div>
-                        <button id="menu-toggle">
-                            <span class="iconify size-10 hover:animate-bounce " data-icon="mdi:menu"
-                                data-inline="false"></span>
-                        </button>
-                    </div>
+                <div>
+                    <button id="menu-toggle">
+                        <span class="iconify size-10 hover:animate-bounce " data-icon="mdi:menu"
+                            data-inline="false"></span>
+                    </button>
+                </div>
                 @endauth
                 <div>
                     <button id="dark-mode-toggle" class=" hover:animate-pulse">
                         <span class="iconify size-10 " data-icon="circum:dark" data-inline="false"></span>
                     </button>
                 </div>
-                <button id="daltonien-toggle" class="text-white hover:animate-pulse">
-                    <span class="iconify size-10" data-icon="material-symbols:contrast" data-inline="false"></span>
-                </button>
+                <div>
+                    <button id="daltonien-mode-toggle" class="text-white hover:animate-pulse">
+                        <span class="iconify size-10" data-icon="material-symbols:contrast" data-inline="false"></span>
+                    </button>
+                </div>
+
             </div>
 
 
             <!-- Liens de navigation pour tablette minimum a revoir -->
             @auth
-                <nav
-                    class="hidden md:flex justify-center w-full text-lg xl:text-2xl items-center gap-4 text-white dark:text-white">
-                    <a href="/dashboard"
-                        class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Accueil</a>
-                    |
-                    @role('admin')
-                        <a href="/admin"
-                            class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Panneau
-                            Administration</a> |
-                    @endrole
-                    <a href="/fournisseurs"
-                        class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Fournisseurs</a>
-                    |
-                    <a href="/profil"
-                        class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Profil</a>
-                </nav>
+            <nav
+                class="hidden md:flex justify-center w-full text-lg xl:text-2xl items-center gap-4 text-white dark:text-white">
+                <a href="/dashboard"
+                    class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Accueil</a>
+                |
+                @role('admin')
+                <a href="/admin"
+                    class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Panneau
+                    Administration</a> |
+                @endrole
+                <a href="/fournisseurs"
+                    class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Fournisseurs</a>
+                |
+                <a href="/profil"
+                    class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Profil</a>
+            </nav>
             @endauth
 
             <!-- Deconnexion et Dark Mode desktop-->
             <div class="hidden md:flex space-x-4 items-center">
                 @auth
-                    <form class="deconnexionBtn" action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <div class="flex items-center space-x-4 hover:animate-bounce">
-                            <button class="ml-4 text-white">
-                                <span class="iconify size-8 lg:size-10" data-icon="mdi:logout" data-inline="false" onclick="removeItemsLocalStorage()"></span>
-                            </button>
-                        </div>
-                    </form>
+                <form class="deconnexionBtn" action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <div class="flex items-center space-x-4 hover:animate-bounce">
+                        <button class="ml-4 text-white">
+                            <span class="iconify size-8 lg:size-10" data-icon="mdi:logout" data-inline="false" onclick="removeItemsLocalStorage()"></span>
+                        </button>
+                    </div>
+                </form>
                 @endauth
 
                 <button id="dark-mode-toggle-desktop" class="text-white hover:animate-pulse  ">
                     <span class="iconify size-8 lg:size-10" data-icon="circum:dark" data-inline="false"></span>
                 </button>
-                <button id="daltonien-toggle-desktop" class="text-white hover:animate-pulse">
+                <button id="daltonien-mode-toggle-desktop" class="text-white hover:animate-pulse">
                     <span class="iconify size-8 lg:size-10" data-icon="material-symbols:contrast" data-inline="false"></span>
                 </button>
             </div>
 
-           
+
             <div class="hidden lg:flex absolute top-5 left-20 ">
                 <a href="/dashboard">
                     <img class="w-36 h-36 bg-white shadow-lg"
@@ -103,11 +106,11 @@
             </div>
         </div>
 
-      
+
         <div id="mobile-menu"
             class="fixed inset-0 z-50 bg-blueV3R transform -translate-x-full transition-transform duration-300 md:hidden ">
             <div class="p-4 flex w-full h-full flex-col">
-                
+
                 <div class="flex items-center w-full">
                     <div class="flex justify-start w-full">
                         <a href="/dashboard">
@@ -128,8 +131,8 @@
                 <nav class="space-y-4 mt-4 text-white text-xl flex flex-col h-full">
                     <a href="/dashboard" class="block hover:bg-green-300 p-2 transition duration-300">Accueil</a>
                     @role('admin')
-                        <a href="/admin" class="block hover:bg-green-300 p-2 transition duration-300">Panneau
-                            Administration</a>
+                    <a href="/admin" class="block hover:bg-green-300 p-2 transition duration-300">Panneau
+                        Administration</a>
                     @endrole
                     <a href="/fournisseurs"
                         class="block hover:bg-green-300 p-2 transition duration-300">Fournisseurs</a>
@@ -137,12 +140,12 @@
 
                     <!-- Bouton deconnexion pour mobile -->
                     @auth
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
-                            <button class="block text-white hover:bg-red-600 p-2 transition duration-300">
-                                <span class="iconify size-10" data-icon="mdi:logout" data-inline="false"></span> Déconnexion
-                            </button>
-                        </form>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button class="block text-white hover:bg-red-600 p-2 transition duration-300">
+                            <span class="iconify size-10" data-icon="mdi:logout" data-inline="false"></span> Déconnexion
+                        </button>
+                    </form>
                     @endauth
                     <div class="flex h-full justify-center">
                         <div class="flex items-end text-xl">
@@ -162,12 +165,12 @@
         // Toogle menu mobile
         document.getElementById('menu-toggle').addEventListener('click', function() {
             const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.remove('-translate-x-full'); 
+            mobileMenu.classList.remove('-translate-x-full');
         });
 
         document.getElementById('close-menu').addEventListener('click', function() {
             const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.add('-translate-x-full'); 
+            mobileMenu.classList.add('-translate-x-full');
         });
         @endauth
         // Fonction pour les deux boutons darkMode
@@ -185,7 +188,7 @@
         document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
         document.getElementById('dark-mode-toggle-desktop').addEventListener('click', toggleDarkMode);
 
-        const toggleDaltonien = () => {
+        const toggleDaltonienMode = () => {
             const htmlElement = document.documentElement;
             if (htmlElement.classList.contains('daltonien')) {
                 htmlElement.classList.remove('daltonien');
@@ -196,8 +199,8 @@
             }
         }
 
-        document.getElementById('daltonien-toggle').addEventListener('click', toggleDaltonien);
-        document.getElementById('daltonien-toggle-desktop').addEventListener('click', toggleDaltonien);
+        document.getElementById('daltonien-mode-toggle').addEventListener('click', toggleDaltonienMode);
+        document.getElementById('daltonien-mode-toggle-desktop').addEventListener('click', toggleDaltonienMode);
 
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme && savedTheme === 'dark') {
@@ -206,11 +209,9 @@
             document.documentElement.classList.remove('dark');
         }
 
-        function removeItemsLocalStorage(){
-          localStorage.removeItem('selectedMenu');
+        function removeItemsLocalStorage() {
+            localStorage.removeItem('selectedMenu');
         }
-
-
     </script>
 </body>
 

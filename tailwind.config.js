@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: 'class',
-  daltonien: 'class',
+  daltonienMode: 'class',
   content: [
     "./resources/**/*.blade.php",
     "./resources/**/*.js",
