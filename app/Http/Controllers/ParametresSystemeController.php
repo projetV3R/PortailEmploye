@@ -27,7 +27,6 @@ class ParametresSystemeController extends Controller
     }
     
 
-
     public function store(ParametreSystemeRequest $request)
     {
         
