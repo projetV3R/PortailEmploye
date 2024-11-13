@@ -57,35 +57,36 @@
 
             <!-- Liens de navigation pour tablette minimum a revoir -->
             @auth
-            <nav
-                class="hidden md:flex justify-center w-full text-lg xl:text-2xl items-center gap-4 text-white dark:text-white">
-                <a href="/dashboard"
-                    class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Accueil</a>
-                |
-                @role('admin')
-                <a href="/admin"
-                    class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Panneau
-                    Administration</a> |
-                @endrole
-                <a href="/fournisseurs"
-                    class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Fournisseurs</a>
-                |
-                <a href="/profil"
-                    class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Profil</a>
-            </nav>
+                <nav
+                    class="hidden md:flex justify-center w-full text-lg xl:text-2xl items-center gap-4 text-white dark:text-white">
+                    <a href="/dashboard"
+                        class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Accueil</a>
+                    |
+                    @role('admin')
+                        <a href="/admin"
+                            class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Panneau
+                            Administration</a> |
+                    @endrole
+                    <a href="{{ route('fiches.index') }}"
+                        class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Fournisseurs</a>
+                    |
+                    <a href="/profil"
+                        class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Profil</a>
+                </nav>
             @endauth
 
             <!-- Deconnexion et Dark Mode desktop-->
             <div class="hidden md:flex space-x-4 items-center">
                 @auth
-                <form class="deconnexionBtn" action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <div class="flex items-center space-x-4 hover:animate-bounce">
-                        <button class="ml-4 text-white">
-                            <span class="iconify size-8 lg:size-10" data-icon="mdi:logout" data-inline="false" onclick="removeItemsLocalStorage()"></span>
-                        </button>
-                    </div>
-                </form>
+                    <form class="deconnexionBtn" action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <div class="flex items-center space-x-4 hover:animate-bounce">
+                            <button class="ml-4 text-white">
+                                <span class="iconify size-8 lg:size-10" data-icon="mdi:logout" data-inline="false"
+                                    onclick="removeItemsLocalStorage()"></span>
+                            </button>
+                        </div>
+                    </form>
                 @endauth
 
                 <button id="dark-mode-toggle-desktop" class="text-white hover:animate-pulse  ">
@@ -213,6 +214,7 @@
             localStorage.removeItem('selectedMenu');
         }
     </script>
+
 </body>
 
 </html>

@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
 {
         Blade::directive('role', function ($role) {
             $roles = explode(',', $role);
-        $roles = array_map('trim', $roles);
+            $roles = array_map('trim', $roles);
         return "<?php if(auth()->check() && in_array(auth()->user()->role, [". implode(',' , $roles) . "])) : ?>";  
         });
 
