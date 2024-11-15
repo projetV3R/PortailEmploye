@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr" class="dark">
-
+<html lang="fr" class="daltonien">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -47,7 +47,7 @@
                     </button>
                 </div>
                 <div>
-                    <button id="daltonien-mode-toggle" class="text-white hover:animate-pulse">
+                    <button id="daltonien-mode-toggle" class="text-white hover:bg-yellow-400 hover:text-black">
                         <span class="iconify size-10" data-icon="material-symbols:contrast" data-inline="false"></span>
                     </button>
                 </div>
@@ -57,42 +57,42 @@
 
             <!-- Liens de navigation pour tablette minimum a revoir -->
             @auth
-                <nav
-                    class="hidden md:flex justify-center w-full text-lg xl:text-2xl items-center gap-4 text-white dark:text-white">
-                    <a href="/dashboard"
-                        class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Accueil</a>
-                    |
-                    @role('admin')
-                        <a href="/admin"
-                            class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Panneau
-                            Administration</a> |
-                    @endrole
-                    <a href="{{ route('fiches.index') }}"
-                        class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Fournisseurs</a>
-                    |
-                    <a href="/profil"
-                        class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Profil</a>
-                </nav>
+            <nav
+                class="hidden md:flex justify-center w-full text-lg xl:text-2xl items-center gap-4 text-white dark:text-white">
+                <a href="/dashboard"
+                    class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Accueil</a>
+                |
+                @role('admin')
+                <a href="/admin"
+                    class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Panneau
+                    Administration</a> |
+                @endrole
+                <a href="{{ route('fiches.index') }}"
+                    class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Fournisseurs</a>
+                |
+                <a href="/profil"
+                    class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg">Profil</a>
+            </nav>
             @endauth
 
             <!-- Deconnexion et Dark Mode desktop-->
             <div class="hidden md:flex space-x-4 items-center">
                 @auth
-                    <form class="deconnexionBtn" action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <div class="flex items-center space-x-4 hover:animate-bounce">
-                            <button class="ml-4 text-white">
-                                <span class="iconify size-8 lg:size-10" data-icon="mdi:logout" data-inline="false"
-                                    onclick="removeItemsLocalStorage()"></span>
-                            </button>
-                        </div>
-                    </form>
+                <form class="deconnexionBtn" action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <div class="flex items-center space-x-4 hover:animate-bounce">
+                        <button class="ml-4 text-white">
+                            <span class="iconify size-8 lg:size-10" data-icon="mdi:logout" data-inline="false"
+                                onclick="removeItemsLocalStorage()"></span>
+                        </button>
+                    </div>
+                </form>
                 @endauth
 
                 <button id="dark-mode-toggle-desktop" class="text-white hover:animate-pulse  ">
                     <span class="iconify size-8 lg:size-10" data-icon="circum:dark" data-inline="false"></span>
                 </button>
-                <button id="daltonien-mode-toggle-desktop" class="text-white hover:animate-pulse">
+                <button id="daltonien-mode-toggle-desktop" class="text-white hover:bg-yellow-400 hover:text-black">
                     <span class="iconify size-8 lg:size-10" data-icon="material-symbols:contrast" data-inline="false"></span>
                 </button>
             </div>
@@ -130,20 +130,20 @@
                 </div>
                 <!-- Liens de navigation pour mobile -->
                 <nav class="space-y-4 mt-4 text-white text-xl flex flex-col h-full">
-                    <a href="/dashboard" class="block hover:bg-green-300 p-2 transition duration-300">Accueil</a>
+                    <a href="/dashboard" class="block hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-yellow-400 daltonien:hover:text-black">Accueil</a>
                     @role('admin')
-                    <a href="/admin" class="block hover:bg-green-300 p-2 transition duration-300">Panneau
+                    <a href="/admin" class="block hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-yellow-400 daltonien:hover:text-black">Panneau
                         Administration</a>
                     @endrole
                     <a href="/fournisseurs"
-                        class="block hover:bg-green-300 p-2 transition duration-300">Fournisseurs</a>
-                    <a href="/profil" class="block hover:bg-green-300 p-2 transition duration-300">Profil</a>
+                        class="block hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-yellow-400 daltonien:hover:text-black">Fournisseurs</a>
+                    <a href="/profil" class="block hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-yellow-400 daltonien:hover:text-black">Profil</a>
 
                     <!-- Bouton deconnexion pour mobile -->
                     @auth
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button class="block text-white hover:bg-red-600 p-2 transition duration-300">
+                        <button class="block text-white hover:bg-red-600 p-2 transition duration-300 daltonien:hover:bg-yellow-400 daltonien:hover:text-black">
                             <span class="iconify size-10" data-icon="mdi:logout" data-inline="false"></span> Déconnexion
                         </button>
                     </form>
@@ -173,7 +173,10 @@
             const mobileMenu = document.getElementById('mobile-menu');
             mobileMenu.classList.add('-translate-x-full');
         });
+
+        document.getElementById('daltonien-mode-toggle-desktop').addEventListener('click', () => { console.log("daltonien button presssed");});
         @endauth
+
         // Fonction pour les deux boutons darkMode
         const toggleDarkMode = () => {
             const htmlElement = document.documentElement;
@@ -185,9 +188,9 @@
                 localStorage.setItem('theme', 'dark');
             }
         }
-
         document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
         document.getElementById('dark-mode-toggle-desktop').addEventListener('click', toggleDarkMode);
+
 
         const toggleDaltonienMode = () => {
             const htmlElement = document.documentElement;
@@ -196,7 +199,7 @@
                 localStorage.setItem('theme', 'light');
             } else {
                 htmlElement.classList.add('daltonien');
-                localStorage.setItem('theme', 'blue');
+                localStorage.setItem('theme', 'daltonien');
             }
         }
 
@@ -204,10 +207,10 @@
         document.getElementById('daltonien-mode-toggle-desktop').addEventListener('click', toggleDaltonienMode);
 
         const savedTheme = localStorage.getItem('theme');
-        if (savedTheme && savedTheme === 'dark') {
+        if (savedTheme === 'dark') {
             document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
+        } else if (savedTheme === 'daltonien') {
+            document.documentElement.classList.add('daltonien');
         }
 
         function removeItemsLocalStorage() {
