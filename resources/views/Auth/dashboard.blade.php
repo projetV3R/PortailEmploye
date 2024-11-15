@@ -10,7 +10,7 @@
 <div class="flex flex-col w-full h-full p-4 lg:p-16 gap-y-4 ">
 <div class="flex w-full flex-col lg:flex-row lg:h-3/4 h-full gap-4">
 <div class="flex lg:w-1/2 w-full h-full">
-    <div class="flex w-full justify-center border-2 border-dashed daltonien:border-black">HIGHCHARTS INSCRIPTION </div> 
+    <div class="flex w-full justify-center border-2 border-dashed daltonien:border-black daltonien:bg-red-800">HIGHCHARTS INSCRIPTION </div> 
 </div>
 <div class="flex lg:w-1/2 w-full h-full">
      <div class="flex w-full border-2 border-dashed justify-center daltonien:border-black">HIGHCHARTS CATEGORIE INSCRIPTION </div> </div>

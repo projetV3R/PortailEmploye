@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr" class="dark daltonien">
-
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,13 +14,13 @@
 </head>
 
 
-<body class="flex flex-col h-screen w-full text-black bg-white daltonien:bg-blue-500 daltonien:text-white dark:bg-gray-900 dark:text-white">
+<body class="flex flex-col h-screen w-full text-black bg-white dark:bg-gray-900 dark:text-white ">
     <!-- HEADER -->
 
     <header>
 
         @yield('header')
-        <div class="flex w-full bg-blueV3R h-32 items-center justify-between p-4 relative">
+        <div class="flex w-full bg-blueV3R h-32 items-center justify-between p-4 relative daltonien:bg-red-500 daltonien:text-white">
             <div class="flex items-center">
                 <a href="/dashboard">
                     <img class="bg-white w-24 h-20 lg:hidden cursor-pointer"
@@ -158,6 +157,7 @@
         </div>
 
     </header>
+
 
     @yield('contenu')
 

@@ -1,7 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
     darkMode: "class",
-    daltonien: "class",
     content: [
         "./resources/**/*.blade.php",
         "./resources/**/*.js",
@@ -10,6 +9,7 @@ export default {
     theme: {
         extend: {
             colors: {
+                blueDaltonien: '#000FF',
                 blueV3R: "#0B2341",
                 primary: {
                     100: "#EFF8FC",
@@ -35,5 +35,9 @@ export default {
             },
         },
     },
-    plugins: [],
+    plugins: [
+        function ({ addVariant }) {
+            addVariant('daltonien', '&.daltonien'); // Crée la variante "daltonien"
+        },
+    ],
 };
