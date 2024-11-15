@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="fr" class="dark">
-<html lang="fr" class="daltonien">
+<html lang="fr" class="dark daltonien">
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -173,44 +173,50 @@
             const mobileMenu = document.getElementById('mobile-menu');
             mobileMenu.classList.add('-translate-x-full');
         });
-
-        document.getElementById('daltonien-mode-toggle-desktop').addEventListener('click', () => { console.log("daltonien button presssed");});
         @endauth
 
         // Fonction pour les deux boutons darkMode
         const toggleDarkMode = () => {
+            console.log("Dark mode toggled");
             const htmlElement = document.documentElement;
             if (htmlElement.classList.contains('dark')) {
                 htmlElement.classList.remove('dark');
                 localStorage.setItem('theme', 'light');
             } else {
+                htmlElement.classList.remove('daltonien');
                 htmlElement.classList.add('dark');
                 localStorage.setItem('theme', 'dark');
             }
-        }
-        document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
-        document.getElementById('dark-mode-toggle-desktop').addEventListener('click', toggleDarkMode);
-
+        };
 
         const toggleDaltonienMode = () => {
+            console.log("Daltonien mode toggled");
             const htmlElement = document.documentElement;
             if (htmlElement.classList.contains('daltonien')) {
                 htmlElement.classList.remove('daltonien');
                 localStorage.setItem('theme', 'light');
             } else {
+                htmlElement.classList.remove('dark');
                 htmlElement.classList.add('daltonien');
                 localStorage.setItem('theme', 'daltonien');
             }
-        }
+        };
 
+        //mode dark
+        document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        document.getElementById('dark-mode-toggle-desktop').addEventListener('click', toggleDarkMode);
+
+        // mode daltonien
         document.getElementById('daltonien-mode-toggle').addEventListener('click', toggleDaltonienMode);
         document.getElementById('daltonien-mode-toggle-desktop').addEventListener('click', toggleDaltonienMode);
 
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
             document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('daltonien');
         } else if (savedTheme === 'daltonien') {
             document.documentElement.classList.add('daltonien');
+            document.documentElement.classList.remove('dark');
         }
 
         function removeItemsLocalStorage() {
