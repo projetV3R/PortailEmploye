@@ -14,7 +14,7 @@
 </head>
 
 
-<body class="flex flex-col h-screen w-full text-black bg-white dark:bg-gray-900 dark:text-white ">
+<body class="flex flex-col h-screen w-full text-black bg-white daltonien:bg-primary-200 dark:text-white ">
     <!-- HEADER -->
 
     <header>
