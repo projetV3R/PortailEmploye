@@ -14,13 +14,13 @@
 </head>
 
 
-<body class="flex flex-col h-screen w-full text-black bg-white daltonien:bg-primary-200 dark:text-white ">
+<body class="flex flex-col h-screen w-full text-black bg-white dark:bg-gray-800 dark:text-white daltonien:bg-yellow-400">
     <!-- HEADER -->
 
     <header>
 
         @yield('header')
-        <div class="flex w-full bg-blueV3R h-32 items-center justify-between p-4 relative daltonien:bg-red-500 daltonien:text-white">
+        <div class="flex w-full bg-blueV3R h-32 items-center justify-between p-4 relative ">
             <div class="flex items-center">
                 <a href="/dashboard">
                     <img class="bg-white w-24 h-20 lg:hidden cursor-pointer"
@@ -129,20 +129,20 @@
                 </div>
                 <!-- Liens de navigation pour mobile -->
                 <nav class="space-y-4 mt-4 text-white text-xl flex flex-col h-full">
-                    <a href="/dashboard" class="block hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-yellow-400 daltonien:hover:text-black">Accueil</a>
+                    <a href="/dashboard" class="block hover:bg-green-300 p-2 transition duration-300">Accueil</a>
                     @role('admin')
-                    <a href="/admin" class="block hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-yellow-400 daltonien:hover:text-black">Panneau
+                    <a href="/admin" class="block hover:bg-green-300 p-2 transition duration-300">Panneau
                         Administration</a>
                     @endrole
                     <a href="/fournisseurs"
-                        class="block hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-yellow-400 daltonien:hover:text-black">Fournisseurs</a>
-                    <a href="/profil" class="block hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-yellow-400 daltonien:hover:text-black">Profil</a>
+                        class="block hover:bg-green-300 p-2 transition duration-300">Fournisseurs</a>
+                    <a href="/profil" class="block hover:bg-green-300 p-2 transition duration-300">Profil</a>
 
                     <!-- Bouton deconnexion pour mobile -->
                     @auth
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button class="block text-white hover:bg-red-600 p-2 transition duration-300 daltonien:hover:bg-yellow-400 daltonien:hover:text-black">
+                        <button class="block text-white hover:bg-red-600 p-2 transition duration-300">
                             <span class="iconify size-10" data-icon="mdi:logout" data-inline="false"></span> Déconnexion
                         </button>
                     </form>
