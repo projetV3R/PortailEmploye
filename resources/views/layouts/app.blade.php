@@ -14,9 +14,11 @@
 </head>
 
 
-<body class="flex flex-col h-screen w-full text-black bg-white dark:bg-gray-800 dark:text-white daltonien:bg-yellow-400">
+<body class="flex flex-col h-screen w-full text-black bg-white dark:bg-gray-800 dark:text-white">
     <!-- HEADER -->
 
+    <div class="daltonien:bg-daltonienYellow">Daltonien appuyé</div>
+    <div class="bg-daltonienYellow">NON appuyé</div>
     <header>
 
         @yield('header')

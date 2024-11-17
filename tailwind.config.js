@@ -9,6 +9,7 @@ export default {
     theme: {
         extend: {
             colors: {
+                daltonienYellow: '#FFFF99',
                 blueV3R: "#0B2341",
                 primary: {
                     100: "#EFF8FC",
