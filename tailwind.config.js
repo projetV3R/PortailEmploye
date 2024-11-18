@@ -36,8 +36,10 @@ export default {
         },
     },
     plugins: [
-        function ({ addVariant }) {
-            addVariant('daltonien', '&.daltonien'); // Crée la variante "daltonien"
-        },
+        require("tailwindcss/plugin")(function ({ addVariant, e }) {
+            addVariant("daltonien", ({ modifySelectors, separator }) => {
+                modifySelectors(({ className }) => `html.daltonien .${e(`daltonien${separator}${className}`)}`);
+            });
+        }),
     ],
 };
