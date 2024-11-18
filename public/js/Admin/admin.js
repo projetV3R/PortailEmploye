@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td class="font-Alumni px-4 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                         ${usager.email}
                     </td>
-                    <td class="font-Alumni px-4 py-1 text-center whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                    <td class="font-Alumni px-4 py-1 text-center whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 ">
                         <input type="hidden" value="${usager.id}">
                         <select name="usagers[${usager.id}][role]" class="pr-2 role-dropdown dark:text-neutral-500 dark:bg-blueV3R">
                             <option value="admin" ${usager.role == 'admin' ? 'selected' : ''}>Admin</option>
@@ -298,7 +298,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         </select>
                     </td>
                     <td class="font-Alumni px-4 py-1 whitespace-nowrap text-sm cursor-default flex justify-center items-center flex-row">
-                        <button type="button" class="delete-user flex items-center px-2 bg-red-500 hover:bg-red-600 text-gray-800 dark:text-neutral-200 rounded-lg shadow-md transition duration-200" data-id="${usager.id}">
+                        <button type="button" 
+                                class="delete-user flex items-center px-2 bg-red-500 hover:bg-red-600 text-gray-800 
+                                       dark:text-neutral-200 rounded-lg shadow-md transition duration-200
+                                       daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black" 
+                                data-id="${usager.id}">
                             <span class="iconify size-10 lg:size-6 mr-1" data-icon="mdi:bin" data-inline="false" data-id="${usager.id}"></span>
                             <span class="delete-user hidden lg:block" data-id="${usager.id}">Supprimer</span>
                         </button>
