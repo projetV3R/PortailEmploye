@@ -184,23 +184,26 @@
             if (htmlElement.classList.contains('dark')) {
                 htmlElement.classList.remove('dark');
                 localStorage.setItem('theme', 'light');
+                console.log("Mode sombre désactivé");
             } else {
                 htmlElement.classList.remove('daltonien');
                 htmlElement.classList.add('dark');
                 localStorage.setItem('theme', 'dark');
+                console.log("Mode sombre activé");
             }
         };
 
         const toggleDaltonienMode = () => {
-            console.log("Daltonien mode toggled");
             const htmlElement = document.documentElement;
             if (htmlElement.classList.contains('daltonien')) {
                 htmlElement.classList.remove('daltonien');
                 localStorage.setItem('theme', 'light');
+                console.log("Mode daltonien désactivé");
             } else {
                 htmlElement.classList.remove('dark');
                 htmlElement.classList.add('daltonien');
                 localStorage.setItem('theme', 'daltonien');
+                console.log("Mode daltonien activé");
             }
         };
 
@@ -216,9 +219,14 @@
         if (savedTheme === 'dark') {
             document.documentElement.classList.add('dark');
             document.documentElement.classList.remove('daltonien');
-        } else if (savedTheme === 'daltonien') {
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        if (savedTheme === 'daltonien') {
             document.documentElement.classList.add('daltonien');
             document.documentElement.classList.remove('dark');
+        } else {
+            document.documentElement.classList.remove('daltonien');
         }
 
         function removeItemsLocalStorage() {
