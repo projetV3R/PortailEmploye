@@ -40,7 +40,7 @@
                         <a class="text-blue-500 hover:underline text-xs md:text-sm text-right" href="#">Mot de passe oublié?</a>
                     </div>
                     <div class="p-4">
-                        <button type="submit" class="block w-full py-2 px-4 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm">
+                        <button type="submit" class="block w-full py-2 px-4 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
                             <strong>Suivant</strong>
                         </button>
                     </div>
