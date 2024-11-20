@@ -49,7 +49,7 @@
         <div class="flex flex-col w-full h-full px-4 mt-2">
             <div class="-m-1.5 overflow-x-auto">
                 <div class="p-1.5 min-w-full inline-block align-middle">
-                    <div class="border-2 rounded-lg shadow-lg divide-y divide-gray-200 dark:border-neutral-700 dark:divide-neutral-700">
+                    <div class="border-2 rounded-lg shadow-lg divide-y divide-gray-200 dark:border-neutral-700 dark:divide-neutral-700 daltonien:border-black">
                         <div class="py-3 px-4">
                             <div class="relative max-w-xs">
                                 <label class="sr-only block font-Alumni text-md md:text-lg mb-2">Recherche (mail ou role)</label>
@@ -57,10 +57,10 @@
                                     class="py-2 px-3 ps-9 block w-full border-gray-200 shadow-md rounded-lg text-sm focus:z-10 
                                      focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none 
                                      dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 
-                                     dark:focus:ring-neutral-600 daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow"
+                                     dark:focus:ring-neutral-600 daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow "
                                     placeholder="Recherche (email ou role)">
                                 <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
-                                    <svg class="size-4 text-gray-400 dark:text-neutral-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <svg class="size-4 text-gray-400 dark:text-neutral-50 0" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <circle cx="11" cy="11" r="8"></circle>
                                         <path d="m21 21-4.3-4.3"></path>
                                     </svg>
@@ -79,8 +79,7 @@
                                         </button>
                                     </div>
                                     <div class="relative block lg:hidden">
-                                        <h2 class="font-Alumni flex gap-y-2 text-center text-2xl font-bold 
-                                        daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
+                                        <h2 class="font-Alumni flex gap-y-2 text-center text-2xl font-bold">
                                             Gestion des utilisateurs
                                         </h2>
                                     </div>
@@ -94,14 +93,14 @@
                                 </div>
                                 <div id="usagers">
                                     <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
-                                        <thead class="bg-gray-50 dark:bg-neutral-700 daltonien:bg-gray-200">
+                                        <thead class="bg-gray-50 dark:bg-neutral-700 border daltonien:border-black">
                                             <tr>
                                                 <th scope="col" class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase dark:text-neutral-500 daltonien:text-black">Courriel</th>
                                                 <th scope="col" class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase dark:text-neutral-500 daltonien:text-black">Rôle</th>
                                                 <th scope="col" class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase dark:text-neutral-500 flex justify-center daltonien:text-black">Action</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
+                                        <tbody class="divide-y divide-gray-200 dark:divide-neutral-700 border daltonien:border-black">
                                         </tbody>
                                     </table>
                                 </div>
@@ -119,34 +118,38 @@
         <div class="flex flex-col w-full h-full px-4 mt-10">
             <h1 class="text-2xl font-bold mb-6 flex justify-center">Gestion des paramètres</h1>
 
-            <div class="border p-6 rounded-lg shadow-md">
+            <div class="border p-6 rounded-lg shadow-md daltonien:border-black">
                 <form id="parametres-form">
                     @csrf
 
                     <div class="mb-4">
                         <label for="email_approvisionnement" class="block font-medium text-lg">Courriel de l'Approvisionnement</label>
                         <input type="email" name="email_approvisionnement" id="email_approvisionnement" required
-                            class="w-full border rounded p-2 mt-1">
+                            class="w-full border rounded p-2 mt-1 daltonien:border-black">
                     </div>
 
                     <div class="mb-4">
                         <label for="mois_revision" class="block font-medium text-lg">Délai avant la révision (mois)</label>
                         <input type="number" name="mois_revision" id="mois_revision" min="1" max="36" required
-                            class="w-full border rounded p-2 mt-1">
+                            class="w-full border rounded p-2 mt-1 daltonien:border-black">
                     </div>
 
                     <div class="mb-4">
                         <label for="taille_fichier" class="block font-medium text-lg">Taille maximale des fichiers joints (Mo)</label>
                         <input type="number" name="taille_fichier" id="taille_fichier" min="1" max="75" required
-                            class="w-full border rounded p-2 mt-1">
+                            class="w-full border rounded p-2 mt-1 daltonien:border-black">
                     </div>
 
                     <div class="mb-4">
                         <label for="email_finances" class="block font-medium text-lg">Courriel des Finances</label>
                         <input type="email" name="finance_approvisionnement" id="finance_approvisionnement" required
-                            class="w-full border rounded p-2 mt-1">
+                            class="w-full border rounded p-2 mt-1 daltonien:border-black">
                     </div>
-                    <button type="submit" class="w-full bg-blue-500 text-white rounded p-2 hover:bg-blue-600">Enregistrer</button>
+                    <button type="submit"
+                        class="w-full bg-blue-500 text-white rounded p-2 hover:bg-blue-600 
+                            daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
+                        Enregistrer
+                    </button>
                 </form>
 
             </div>
@@ -164,28 +167,30 @@
             <select id="modelesSelect" class="border-2  rounded-md shadow-sm" onchange="afficherModele()">
 
             </select>
-            <button class="bg-green-300 rounded-md p-2 px-2 hover:text-white hover:bg-green-700"><span class=" hidden md:block">Ajouter</span> <span class="block md:hidden iconify size-6" data-icon="material-symbols-light:post-add" data-inline="false"></span></button>
-            <button class="bg-red-300 rounded-md p-2 px-2 hover:text-white hover:bg-red-700"><span class="hidden md:block">Supprimer</span> <span class="block md:hidden iconify size-6" data-icon="mdi:bin" data-inline="false"></button>
+            <button class="bg-green-300 rounded-md p-2 px-2 hover:text-white hover:bg-green-700 daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black"><span class=" hidden md:block">Ajouter</span> <span class="block md:hidden iconify size-6" data-icon="material-symbols-light:post-add" data-inline="false"></span></button>
+            <button class="bg-red-300 rounded-md p-2 px-2 hover:text-white hover:bg-red-700 daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black"><span class="hidden md:block">Supprimer</span> <span class="block md:hidden iconify size-6" data-icon="mdi:bin" data-inline="false"></button>
         </div>
 
 
-        <div id="contenuModele" class="flex flex-col w-full h-full border-2  rounded-lg shadow-lg p-4 gap-y-4">
+        <div id="contenuModele" class="flex flex-col w-full h-full border-2 rounded-lg shadow-lg p-4 gap-y-4 daltonien:border-black">
 
             <div class="flex flex-col">
                 <label for="modeleObjet" class="font-bold mb-2">Objet du modèle</label>
-                <input type="text" id="modeleObjet" class="border p-2 rounded-md" required>
+                <input type="text" id="modeleObjet" class="border p-2 rounded-md daltonien:border-black" required>
             </div>
 
             <!-- Textarea pour le body -->
             <div class="flex flex-col h-full">
                 <label for="modeleBody" class="font-bold mb-2">Contenu du modèle</label>
-                <div id="editor" class="border p-2 rounded-md h-full max-h-96 overflow-auto"></div>
+                <div id="editor" class="border p-2 rounded-md h-full max-h-96 overflow-auto daltonien:border-black"></div>
             </div>
 
         </div>
 
 
-        <button class="bg-blue-300 rounded-md p-2 px-4 hover:bg-blue-500 hover:text-white">Enregistrer les modifications</button>
+        <button class="bg-blue-300 rounded-md p-2 px-4 hover:bg-blue-500 hover:text-white daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
+            Enregistrer les modifications
+        </button>
     </div>
 
 

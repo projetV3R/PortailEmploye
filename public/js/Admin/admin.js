@@ -171,12 +171,12 @@ document.addEventListener('DOMContentLoaded', function() {
         Swal.fire({
             title: 'Ajouter un utilisateur',
             html: `
-                <input id="email" class="font-Alumni swal2-input" placeholder="Courriel" required>
-                <input id="password" type="password" class="font-Alumni swal2-input" placeholder="Mot de passe" required>
-                <input id="password_confirmation" type="password" class="font-Alumni swal2-input" placeholder="Confirmer le mot de passe" required>
-                <input id="nom" class="font-Alumni swal2-input" placeholder="Nom" required>
-                <input id="prenom" class="font-Alumni swal2-input" placeholder="Prénom" required>
-                <select id="role" class="font-Alumni swal2-select" required>
+                <input id="email" class="font-Alumni swal2-input border daltonien:border-black" placeholder="Courriel" required>
+                <input id="password" type="password" class="font-Alumni swal2-input border daltonien:border-black" placeholder="Mot de passe" required>
+                <input id="password_confirmation" type="password" class="font-Alumni swal2-input border daltonien:border-black" placeholder="Confirmer le mot de passe" required>
+                <input id="nom" class="font-Alumni swal2-input border daltonien:border-black" placeholder="Nom" required>
+                <input id="prenom" class="font-Alumni swal2-input border daltonien:border-black" placeholder="Prénom" required>
+                <select id="role" class="font-Alumni swal2-select required>
                     <option value="">Sélectionnez un rôle</option>
                     <option value="commis">Commis</option>
                     <option value="responsable">Responsable</option>
@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td class="font-Alumni px-4 py-1 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                         ${usager.email}
                     </td>
-                    <td class="font-Alumni px-4 py-1 text-center whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 ">
+                    <td class="font-Alumni px-4 py-1 text-center whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                         <input type="hidden" value="${usager.id}">
                         <select name="usagers[${usager.id}][role]" class="pr-2 role-dropdown dark:text-neutral-500 dark:bg-blueV3R">
                             <option value="admin" ${usager.role == 'admin' ? 'selected' : ''}>Admin</option>
@@ -336,13 +336,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function paginationButtons(data) {
         return `
             <button type="button"
-                class="pagination-btn bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-2 md:px-4 rounded-l
+                class="pagination-btn bg-gray-300 hover:bg-gray-400 daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black text-gray-800 font-bold py-2 px-2 md:px-4 rounded-l
                 ${!data.prev_page_url ? 'cursor-not-allowed' : ''}"
                 data-page="1" ${!data.prev_page_url ? 'disabled' : ''}>
                 &lt;&lt;
             </button>
             <button type="button"
-                class="pagination-btn bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-2 md:px-4
+                class="pagination-btn bg-gray-300 hover:bg-gray-400 daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black text-gray-800 font-bold py-2 px-2 md:px-4
                 ${!data.prev_page_url ? 'cursor-not-allowed' : ''}"
                 data-page="${data.current_page - 1}" ${!data.prev_page_url ? 'disabled' : ''}>
                 <span>&lt;</span>
@@ -350,14 +350,14 @@ document.addEventListener('DOMContentLoaded', function() {
             </button>
             <span class="text-xs font-bold mx-2">Page ${data.current_page} sur ${data.last_page}</span>
             <button type="button"
-                class="pagination-btn bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-2 md:px-4
+                class="pagination-btn bg-gray-300 hover:bg-gray-400 daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black text-gray-800 font-bold py-2 px-2 md:px-4
                 ${!data.next_page_url ? 'cursor-not-allowed' : ''}"
                 data-page="${data.current_page + 1}" ${!data.next_page_url ? 'disabled' : ''}>
                 <span>&gt;</span>
                 <span class="hidden md:inline">Suivante</span>
             </button>
             <button type="button"
-                class="pagination-btn bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-2 md:px-4 rounded-r
+                class="pagination-btn bg-gray-300 hover:bg-gray-400 daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black text-gray-800 font-bold py-2 px-2 md:px-4 rounded-r
                 ${!data.next_page_url ? 'cursor-not-allowed' : ''}"
                 data-page="${data.last_page}" ${!data.next_page_url ? 'disabled' : ''}>
                 &gt;&gt;
