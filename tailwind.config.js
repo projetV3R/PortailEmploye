@@ -10,7 +10,7 @@ export default {
         extend: {
             colors: {
                 daltonienYellow: '#FACC15',
-                daltonienBleu: "#4066B3",
+                daltonienBleu: "#849ED2",
                 blueV3R: "#0B2341",
                 primary: {
                     100: "#EFF8FC",

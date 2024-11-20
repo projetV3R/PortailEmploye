@@ -68,27 +68,27 @@ $etatStyles = [
         <div class="grid grid-cols-2 gap-1 w-full md:flex md:space-x-4 md:w-auto">
             <button id="outlook-button"
                 class="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 w-full md:w-auto
-                       daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
+                       daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black daltonien:text-black">
                 <span class="iconify" data-icon="mdi:email-sync-outline"></span>
-                <span class="font-Alumni">Outlook</span>
+                <span class="font-Alumni"><b>Outlook</b></span>
             </button>
             <button id="excel-button"
                 class="flex items-center justify-center space-x-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 w-full md:w-auto
-                       daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
+                       daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black daltonien:text-black">
                 <span class="iconify" data-icon="mdi:file-excel"></span>
-                <span class="font-Alumni">Excel</span>
+                <span class="font-Alumni"><b>Excel</b></span>
             </button>
             <button
                 class="flex items-center justify-center space-x-2 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 w-full md:w-auto 
-                       daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
+                       daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black daltonien:text-black">
                 <span class="iconify" data-icon="mdi:currency-usd"></span>
-                <span class="font-Alumni">Finances</span>
+                <span class="font-Alumni"><b>Finances</b></span>
             </button>
             <button id="copy-button"
                 class="flex items-center justify-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 w-full md:w-auto
-                       daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
+                       daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black daltonien:text-black">
                 <span class="iconify" data-icon="mdi:email-multiple"></span>
-                <span class="font-Alumni">Copier</span>
+                <span class="font-Alumni"><b>Copier</b></span>
             </button>
         </div>
 
@@ -96,9 +96,12 @@ $etatStyles = [
             <div class="flex justify-between items-center mb-1">
                 <p class="font-Alumni text-lg font-semibold text-gray-500 daltonien:text-black" id="counter">Éléments sélectionnés
                     ({{ count($selectedCompanies) }})</p>
-                <button onclick="clearSelections()"
-                    class="text-sm font-Alumni text-blue-500 hover:underline daltonien:text-daltonienBleu daltonien:hover:text-daltonienYellow">Désélectionner tout</button>
+
             </div>
+            <button onclick="clearSelections()"
+                class="text-sm font-Alumni text-blue-500 hover:underline daltonien:text-black daltonien:hover:bg-daltonienBleu">
+                Désélectionner tout
+            </button>
             <div id="selected-companies"
                 class="text-sm text-gray-600 w-full md:w-60 h-16 p-2 bg-gray-100 border border-gray-300 rounded overflow-y-auto flex daltonien:text-black">
                 <!-- Zone pour afficher les noms des entreprises sélectionnées -->
@@ -153,13 +156,13 @@ $etatStyles = [
                 class="font-Alumni md:text-lg bg-primary-300 text-gray-700 px-4 py-2 hover:bg-secondary-300
                        daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
                 Précédent
-            </button> 
-            
+            </button>
+
             <!-- delete? -->
             <div id="page-buttons" class="flex space-x-0 daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
                 <!-- Les boutons de page seront insérés ici -->
             </div>
-            
+
             <button onclick="nextPage()"
                 class="font-Alumni md:text-lg bg-primary-300 text-gray-700 px-4 py-2 hover:bg-secondary-300
                        daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
@@ -220,7 +223,7 @@ $etatStyles = [
                         text: fiche.etat
                     };
                     const row = document.createElement('tr');
-                    row.classList.add('bg-white', 'border-b', 'hover:bg-gray-50');
+                    row.classList.add('bg-white', 'border-b', 'hover:bg-gray-50', 'daltonien:hover:bg-gray-200', 'daltonien:text-black');
                     row.dataset.id = fiche.id;
                     row.dataset.name = fiche.nom_entreprise;
                     row.dataset.email = fiche.adresse_courriel;
@@ -240,14 +243,14 @@ $etatStyles = [
                     </td>
                     <td class="px-6 py-4 font-medium text-gray-900">${fiche.nom_entreprise}</td>
                     <td class="px-6 py-4">${fiche.coordonnees?.ville || ''}</td>
-                    <td class="px-6 py-4 ${etatStyle.textColor}">
+                    <td class="px-6 py-4 ${etatStyle.textColor} daltonien:text-black">
                         <span class="flex items-center">
                             <span class="iconify mr-1" data-icon="${etatStyle.icon}"></span>
                             <span>${etatStyle.text}</span>
                         </span>
                     </td>
                     <td class="px-6 py-4">
-                        <a href="${profilRoute.replace(':id', fiche.id)}" class="font-medium text-blue-600 hover:underline">Ouvrir</a>
+                        <a href="${profilRoute.replace(':id', fiche.id)}" class="font-medium text-blue-600 hover:underline daltonien:text-black daltonien:hover:bg-daltonienBleu">Ouvrir</a>
                     </td>
                 `;
                     document.getElementById('fiches-content').appendChild(row);
