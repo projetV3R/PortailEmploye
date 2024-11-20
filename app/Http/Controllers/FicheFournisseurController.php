@@ -44,6 +44,14 @@ class FicheFournisseurController extends Controller
     }
 
 
+    public function lineChart ()
+    {
+        //prends fiche fournisseurs
+        //regroupe par groupe code catégorie(produits et services)
+        //compteur des fiches dans chaque catégories
+        //renvoie le tout en json.
+    }
+
     /**
      * Show the form for creating a new resource.
      */
