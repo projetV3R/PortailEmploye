@@ -94,13 +94,13 @@ $etatStyles = [
 
         <div class="w-full md:w-auto mt-4 md:mt-0">
             <div class="flex justify-between items-center mb-1">
-                <p class="font-Alumni text-lg font-semibold text-gray-500" id="counter">Éléments sélectionnés
+                <p class="font-Alumni text-lg font-semibold text-gray-500 daltonien:text-black" id="counter">Éléments sélectionnés
                     ({{ count($selectedCompanies) }})</p>
                 <button onclick="clearSelections()"
-                    class="text-sm font-Alumni text-blue-500 hover:underline">Désélectionner tout</button>
+                    class="text-sm font-Alumni text-blue-500 hover:underline daltonien:text-daltonienBleu daltonien:hover:text-daltonienYellow">Désélectionner tout</button>
             </div>
             <div id="selected-companies"
-                class="text-sm text-gray-600 w-full md:w-60 h-16 p-2 bg-gray-100 border border-gray-300 rounded overflow-y-auto flex">
+                class="text-sm text-gray-600 w-full md:w-60 h-16 p-2 bg-gray-100 border border-gray-300 rounded overflow-y-auto flex daltonien:text-black">
                 <!-- Zone pour afficher les noms des entreprises sélectionnées -->
             </div>
         </div>
@@ -122,7 +122,7 @@ $etatStyles = [
     <!-- Tableau de données dynamique -->
     <div class="relative overflow-x-auto shadow-md rounded-lg">
         <table class="w-full text-sm text-left text-gray-500 font-Alumni md:text-xl">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 daltonien:text-black daltonien:bg-gray-200">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 daltonien:text-black daltonien:border border-black">
                 <tr>
                     <th scope="col" class="p-4">
                         <div class="flex items-center">

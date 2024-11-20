@@ -93,14 +93,14 @@
                                 </div>
                                 <div id="usagers">
                                     <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
-                                        <thead class="bg-gray-50 dark:bg-neutral-700 border daltonien:border-black">
+                                        <thead class="bg-gray-50 dark:bg-neutral-700 daltonien:border border-black">
                                             <tr>
                                                 <th scope="col" class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase dark:text-neutral-500 daltonien:text-black">Courriel</th>
                                                 <th scope="col" class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase dark:text-neutral-500 daltonien:text-black">Rôle</th>
                                                 <th scope="col" class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase dark:text-neutral-500 flex justify-center daltonien:text-black">Action</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="divide-y divide-gray-200 dark:divide-neutral-700 border daltonien:border-black">
+                                        <tbody class="divide-y divide-gray-200 dark:divide-neutral-700 daltonien:border border-black">
                                         </tbody>
                                     </table>
                                 </div>

@@ -6,7 +6,7 @@
 <div class="w-full p-2">
 <div class="relative flex items-center justify-center w-full h-screen ">
     <div class="w-full lg:w-3/4 xl:w-2/3 mx-auto lg:ml-4 xl:ml-8">
-        <div class="relative flex flex-col items-center justify-left p-4 shadow-lg max-w-md mx-auto z-10 border daltonien:border-black">
+        <div class="relative flex flex-col items-center justify-left p-4 shadow-lg max-w-md mx-auto z-10 daltonien:border border-black">
             <div class="flex flex-col items-center justify-center p-4">
                 <strong>
                     <h1 class="text-3xl md:text-5xl">Connexion</h1>
