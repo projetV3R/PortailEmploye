@@ -67,22 +67,26 @@ $etatStyles = [
         <!-- Grille de boutons avec disposition responsive -->
         <div class="grid grid-cols-2 gap-1 w-full md:flex md:space-x-4 md:w-auto">
             <button id="outlook-button"
-                class="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 w-full md:w-auto">
+                class="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 w-full md:w-auto
+                       daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
                 <span class="iconify" data-icon="mdi:email-sync-outline"></span>
                 <span class="font-Alumni">Outlook</span>
             </button>
             <button id="excel-button"
-                class="flex items-center justify-center space-x-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 w-full md:w-auto">
+                class="flex items-center justify-center space-x-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 w-full md:w-auto
+                       daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
                 <span class="iconify" data-icon="mdi:file-excel"></span>
                 <span class="font-Alumni">Excel</span>
             </button>
             <button
-                class="flex items-center justify-center space-x-2 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 w-full md:w-auto">
+                class="flex items-center justify-center space-x-2 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 w-full md:w-auto 
+                       daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
                 <span class="iconify" data-icon="mdi:currency-usd"></span>
                 <span class="font-Alumni">Finances</span>
             </button>
             <button id="copy-button"
-                class="flex items-center justify-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 w-full md:w-auto">
+                class="flex items-center justify-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 w-full md:w-auto
+                       daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
                 <span class="iconify" data-icon="mdi:email-multiple"></span>
                 <span class="font-Alumni">Copier</span>
             </button>
@@ -105,7 +109,7 @@ $etatStyles = [
 
     <!-- Options de sélection du nombre d'éléments par page -->
     <div class="mb-4">
-        <label for="items-per-page" class="text-sm text-gray-600 font-Alumni md:text-lg">Afficher par :</label>
+        <label for="items-per-page" class="text-sm text-gray-600 font-Alumni md:text-lg daltonien:text-black">Afficher par :</label>
         <select id="items-per-page" class="border rounded px-2 py-1 font-Alumni md:text-lg"
             onchange="updatePagination()">
             <option value="5">5</option>
@@ -118,7 +122,7 @@ $etatStyles = [
     <!-- Tableau de données dynamique -->
     <div class="relative overflow-x-auto shadow-md rounded-lg">
         <table class="w-full text-sm text-left text-gray-500 font-Alumni md:text-xl">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 daltonien:text-black daltonien:bg-gray-200">
                 <tr>
                     <th scope="col" class="p-4">
                         <div class="flex items-center">
@@ -141,19 +145,24 @@ $etatStyles = [
 
     <!-- Pagination Controls -->
     <div class="flex items-center justify-between mt-4">
-        <div class="text-sm text-gray-600 font-Alumni md:text-lg">
+        <div class="text-sm text-gray-600 font-Alumni md:text-lg daltonien:text-black">
             Affichage de <span id="current-count">0</span> sur <span id="total">0</span> éléments
         </div>
         <div class="flex space-x-2">
             <button onclick="previousPage()"
-                class="font-Alumni md:text-lg bg-primary-300 text-gray-700 px-4 py-2 hover:bg-secondary-300">
+                class="font-Alumni md:text-lg bg-primary-300 text-gray-700 px-4 py-2 hover:bg-secondary-300
+                       daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
                 Précédent
-            </button>
-            <div id="page-buttons" class="flex space-x-0">
+            </button> 
+            
+            <!-- delete? -->
+            <div id="page-buttons" class="flex space-x-0 daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
                 <!-- Les boutons de page seront insérés ici -->
             </div>
+            
             <button onclick="nextPage()"
-                class="font-Alumni md:text-lg bg-primary-300 text-gray-700 px-4 py-2 hover:bg-secondary-300">
+                class="font-Alumni md:text-lg bg-primary-300 text-gray-700 px-4 py-2 hover:bg-secondary-300
+                       daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
                 Suivant
             </button>
         </div>
