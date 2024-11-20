@@ -193,17 +193,14 @@
 
         // Fonction pour les deux boutons darkMode
         const toggleDarkMode = () => {
-            console.log("Dark mode toggled");
             const htmlElement = document.documentElement;
             if (htmlElement.classList.contains('dark')) {
                 htmlElement.classList.remove('dark');
                 localStorage.setItem('theme', 'light');
-                console.log("Mode sombre désactivé");
             } else {
                 htmlElement.classList.remove('daltonien');
                 htmlElement.classList.add('dark');
                 localStorage.setItem('theme', 'dark');
-                console.log("Mode sombre activé");
             }
         };
 
@@ -212,12 +209,10 @@
             if (htmlElement.classList.contains('daltonien')) {
                 htmlElement.classList.remove('daltonien');
                 localStorage.setItem('theme', 'light');
-                console.log("Mode daltonien désactivé");
             } else {
                 htmlElement.classList.remove('dark');
                 htmlElement.classList.add('daltonien');
                 localStorage.setItem('theme', 'daltonien');
-                console.log("Mode daltonien activé");
             }
         };
 
