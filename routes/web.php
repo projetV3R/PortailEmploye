@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsagerController;
 use App\Http\Controllers\ParametresSystemeController;
 use App\Http\Controllers\ModelesController;
- 
+use App\Http\Controllers\FiltreController;
  
  
 // FORMULAIRE CONNEXION
@@ -68,6 +68,8 @@ Route::get('/profil/{id}', [FicheFournisseurController::class, 'profil'])->name(
 
 Route::post('/update-selection', [FicheFournisseurController::class, 'updateSelection'])->name('update.selection');
 
+Route::post('/filtre/fiches', [FiltreController::class, 'filtreFiches'])->name('filtre.fiches');
+Route::get('/get-villes', [FiltreController::class, 'getVillesByRegions'])->name('get.villes');
 //!!! ROUTE DE REDIRECTION ERREUR 404 TOUJOURS A LA FIN DU FICHIER DE ROUTE NE JAMAIS AVOIR DE ROUTE APRES !!!!
 Route::fallback(function () {
     return response()->view('redirection.404', [], 404);

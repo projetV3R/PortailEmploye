@@ -121,6 +121,98 @@ $etatStyles = [
             <option value="50">50</option>
         </select>
     </div>
+    <div id="filters" class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 border-4 p-4 mb-4">
+        <!-- Filtres par région administrative -->
+        <div class="w-full lg:w-1/4">
+            <div id="region-filter-bubbles" class="flex flex-wrap gap-2 mb-2 w-full h-16 max-h-16 overflow-y-auto">
+          
+            </div>
+            <h3 class="font-bold text-lg mb-2 mt-8">Régions Administratives</h3>
+            <div id="region-checkboxes" class="space-y-2 max-h-48 overflow-y-auto border p-2 rounded ">
+                <label class="flex items-center">
+                    <input type="checkbox" value="Bas-Saint-Laurent (01)" class="region-filter mr-2">
+                    Bas-Saint-Laurent (01)
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" value="Saguenay-Lac-Saint-Jean (02)" class="region-filter mr-2">
+                    Saguenay-Lac-Saint-Jean (02)
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" value="Capitale-Nationale (03)" class="region-filter mr-2">
+                    Capitale-Nationale (03)
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" value="Mauricie (04)" class="region-filter mr-2">
+                    Mauricie (04)
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" value="Estrie (05)" class="region-filter mr-2">
+                    Estrie (05)
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" value="Montréal (06)" class="region-filter mr-2">
+                    Montréal (06)
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" value="Outaouais (07)" class="region-filter mr-2">
+                    Outaouais (07)
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" value="Abitibi-Témiscamingue (08)" class="region-filter mr-2">
+                    Abitibi-Témiscamingue (08)
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" value="Côte-Nord (09)" class="region-filter mr-2">
+                    Côte-Nord (09)
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" value="Nord-du-Québec (10)" class="region-filter mr-2">
+                    Nord-du-Québec (10)
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" value="Gaspésie-Îles-de-la-Madeleine (11)" class="region-filter mr-2">
+                    Gaspésie-Îles-de-la-Madeleine (11)
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" value="Chaudière-Appalaches (12)" class="region-filter mr-2">
+                    Chaudière-Appalaches (12)
+                </label>  <label class="flex items-center">
+                    <input type="checkbox" value="Laval (13)" class="region-filter mr-2">
+                    Laval (13)
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" value="Lanaudière (14)" class="region-filter mr-2">
+                    Lanaudière (14)
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" value="Laurentides (15)" class="region-filter mr-2">
+                    Laurentides (15)
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" value="Montérégie (16)" class="region-filter mr-2">
+                    Montérégie (16)
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" value="Centre-du-Québec (17)" class="region-filter mr-2">
+                    Centre-du-Québec (17)
+                </label>
+            </div>
+        </div>
+    
+        <!-- Filtres par ville -->
+        <div class="w-full lg:w-1/4">
+            <div id="ville-filter-bubbles" class="flex flex-wrap gap-2 mb-2 w-full h-16 max-h-16 overflow-y-auto ">
+          
+            </div>
+            <h3 class="font-bold text-lg mb-2 mt-8">Villes</h3>
+            <div id="ville-checkboxes" class="space-y-2 max-h-48 overflow-y-auto border p-2 rounded">
+         
+            </div>
+        </div>
+    </div>
+    
+    
+    
 
     <!-- Tableau de données dynamique -->
     <div class="relative overflow-x-auto shadow-md rounded-lg">
@@ -172,7 +264,7 @@ $etatStyles = [
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
 <script>
     const profilRoute = @json(route('profil', ['id' => ':id']));
     const etatStyles = @json($etatStyles);
@@ -184,7 +276,10 @@ $etatStyles = [
     document.addEventListener("DOMContentLoaded", fetchData);
 
     document.addEventListener("DOMContentLoaded", () => {
+     
+        restoreFilters();
         fetchData();
+       
         setTimeout(() => {
             selectedCompanies =
                 @json($selectedCompanies); // charge les entreprises sélectionnées depuis la session
@@ -205,74 +300,173 @@ $etatStyles = [
         currentPage = 1;
         fetchData();
     }
+    document.querySelectorAll('.region-filter').forEach(checkbox => {
+    checkbox.addEventListener('change', () => {
+      //  updateCityFilters();
+        
+        saveFilters();
+        restoreFilters();
+        fetchData();
+    });
+});
+
+document.querySelectorAll('.ville-filter').forEach(checkbox => {
+    checkbox.addEventListener('change', () => {
+        currentPage = 1;
+      
+      saveFilters();
+  
+        fetchData();
+   
+    });
+});
+
+function updateCityFilters(selectedVilles = []) {
+    const regions = Array.from(document.querySelectorAll('.region-filter:checked')).map(el => el.value);
+
+    axios.get('{{ route('get.villes') }}', {
+        params: {
+            regions: regions,
+        }
+    })
+    .then(response => {
+        const villes = response.data.villesDisponibles;
+        const villeCheckboxesContainer = document.getElementById('ville-checkboxes');
+        villeCheckboxesContainer.innerHTML = '';
+
+      
+        selectedVilles = selectedVilles.filter(ville => villes.includes(ville));
+
+       
+        localStorage.setItem('selectedVilles', JSON.stringify(selectedVilles));
+
+        villes.forEach(ville => {
+            const label = document.createElement('label');
+            label.classList.add('flex', 'items-center');
+            label.innerHTML = `
+                <input type="checkbox" value="${ville}" class="ville-filter mr-2">
+                ${ville}
+            `;
+            villeCheckboxesContainer.appendChild(label);
+        });
+
+        document.querySelectorAll('.ville-filter').forEach(checkbox => {
+          
+            if (selectedVilles.includes(checkbox.value)) {
+                checkbox.checked = true;
+            }
+            checkbox.addEventListener('change', () => {
+                saveFilters();
+                fetchData();
+            });
+        });
+
+       
+        updateFilterBubbles();
+
+        
+        fetchData();
+    })
+    .catch(error => console.error('Erreur lors de la récupération des villes :', error));
+}
+
+function updateCheckboxAllState() {
+    const allCheckboxes = document.querySelectorAll('.row-checkbox');
+    const checkedCheckboxes = document.querySelectorAll('.row-checkbox:checked');
+    const selectAllCheckbox = document.getElementById('checkbox-all');
+
+    if (allCheckboxes.length === checkedCheckboxes.length && allCheckboxes.length > 0) {
+        selectAllCheckbox.checked = true;
+        selectAllCheckbox.indeterminate = false;
+    } else if (checkedCheckboxes.length > 0) {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = true;
+    } else {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = false;
+    }
+}
+
 
     function fetchData() {
-        axios.get(`{{ route('fiches.index') }}?page=${currentPage}&perPage=${perPage}`)
-            .then(response => {
-                const data = response.data;
-                document.getElementById('fiches-content').innerHTML = '';
-                document.getElementById('total').textContent = data.total;
-                document.getElementById('current-count').textContent = data.to;
+    const regions = Array.from(document.querySelectorAll('.region-filter:checked')).map(el => el.value);
+    const villes = Array.from(document.querySelectorAll('.ville-filter:checked')).map(el => el.value);
 
-                totalPages = data.last_page;
+    axios.get(`{{ route('fiches.index') }}`, {
+        params: {
+            page: currentPage,
+            perPage: perPage,
+            regions: regions,
+            villes: villes,
+        }
+    })
+    .then(response => {
+        const data = response.data;
+        document.getElementById('fiches-content').innerHTML = '';
+        document.getElementById('total').textContent = data.total;
+        document.getElementById('current-count').textContent = data.to;
 
-                data.data.forEach(fiche => {
-                    const etatStyle = etatStyles[fiche.etat] || {
-                        textColor: '',
-                        icon: '',
-                        text: fiche.etat
-                    };
-                    const row = document.createElement('tr');
-                    row.classList.add('bg-white', 'border-b', 'hover:bg-gray-50', 'daltonien:hover:bg-gray-200', 'daltonien:text-black');
-                    row.dataset.id = fiche.id;
-                    row.dataset.name = fiche.nom_entreprise;
-                    row.dataset.email = fiche.adresse_courriel;
+        totalPages = data.last_page;
 
-                    // Vérifie si l'entreprise est déjà sélectionnée ou si "Tout sélectionner" est activé
-                    const isChecked = selectedCompanies.some(item => item.id === fiche.id) || document
-                        .getElementById('checkbox-all').checked;
+        data.data.forEach(fiche => {
+            const etatStyle = etatStyles[fiche.etat] || {
+                textColor: '',
+                icon: '',
+                text: fiche.etat
+            };
+            const row = document.createElement('tr');
+            row.classList.add('bg-white', 'border-b', 'hover:bg-gray-50', 'daltonien:hover:bg-gray-200', 'daltonien:text-black');
+            row.dataset.id = fiche.id;
+            row.dataset.name = fiche.nom_entreprise;
+            row.dataset.email = fiche.adresse_courriel;
 
-                    row.innerHTML = `
-                    <td class="w-4 p-4">
-                        <div class="flex items-center">
-                            <input type="checkbox" 
-                                   class="row-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                                   onclick="toggleSelection(${fiche.id}, '${fiche.nom_entreprise}', '${fiche.adresse_courriel}' )"
-                                   ${isChecked ? 'checked' : ''} data-id="${fiche.id}">
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 font-medium text-gray-900">${fiche.nom_entreprise}</td>
-                    <td class="px-6 py-4">${fiche.coordonnees?.ville || ''}</td>
-                    <td class="px-6 py-4 ${etatStyle.textColor} daltonien:text-black">
-                        <span class="flex items-center">
-                            <span class="iconify mr-1" data-icon="${etatStyle.icon}"></span>
-                            <span>${etatStyle.text}</span>
-                        </span>
-                    </td>
-                    <td class="px-6 py-4">
-                        <a href="${profilRoute.replace(':id', fiche.id)}" class="font-medium text-blue-600 hover:underline daltonien:text-black daltonien:hover:bg-daltonienBleu">Ouvrir</a>
-                    </td>
-                `;
-                    document.getElementById('fiches-content').appendChild(row);
+       
+            const isChecked = selectedCompanies.some(item => item.id === fiche.id) || document
+                .getElementById('checkbox-all').checked;
 
-                    // Si "Tout sélectionner" est activé, ajoute l'entreprise à la sélection si elle ne l'est pas déjà
-                    if (document.getElementById('checkbox-all').checked && !selectedCompanies.some(item =>
-                            item.id === fiche.id)) {
-                        selectedCompanies.push({
-                            id: fiche.id,
-                            name: fiche.nom_entreprise
-                        });
-                    }
+            row.innerHTML = `
+                <td class="w-4 p-4">
+                    <div class="flex items-center">
+                        <input type="checkbox" 
+                               class="row-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                               onclick="toggleSelection(${fiche.id}, '${fiche.nom_entreprise}', '${fiche.adresse_courriel}' )"
+                               ${isChecked ? 'checked' : ''} data-id="${fiche.id}">
+                    </div>
+                </td>
+                <td class="px-6 py-4 font-medium text-gray-900">${fiche.nom_entreprise}</td>
+                <td class="px-6 py-4">${fiche.coordonnees?.ville || ''}</td>
+                <td class="px-6 py-4 ${etatStyle.textColor} daltonien:text-black">
+                    <span class="flex items-center">
+                        <span class="iconify mr-1" data-icon="${etatStyle.icon}"></span>
+                        <span>${etatStyle.text}</span>
+                    </span>
+                </td>
+                <td class="px-6 py-4">
+                    <a href="${profilRoute.replace(':id', fiche.id)}" class="font-medium text-blue-600 hover:underline daltonien:text-black daltonien:hover:bg-daltonienBleu">Ouvrir</a>
+                </td>
+            `;
+            document.getElementById('fiches-content').appendChild(row);
+
+         
+            if (document.getElementById('checkbox-all').checked && !selectedCompanies.some(item =>
+                    item.id === fiche.id)) {
+                selectedCompanies.push({
+                    id: fiche.id,
+                    name: fiche.nom_entreprise
                 });
+            }
+        });
 
-                // Met à jour l'affichage des entreprises sélectionnées et la pagination
-                updateSelectedCompaniesDisplay();
-                generatePageButtons(totalPages);
-                sessionStorage.setItem('selectedCompanies', JSON.stringify(selectedCompanies));
-                updateCheckboxAllState(); // Vérifie si toutes les cases de la page sont cochées
-            })
-            .catch(error => console.error('Erreur lors de la récupération des données :', error));
-    }
+
+        updateSelectedCompaniesDisplay();
+        generatePageButtons(totalPages);
+        sessionStorage.setItem('selectedCompanies', JSON.stringify(selectedCompanies));
+        updateCheckboxAllState(); 
+        
+    })
+    .catch(error => console.error('Erreur lors de la récupération des données :', error));
+}
+
 
     function toggleSelection(ficheId, companyName, email) {
         const index = selectedCompanies.findIndex(item => item.id === ficheId);
@@ -544,5 +738,105 @@ $etatStyles = [
             location.reload();
         }
     });
+
+    function saveFilters() {
+ 
+    const selectedRegions = Array.from(document.querySelectorAll('.region-filter:checked')).map(el => el.value);
+    
+    const selectedVilles = Array.from(document.querySelectorAll('.ville-filter:checked')).map(el => el.value);
+
+  
+    localStorage.setItem('selectedRegions', JSON.stringify(selectedRegions));
+    localStorage.setItem('selectedVilles', JSON.stringify(selectedVilles));
+    updateFilterBubbles();
+    console.log(selectedVilles);
+}
+
+function restoreFilters() {
+  
+    const selectedRegions = JSON.parse(localStorage.getItem('selectedRegions')) || [];
+    const selectedVilles = JSON.parse(localStorage.getItem('selectedVilles')) || [];
+
+
+    selectedRegions.forEach(region => {
+        document.querySelectorAll('.region-filter').forEach(checkbox => {
+            if (checkbox.value === region) {
+                checkbox.checked = true;
+            }
+        });
+    });
+
+   
+    updateCityFilters(selectedVilles); // On passe les villes sélectionnées
+    updateFilterBubbles();
+}
+
+function updateFilterBubbles() {
+    const selectedRegions = JSON.parse(localStorage.getItem('selectedRegions')) || [];
+    const selectedVilles = JSON.parse(localStorage.getItem('selectedVilles')) || [];
+
+    updateRegionFilterBubbles(selectedRegions);
+    updateVilleFilterBubbles(selectedVilles);
+    
+}
+
+function updateRegionFilterBubbles(selectedRegions) {
+    const regionBubblesContainer = document.getElementById('region-filter-bubbles');
+    regionBubblesContainer.innerHTML = '';
+
+    selectedRegions.forEach(region => {
+        const bubble = document.createElement('span');
+        bubble.classList.add('bg-blue-200', 'text-blue-800', 'text-sm','cursor-pointer', 'font-semibold', 'mr-2', 'px-2', 'py-1', 'rounded', 'flex', 'items-center', 'mb-2','hover:bg-red-500','hover:text-white','max-h-10');
+        bubble.innerHTML = `
+            ${region}
+              <span class="iconify w-4 h-4 ml-1 " data-icon="material-symbols:close"></span>
+        `;
+
+        bubble.addEventListener('click', () => {
+            
+            document.querySelectorAll('.region-filter').forEach(checkbox => {
+                if (checkbox.value === region) {
+                    checkbox.checked = false;
+                }
+            });
+            saveFilters();
+            fetchData();
+            restoreFilters();
+        });
+
+        regionBubblesContainer.appendChild(bubble);
+    });
+}
+
+function updateVilleFilterBubbles(selectedVilles) {
+    const villeBubblesContainer = document.getElementById('ville-filter-bubbles');
+    villeBubblesContainer.innerHTML = '';
+
+    selectedVilles.forEach(ville => {
+        const bubble = document.createElement('span');
+        bubble.classList.add('bg-blue-200', 'text-blue-800', 'text-sm','cursor-pointer', 'font-semibold', 'mr-2', 'px-2', 'py-1', 'rounded', 'flex', 'items-center', 'mb-2','hover:bg-red-500','hover:text-white','max-h-10');
+        bubble.innerHTML = `
+            ${ville}
+             <span class="iconify w-4 h-4 ml-1 " data-icon="material-symbols:close"></span>
+        `;
+
+        bubble.addEventListener('click', () => {
+           
+            document.querySelectorAll('.ville-filter').forEach(checkbox => {
+                if (checkbox.value === ville) {
+                    checkbox.checked = false;
+                }
+            });
+            saveFilters();
+            fetchData();
+            restoreFilters();
+        });
+
+        villeBubblesContainer.appendChild(bubble);
+    });
+}
+
+
+
 </script>
 @endsection

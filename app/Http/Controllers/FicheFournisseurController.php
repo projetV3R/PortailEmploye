@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\FicheFournisseur;
 use App\Models\ParametreSysteme;
+use App\Models\Coordonnee;
+use App\Models\Municipalites;
 use Illuminate\Http\Request;
 
 class FicheFournisseurController extends Controller
@@ -15,15 +17,38 @@ class FicheFournisseurController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('perPage', 5);
-        $fiches = FicheFournisseur::with('coordonnees')->paginate($perPage);
-        $selectedCompanies = session('selectedCompanies', []);
-
+        $page = $request->input('page', 1);
+        $regions = $request->input('regions', []);
+        $villes = $request->input('villes', []);
+    
+        $query = FicheFournisseur::with('coordonnees');
+    
+       
+        if (!empty($regions)) {
+            $query->whereHas('coordonnees', function ($q) use ($regions) {
+                $q->whereIn('region_administrative', $regions);
+            });
+        }
+    
+        if (!empty($villes)) {
+            $query->whereHas('coordonnees', function ($q) use ($villes) {
+                $q->whereIn('ville', $villes);
+            });
+        }
+    
+       
+        $query->where('etat', '!=', 'désactivé');
+    
+        $fiches = $query->paginate($perPage, ['*'], 'page', $page);
+    
         if ($request->ajax()) {
             return response()->json($fiches);
         }
-
+    
+        $selectedCompanies = session('selectedCompanies', []);
         return view('Fournisseur.liste_fournisseur', compact('fiches', 'selectedCompanies'));
     }
+    
 
 
     public function profil($id)
