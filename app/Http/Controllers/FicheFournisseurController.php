@@ -43,6 +43,29 @@ class FicheFournisseurController extends Controller
         return response()->json(['message' => 'Sélection mise à jour']);
     }
 
+    public function approve($id)
+    {
+        $fournisseur = FicheFournisseur::find($id);
+        if ($fournisseur) {
+            $fournisseur->etat = 'accepter';
+            $fournisseur->save();
+            return response()->json(['message' => 'Demande approuvée avec succès.']);
+        }
+        return response()->json(['message' => 'Fournisseur non trouvé.'], 404);
+    }
+
+    public function reject(Request $request, $id)
+    {
+        $fournisseur = FicheFournisseur::find($id);
+        if ($fournisseur) {
+            $fournisseur->etat = 'refuser';
+            $fournisseur->save();
+            return response()->json(['message' => 'Demande refusée avec succès.']);
+        }
+        return response()->json(['message' => 'Fournisseur non trouvé.'], 404);
+    }
+
+
 
     /**
      * Show the form for creating a new resource.

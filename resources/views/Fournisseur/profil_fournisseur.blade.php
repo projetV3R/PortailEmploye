@@ -54,10 +54,37 @@
                 </div>
                 <div class="ml-4">
                     <h4 class="font-Alumni font-bold text-lg md:text-2xl">Statut de la demande :
-                        <span class="{{ $etatStyle['labelColor'] }}">
+                        <span class="{{ $etatStyle['labelColor'] }} block mt-1 text-lg md:text-xl font-semibold">
                             {{ $etatStyle['text'] }}
                         </span>
                     </h4>
+                </div>
+                <div class="ml-4 flex gap-2 justify-center">
+                @if ($etat == 'En attente' || $etat == 'refuser')
+                    <button type="button"
+                        class="hidden md:inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+                        id="approveButton">
+                        Approuver
+                    </button>
+                    <button type="button"
+                        class="md:hidden bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded flex items-center justify-center"
+                        id="approveButtonIcon">
+                        <span class="iconify" data-icon="material-symbols:check-circle-outline" style="font-size: 1.5rem;"></span>
+                    </button>
+                    @endif
+
+                    @if ($etat == 'En attente')
+                    <button type="button"
+                        class="hidden md:inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                        id="rejectButton">
+                        Refuser
+                    </button>
+                    <button type="button"
+                        class="md:hidden bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded flex items-center justify-center"
+                        id="rejectButtonIcon">
+                        <span class="iconify" data-icon="material-symbols:cancel" style="font-size: 1.5rem;"></span>
+                    </button>
+                    @endif
                 </div>
             </div>
         </div>
@@ -335,6 +362,64 @@
 
     <script>
         sessionStorage.setItem('fromProfilePage', 'true');
-    </script>
+    
+    document.getElementById('approveButton').addEventListener('click', function() {
+        Swal.fire({
+            title: 'Êtes-vous sûr ?',
+            text: "Voulez-vous vraiment approuver cette demande ?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Oui, approuver',
+            cancelButtonText: 'Annuler'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                approuverDemande();
+            }
+        });
+    });
+
+    document.getElementById('rejectButton').addEventListener('click', function() {
+        Swal.fire({
+            title: 'Êtes-vous sûr ?',
+            text: "Voulez-vous vraiment refuser cette demande ?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Refuser',
+            cancelButtonText: 'Annuler',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                refuserDemande();
+            }
+        });
+    });
+
+    function approuverDemande() {
+        axios.post('{{ route('fiches.approve', ['id' => $fournisseur->id]) }}')
+            .then(response => {
+                Swal.fire('Approuvé!', 'La demande a été approuvée.', 'success')
+                    .then(() => location.reload());
+            })
+            .catch(error => {
+                Swal.fire('Erreur!', "Une erreur s'est produite.", 'error');
+            });
+    }
+
+    function refuserDemande(reasons) {
+        axios.post('{{ route('fiches.reject', ['id' => $fournisseur->id]) }}', {
+            reasons: reasons
+        })
+            .then(response => {
+                Swal.fire('Refusé!', 'La demande a été refusée.', 'success')
+                    .then(() => location.reload());
+            })
+            .catch(error => {
+                Swal.fire('Erreur!', "Une erreur s'est produite.", 'error');
+            });
+    }
+</script>
 
 @endsection
