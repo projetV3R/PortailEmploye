@@ -8,9 +8,8 @@ use App\Models\ParametreSysteme;
 use App\Models\Coordonnee;
 use App\Models\Municipalites;
 use Illuminate\Http\Request;
-
-class FicheFournisseurController extends Controller
-{
+     class FicheFournisseurController extends Controller
+    {
     /**
      * Display a listing of the resource.
      */
@@ -35,7 +34,17 @@ class FicheFournisseurController extends Controller
                 $q->whereIn('ville', $villes);
             });
         }
-    
+        if ($request->has('produits') && !empty($request->produits)) {
+            $produits = $request->input('produits');
+            $query->whereHas('produitsServices', function($q) use ($produits) {
+                $q->whereIn('produits_services.id', $produits);
+            });
+        }
+
+        if ($request->has('etats') && !empty($request->etats)) {
+            $etats = $request->input('etats');
+            $query->whereIn('etat', $etats);
+        }
        
         $query->where('etat', '!=', 'désactivé');
     
@@ -51,7 +60,7 @@ class FicheFournisseurController extends Controller
     
 
 
-    public function profil($id)
+     public function profil($id)
     {
         $fournisseur = FicheFournisseur::find($id);
         $licence = $fournisseur->licence()->with('sousCategories.categorie')->first();

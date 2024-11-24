@@ -122,8 +122,55 @@ $etatStyles = [
         </select>
     </div>
     <div id="filters" class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 border-4 p-4 mb-4">
+        <div class="w-full lg:w-1/5">
+            <div id="etat-filter-bubbles" class="flex flex-wrap gap-2 mb-2 w-full h-16 max-h-16 overflow-y-auto">
+            </div>
+            <h3 class="font-bold text-lg mb-2 mt-8">État de la fiche</h3>
+            <div id="etat-checkboxes" class="space-y-2 max-h-48 overflow-y-auto border p-2 rounded">
+                <label class="flex items-center">
+                    <input type="checkbox" value="En attente" class="etat-filter mr-2">
+                    En attente
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" value="Accepter" class="etat-filter mr-2">
+                    Accepté
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" value="Refuser" class="etat-filter mr-2">
+                    Refusé
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" value="A reviser" class="etat-filter mr-2">
+                    À réviser
+                </label>
+            </div>
+        </div>
+        
+        <div class="w-full lg:w-1/5">
+            <div id="produits-filter-bubbles" class="flex flex-wrap gap-2 mb-2 w-full h-16 max-h-16 overflow-y-auto ">
+                <div id="scroll-trigger" class="h-1"></div>
+            </div>
+            <h3 class="font-bold text-lg mb-2 mt-8">Produits&Services</h3>
+       
+            <div>     <select id="categorie-select" class="border px-2 py-1 w-full ">
+                <option value="">Toutes les catégories</option>
+                <!-- Les options seront ajoutées dynamiquement -->
+            </select></div><div id="produits-checkboxes" class="space-y-2 max-h-48 overflow-y-auto border p-2 rounded">
+         
+            </div>
+        </div>
+
+        <div class="w-full lg:w-1/5">
+            <div id="licence-filter-bubbles" class="flex flex-wrap gap-2 mb-2 w-full h-16 max-h-16 overflow-y-auto ">
+          
+            </div>
+            <h3 class="font-bold text-lg mb-2 mt-8">Catégorie de travaux</h3>
+            <div id="licence-checkboxes" class="space-y-2 max-h-48 overflow-y-auto border p-2 rounded">
+         
+            </div>
+        </div>
         <!-- Filtres par région administrative -->
-        <div class="w-full lg:w-1/4">
+        <div class="w-full lg:w-1/5">
             <div id="region-filter-bubbles" class="flex flex-wrap gap-2 mb-2 w-full h-16 max-h-16 overflow-y-auto">
           
             </div>
@@ -200,7 +247,7 @@ $etatStyles = [
         </div>
     
         <!-- Filtres par ville -->
-        <div class="w-full lg:w-1/4">
+        <div class="w-full lg:w-1/5">
             <div id="ville-filter-bubbles" class="flex flex-wrap gap-2 mb-2 w-full h-16 max-h-16 overflow-y-auto ">
           
             </div>
@@ -264,80 +311,56 @@ $etatStyles = [
     </div>
 </div>
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
 <script>
+    let loadedProduitIds = []; 
     const profilRoute = @json(route('profil', ['id' => ':id']));
     const etatStyles = @json($etatStyles);
-    let selectedCompanies = [];
+    let selectedCompanies = @json($selectedCompanies); 
     let currentPage = 1;
     let perPage = 5;
     let totalPages = 1;
 
-    document.addEventListener("DOMContentLoaded", fetchData);
-
-    document.addEventListener("DOMContentLoaded", () => {
-     
-        restoreFilters();
-        fetchData();
-       
-        setTimeout(() => {
-            selectedCompanies =
-                @json($selectedCompanies); // charge les entreprises sélectionnées depuis la session
-
-            selectedCompanies.forEach(company => {
-                const checkbox = document.querySelector(
-                    `.row-checkbox[data-id="${company.id}"]`);
-                if (checkbox) checkbox.checked = true;
-            });
-            updateSelectedCompaniesDisplay();
-        }, 500);
+    document.addEventListener("DOMContentLoaded", async () => {
+        await restoreFilters();
+        await fetchData();
+        await populateCategorieSelect(); 
+        updateSelectedCompaniesDisplay();
+        
     });
-
-
 
     function updatePagination() {
         perPage = document.getElementById('items-per-page').value;
         currentPage = 1;
         fetchData();
     }
-    document.querySelectorAll('.region-filter').forEach(checkbox => {
-    checkbox.addEventListener('change', () => {
-      //  updateCityFilters();
-        
-        saveFilters();
-        restoreFilters();
-        fetchData();
-    });
-});
 
-document.querySelectorAll('.ville-filter').forEach(checkbox => {
-    checkbox.addEventListener('change', () => {
-        currentPage = 1;
-      
-      saveFilters();
-  
-        fetchData();
    
+    document.querySelectorAll('.region-filter').forEach(checkbox => {
+        checkbox.addEventListener('change', async () => {
+            currentPage = 1;
+            saveFilters();
+            await updateCityFilters();
+            await updateProduitsFilters();
+            await fetchData();
+            await populateCategorieSelect();
+        });
     });
-});
 
-function updateCityFilters(selectedVilles = []) {
+    async function updateCityFilters(selectedVilles = []) {
     const regions = Array.from(document.querySelectorAll('.region-filter:checked')).map(el => el.value);
+    const produits = Array.from(document.querySelectorAll('.produits-filter:checked')).map(el => el.value);
 
-    axios.get('{{ route('get.villes') }}', {
-        params: {
-            regions: regions,
-        }
-    })
-    .then(response => {
-        const villes = response.data.villesDisponibles;
+    try {
+        const response = await axios.get('{{ route('get.villes') }}', {
+            params: { regions, produits }
+        });
+
+        const villes = response.data.villesDisponibles || [];
         const villeCheckboxesContainer = document.getElementById('ville-checkboxes');
         villeCheckboxesContainer.innerHTML = '';
 
-      
         selectedVilles = selectedVilles.filter(ville => villes.includes(ville));
-
-       
         localStorage.setItem('selectedVilles', JSON.stringify(selectedVilles));
 
         villes.forEach(ville => {
@@ -351,177 +374,303 @@ function updateCityFilters(selectedVilles = []) {
         });
 
         document.querySelectorAll('.ville-filter').forEach(checkbox => {
-          
             if (selectedVilles.includes(checkbox.value)) {
                 checkbox.checked = true;
             }
-            checkbox.addEventListener('change', () => {
+            checkbox.addEventListener('change', async () => {
                 saveFilters();
-                fetchData();
+                await populateCategorieSelect(); // Actualise les catégories
+                await fetchData(); // Actualise les fiches fournisseurs
             });
         });
 
-       
         updateFilterBubbles();
-
-        
-        fetchData();
-    })
-    .catch(error => console.error('Erreur lors de la récupération des villes :', error));
-}
-
-function updateCheckboxAllState() {
-    const allCheckboxes = document.querySelectorAll('.row-checkbox');
-    const checkedCheckboxes = document.querySelectorAll('.row-checkbox:checked');
-    const selectAllCheckbox = document.getElementById('checkbox-all');
-
-    if (allCheckboxes.length === checkedCheckboxes.length && allCheckboxes.length > 0) {
-        selectAllCheckbox.checked = true;
-        selectAllCheckbox.indeterminate = false;
-    } else if (checkedCheckboxes.length > 0) {
-        selectAllCheckbox.checked = false;
-        selectAllCheckbox.indeterminate = true;
-    } else {
-        selectAllCheckbox.checked = false;
-        selectAllCheckbox.indeterminate = false;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des villes :', error);
     }
 }
 
 
-    function fetchData() {
+    async function updateProduitsFilters(selectedProduits = []) {
+    produitsPage = 1; 
+    loadedProduitIds = []; 
     const regions = Array.from(document.querySelectorAll('.region-filter:checked')).map(el => el.value);
     const villes = Array.from(document.querySelectorAll('.ville-filter:checked')).map(el => el.value);
+    const selectedCategorie = document.getElementById('categorie-select').value; 
 
-    axios.get(`{{ route('fiches.index') }}`, {
-        params: {
-            page: currentPage,
-            perPage: perPage,
-            regions: regions,
-            villes: villes,
-        }
-    })
-    .then(response => {
-        const data = response.data;
-        document.getElementById('fiches-content').innerHTML = '';
-        document.getElementById('total').textContent = data.total;
-        document.getElementById('current-count').textContent = data.to;
+    try {
+        const response = await axios.get('{{ route('get.produits') }}', {
+            params: { regions, villes, categorie: selectedCategorie }
+        });
 
-        totalPages = data.last_page;
+        const produits = response.data.produitsDisponibles || [];
+        const produitsCheckboxesContainer = document.getElementById('produits-checkboxes');
 
-        data.data.forEach(fiche => {
-            const etatStyle = etatStyles[fiche.etat] || {
-                textColor: '',
-                icon: '',
-                text: fiche.etat
-            };
-            const row = document.createElement('tr');
-            row.classList.add('bg-white', 'border-b', 'hover:bg-gray-50', 'daltonien:hover:bg-gray-200', 'daltonien:text-black');
-            row.dataset.id = fiche.id;
-            row.dataset.name = fiche.nom_entreprise;
-            row.dataset.email = fiche.adresse_courriel;
-
+        produitsCheckboxesContainer.innerHTML = ''; 
        
-            const isChecked = selectedCompanies.some(item => item.id === fiche.id) || document
-                .getElementById('checkbox-all').checked;
+       if (produits.length === 0) {
+            produitsCheckboxesContainer.innerHTML = `
+                <p class="text-gray-500 text-center font-Alumni mt-4">
+                    Pas de produits ou services disponibles avec les filtres appliqués.
+                </p>`;
+            return;
+        }
+        produits.forEach(produit => {
+            if (!loadedProduitIds.includes(produit.id)) {
+                loadedProduitIds.push(produit.id); 
 
-            row.innerHTML = `
-                <td class="w-4 p-4">
-                    <div class="flex items-center">
-                        <input type="checkbox" 
-                               class="row-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                               onclick="toggleSelection(${fiche.id}, '${fiche.nom_entreprise}', '${fiche.adresse_courriel}' )"
-                               ${isChecked ? 'checked' : ''} data-id="${fiche.id}">
-                    </div>
-                </td>
-                <td class="px-6 py-4 font-medium text-gray-900">${fiche.nom_entreprise}</td>
-                <td class="px-6 py-4">${fiche.coordonnees?.ville || ''}</td>
-                <td class="px-6 py-4 ${etatStyle.textColor} daltonien:text-black">
-                    <span class="flex items-center">
-                        <span class="iconify mr-1" data-icon="${etatStyle.icon}"></span>
-                        <span>${etatStyle.text}</span>
-                    </span>
-                </td>
-                <td class="px-6 py-4">
-                    <a href="${profilRoute.replace(':id', fiche.id)}" class="font-medium text-blue-600 hover:underline daltonien:text-black daltonien:hover:bg-daltonienBleu">Ouvrir</a>
-                </td>
-            `;
-            document.getElementById('fiches-content').appendChild(row);
-
-         
-            if (document.getElementById('checkbox-all').checked && !selectedCompanies.some(item =>
-                    item.id === fiche.id)) {
-                selectedCompanies.push({
-                    id: fiche.id,
-                    name: fiche.nom_entreprise
-                });
+                const label = document.createElement('label');
+                label.classList.add('flex', 'items-center');
+                label.innerHTML = `
+                    <input type="checkbox" value="${produit.id}" class="produits-filter mr-2">
+                    ${produit.description}
+                `;
+                produitsCheckboxesContainer.appendChild(label);
             }
         });
 
-
-        updateSelectedCompaniesDisplay();
-        generatePageButtons(totalPages);
-        sessionStorage.setItem('selectedCompanies', JSON.stringify(selectedCompanies));
-        updateCheckboxAllState(); 
         
-    })
-    .catch(error => console.error('Erreur lors de la récupération des données :', error));
+        document.querySelectorAll('.produits-filter').forEach(checkbox => {
+            if (selectedProduits.some(p => p.id === checkbox.value)) {
+                checkbox.checked = true;
+            }
+            checkbox.addEventListener('change', async () => {
+                saveFilters();
+                await fetchData();
+            });
+        });
+
+    } catch (error) {
+        console.error('Erreur lors de la récupération des produits :', error);
+    }
 }
 
+async function populateCategorieSelect() {
+    const regions = Array.from(document.querySelectorAll('.region-filter:checked')).map(el => el.value) || [];
+    const villes = Array.from(document.querySelectorAll('.ville-filter:checked')).map(el => el.value) || [];
+
+    try {
+        const response = await axios.get('{{ route('get.categories') }}', {
+            params: {
+                regions,
+                villes
+            }
+        });
+
+        const categories = response.data.categories || [];
+        const categorieSelect = document.getElementById('categorie-select');
+
+       
+        categorieSelect.innerHTML = '<option value="">Toutes les catégories</option>';
+
+     
+        categories.forEach(categorie => {
+            const option = document.createElement('option');
+            option.value = categorie;
+            option.textContent = categorie;
+            categorieSelect.appendChild(option);
+        });
+
+        console.log('Catégories mises à jour:', categories);
+    } catch (error) {
+        console.error('Erreur lors du peuplage des catégories :', error);
+    }
+}
+
+
+document.getElementById('categorie-select').addEventListener('change', async () => {
+    await updateProduitsFilters(); 
+});
+
+let produitsLoading = false;
+let produitsPage = 1; 
+const produitsCheckboxesContainer = document.getElementById('produits-checkboxes');
+
+
+async function loadMoreProduits() {
+    if (produitsLoading) return; 
+    produitsLoading = true;
+
+    const regions = Array.from(document.querySelectorAll('.region-filter:checked')).map(el => el.value);
+    const villes = Array.from(document.querySelectorAll('.ville-filter:checked')).map(el => el.value);
+    const selectedCategorie = document.getElementById('categorie-select').value; 
+
+    try {
+        const response = await axios.get('{{ route('get.produits') }}', {
+            params: { 
+                regions, 
+                villes, 
+                categorie: selectedCategorie, 
+                page: produitsPage, 
+                perPage: 100
+            },
+        });
+
+        const produits = response.data.produitsDisponibles || [];
+        const currentPage = response.data.current_page;
+        const lastPage = response.data.last_page;
+
+       
+        if (currentPage >= lastPage || produits.length === 0) {
+            console.log('Aucun produit supplémentaire disponible.');
+            produitsLoading = false; // Stoppe le lazy loading
+            return;
+        }
+
+        produitsPage++; 
+
+        produits.forEach(produit => {
+            // Vérifiez si le produit est déjà chargé
+            if (!loadedProduitIds.includes(produit.id)) {
+                loadedProduitIds.push(produit.id); 
+
+                const label = document.createElement('label');
+                label.classList.add('flex', 'items-center');
+                label.innerHTML = `
+                    <input type="checkbox" value="${produit.id}" class="produits-filter mr-2">
+                    ${produit.description}
+                `;
+                produitsCheckboxesContainer.appendChild(label);
+            }
+        });
+
+ 
+        document.querySelectorAll('.produits-filter').forEach(checkbox => {
+            checkbox.addEventListener('change', async () => {
+                saveFilters();
+                await fetchData();
+            });
+        });
+
+    } catch (error) {
+        console.error('Erreur lors du chargement des produits :', error);
+    } finally {
+        produitsLoading = false;
+    }
+}
+
+
+
+
+
+produitsCheckboxesContainer.addEventListener('scroll', () => {
+    if (
+        produitsCheckboxesContainer.scrollTop + produitsCheckboxesContainer.clientHeight >= 
+        produitsCheckboxesContainer.scrollHeight
+    ) {
+        if (!produitsLoading) {
+            loadMoreProduits(); 
+        }
+    }
+});
+
+
+
+
+    async function fetchData() {
+        const regions = Array.from(document.querySelectorAll('.region-filter:checked')).map(el => el.value);
+        const villes = Array.from(document.querySelectorAll('.ville-filter:checked')).map(el => el.value);
+        const produits = JSON.parse(localStorage.getItem('selectedProduits'))?.map(p => p.id) || [];
+
+
+        try {
+            const response = await axios.get(`{{ route('fiches.index') }}`, {
+                params: {
+                    page: currentPage,
+                    perPage: perPage,
+                    regions: regions,
+                    villes: villes,
+                    produits: produits,
+                }
+            });
+
+            const data = response.data;
+            document.getElementById('fiches-content').innerHTML = '';
+            document.getElementById('total').textContent = data.total;
+            document.getElementById('current-count').textContent = data.to;
+
+            totalPages = data.last_page;
+
+            data.data.forEach(fiche => {
+                const etatStyle = etatStyles[fiche.etat] || { textColor: '', icon: '', text: fiche.etat };
+                const row = document.createElement('tr');
+                row.classList.add('bg-white', 'border-b', 'hover:bg-gray-50', 'daltonien:hover:bg-gray-200', 'daltonien:text-black');
+                row.dataset.id = fiche.id;
+                row.dataset.name = fiche.nom_entreprise;
+                row.dataset.email = fiche.adresse_courriel;
+
+                const isChecked = selectedCompanies.some(item => item.id === fiche.id) || document.getElementById('checkbox-all').checked;
+
+                row.innerHTML = `
+                    <td class="w-4 p-4">
+                        <div class="flex items-center">
+                            <input type="checkbox" 
+                                   class="row-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                   onclick="toggleSelection(${fiche.id}, '${fiche.nom_entreprise}', '${fiche.adresse_courriel}' )"
+                                   ${isChecked ? 'checked' : ''} data-id="${fiche.id}">
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 font-medium text-gray-900">${fiche.nom_entreprise}</td>
+                    <td class="px-6 py-4">${fiche.coordonnees?.ville || ''}</td>
+                    <td class="px-6 py-4 ${etatStyle.textColor} daltonien:text-black">
+                        <span class="flex items-center">
+                            <span class="iconify mr-1" data-icon="${etatStyle.icon}"></span>
+                            <span>${etatStyle.text}</span>
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <a href="${profilRoute.replace(':id', fiche.id)}" class="font-medium text-blue-600 hover:underline daltonien:text-black daltonien:hover:bg-daltonienBleu">Ouvrir</a>
+                    </td>
+                `;
+                document.getElementById('fiches-content').appendChild(row);
+
+                if (document.getElementById('checkbox-all').checked && !selectedCompanies.some(item => item.id === fiche.id)) {
+                    selectedCompanies.push({ id: fiche.id, name: fiche.nom_entreprise, email: fiche.adresse_courriel });
+                }
+            });
+
+           
+            selectedCompanies.forEach(company => {
+                const checkbox = document.querySelector(`.row-checkbox[data-id="${company.id}"]`);
+                if (checkbox) {
+                    checkbox.checked = true;
+                }
+            });
+
+            updateSelectedCompaniesDisplay();
+            generatePageButtons(totalPages);
+            sessionStorage.setItem('selectedCompanies', JSON.stringify(selectedCompanies));
+            updateCheckboxAllState();
+        } catch (error) {
+            console.error('Erreur lors de la récupération des données :', error);
+        }
+    }
 
     function toggleSelection(ficheId, companyName, email) {
         const index = selectedCompanies.findIndex(item => item.id === ficheId);
         if (index === -1) {
-            selectedCompanies.push({
-                id: ficheId,
-                name: companyName,
-                email: email
-            });
+            selectedCompanies.push({ id: ficheId, name: companyName, email: email });
         } else {
             selectedCompanies.splice(index, 1);
         }
         updateSelectedCompaniesDisplay();
-        saveSelection(); // Sauvegarde en session après chaque modification
+        saveSelection();
     }
 
-
     function saveSelection() {
-        axios.post("{{ route('update.selection') }}", {
-                selectedCompanies: selectedCompanies // Utilisez bien `selectedCompanies`
-            })
+        axios.post("{{ route('update.selection') }}", { selectedCompanies })
             .then(response => console.log(response.data.message))
             .catch(error => console.error('Erreur de mise à jour de la sélection :', error));
     }
 
-
-
-    /*function toggleSelectAll(checkbox) {
-        selectedCompanies = [];
-        const checkboxes = document.querySelectorAll('.row-checkbox');
-        checkboxes.forEach(box => {
-            const row = box.closest('tr');
-            const ficheId = parseInt(row.dataset.id);
-            const companyName = row.dataset.name;
-            box.checked = checkbox.checked;
-            if (checkbox.checked) {
-                selectedCompanies.push({
-                    id: ficheId,
-                    name: companyName
-                });
-            }
-        });
-        updateSelectedCompaniesDisplay();
-        saveSelection(); // Ajout pour sauvegarder la liste vide en session si tout est décoché
-    }*/
-
-
     function updateSelectedCompaniesDisplay() {
         const selectedListItems = selectedCompanies
             .map((company, index) => `
-            <li style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
-                ${company.name}
-                <button onclick="removeCompany(${index}, ${company.id})" style="margin-left: 10px; cursor: pointer;">❌</button>
-            </li>
-        `)
+                <li style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+                    ${company.name}
+                    <button onclick="removeCompany(${index}, ${company.id})" style="margin-left: 10px; cursor: pointer;">❌</button>
+                </li>
+            `)
             .join('');
 
         const selectedCompaniesContainer = document.getElementById('selected-companies');
@@ -529,27 +678,20 @@ function updateCheckboxAllState() {
         selectedCompaniesContainer.style.flexDirection = 'column';
         selectedCompaniesContainer.innerHTML = selectedListItems;
 
-        document.getElementById('counter').textContent = `Elements selectionnees (${selectedCompanies.length})`;
+        document.getElementById('counter').textContent = `Éléments sélectionnés (${selectedCompanies.length})`;
     }
 
-
     function removeCompany(index, companyId) {
-        // Supprime l'entreprise sélectionnée à l'index spécifié
         selectedCompanies.splice(index, 1);
-
-        // Met à jour l'affichage des entreprises sélectionnées
         updateSelectedCompaniesDisplay();
 
-        // Décoche la case correspondante dans le tableau principal
         const checkbox = document.querySelector(`.row-checkbox[data-id="${companyId}"]`);
         if (checkbox) {
             checkbox.checked = false;
         }
 
-        // Sauvegarde la sélection mise à jour
         saveSelection();
     }
-
 
     function generatePageButtons(totalPages) {
         const pageButtonsContainer = document.getElementById('page-buttons');
@@ -557,29 +699,13 @@ function updateCheckboxAllState() {
         const nextButton = document.querySelector('button[onclick="nextPage()"]');
         pageButtonsContainer.innerHTML = '';
 
-        // Active/Désactive le bouton "Précédent"
-        if (currentPage === 1) {
-            previousButton.classList.add('cursor-not-allowed', 'opacity-50');
-            previousButton.disabled = true;
-        } else {
-            previousButton.classList.remove('cursor-not-allowed', 'opacity-50');
-            previousButton.disabled = false;
-        }
-
-        // Active/Désactive le bouton "Suivant"
-        if (currentPage === totalPages) {
-            nextButton.classList.add('cursor-not-allowed', 'opacity-50');
-            nextButton.disabled = true;
-        } else {
-            nextButton.classList.remove('cursor-not-allowed', 'opacity-50');
-            nextButton.disabled = false;
-        }
+        previousButton.disabled = currentPage === 1;
+        nextButton.disabled = currentPage === totalPages;
 
         for (let i = 1; i <= totalPages; i++) {
             const pageButton = document.createElement('button');
             pageButton.textContent = i;
-            pageButton.className =
-                `px-3 py-1 font-Alumni ${i === currentPage ? 'bg-secondary-300 text-white' : ' hidden bg-primary-300 text-gray-700 hover:bg-secondary-300'}`;
+            pageButton.className = `px-3 py-1 font-Alumni ${i === currentPage ? 'bg-secondary-300 text-white' : 'hidden bg-primary-300 text-gray-700 hover:bg-secondary-300'}`;
             pageButton.onclick = () => {
                 currentPage = i;
                 fetchData();
@@ -602,7 +728,6 @@ function updateCheckboxAllState() {
         }
     }
 
-    // Fonction pour vider la sélection
     function clearSelections() {
         selectedCompanies = [];
         document.querySelectorAll('.row-checkbox').forEach(box => box.checked = false);
@@ -611,15 +736,9 @@ function updateCheckboxAllState() {
         saveSelection();
     }
 
-    document.getElementById('counter').addEventListener
-
-    // Fonctions pour les boutons d'action
+    // Boutons d'action
     document.getElementById('outlook-button').addEventListener('click', () => {
-        // Récupère le contenu de la zone de texte
-        const selectedCompaniesText = document.getElementById('selected-companies').textContent;
-
-        // Transforme le contenu en un tableau d'objets (si nécessaire)
-        if (!selectedCompaniesText.trim()) {
+        if (selectedCompanies.length === 0) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Aucune sélection',
@@ -629,10 +748,8 @@ function updateCheckboxAllState() {
             return;
         }
 
-        // Crée un tableau des emails en extrayant les informations stockées dans `selectedCompanies`
         const emails = selectedCompanies.map(company => company.email).join(';');
 
-        // Vérifie s'il y a des emails sélectionnés et ouvre le client de messagerie
         if (emails) {
             window.location.href = `mailto:${emails}`;
         } else {
@@ -645,51 +762,45 @@ function updateCheckboxAllState() {
         }
     });
 
-
     document.getElementById('excel-button').addEventListener('click', () => {
-        //getSelectedCompanies();
-        if (selectedCompanies.length === 0) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Aucune sélection',
-                text: 'Aucune entreprise sélectionnée.',
-                confirmButtonText: 'OK'
-            });
-            return;
-        }
-
-        const worksheetData = selectedCompanies.map(company => ({
-            Nom: company.name,
-            Email: company.email,
-        }));
-
-        const worksheet = XLSX.utils.json_to_sheet(worksheetData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Entreprises");
-
-        try {
-            XLSX.writeFile(workbook, "entreprises.xlsx", {
-                bookType: 'xlsx',
-                type: 'binary'
-            });
-            Swal.fire({
-                icon: 'success',
-                title: 'Téléchargement réussi',
-                text: 'Le fichier Excel a été téléchargé avec succès.',
-                confirmButtonText: 'OK'
-            });
-        } catch (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Erreur',
-                text: 'Une erreur est survenue lors de la création du fichier Excel.',
-                confirmButtonText: 'OK'
-            });
-        }
-    });
-
+            //getSelectedCompanies();
+            if (selectedCompanies.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Aucune sélection',
+                    text: 'Aucune entreprise sélectionnée.',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+            const worksheetData = selectedCompanies.map(company => ({
+                Nom: company.name,
+                Email: company.email,
+            }));
+            const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Entreprises");
+            try {
+                XLSX.writeFile(workbook, "entreprises.xlsx", {
+                    bookType: 'xlsx',
+                    type: 'binary'
+                });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Téléchargement réussi',
+                    text: 'Le fichier Excel a été téléchargé avec succès.',
+                    confirmButtonText: 'OK'
+                });
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: 'Une erreur est survenue lors de la création du fichier Excel.',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
     document.getElementById('copy-button').addEventListener('click', () => {
-        //getSelectedCompanies();
         const emails = selectedCompanies.map(company => company.email).join('; ');
         if (!emails) {
             Swal.fire({
@@ -717,45 +828,12 @@ function updateCheckboxAllState() {
         });
     });
 
-    function getSelectedCompanies() {
-        selectedCompanies = [];
-        document.querySelectorAll('.row-checkbox:checked').forEach(checkbox => {
-            const row = checkbox.closest('tr');
-            const email = row.dataset.email;
-            const companyName = row.dataset.name;
-
-            selectedCompanies.push({
-                name: companyName,
-                email: email,
-            });
-        });
-    }
-
-    window.addEventListener('pageshow', function(event) {
-        if (sessionStorage.getItem('fromProfilePage')) {
-            sessionStorage.removeItem(
-                'fromProfilePage');
-            location.reload();
-        }
-    });
-
-    function saveFilters() {
- 
-    const selectedRegions = Array.from(document.querySelectorAll('.region-filter:checked')).map(el => el.value);
-    
-    const selectedVilles = Array.from(document.querySelectorAll('.ville-filter:checked')).map(el => el.value);
-
-  
-    localStorage.setItem('selectedRegions', JSON.stringify(selectedRegions));
-    localStorage.setItem('selectedVilles', JSON.stringify(selectedVilles));
-    updateFilterBubbles();
-    console.log(selectedVilles);
-}
-
-function restoreFilters() {
-  
+    async function restoreFilters() {
     const selectedRegions = JSON.parse(localStorage.getItem('selectedRegions')) || [];
     const selectedVilles = JSON.parse(localStorage.getItem('selectedVilles')) || [];
+    const selectedProduits = JSON.parse(localStorage.getItem('selectedProduits')) || [];
+
+    loadedProduitIds = []; 
 
 
     selectedRegions.forEach(region => {
@@ -767,76 +845,142 @@ function restoreFilters() {
     });
 
    
-    updateCityFilters(selectedVilles); // On passe les villes sélectionnées
+    await updateCityFilters(selectedVilles);
+    await populateCategorieSelect();
+    await updateProduitsFilters(selectedProduits);
+
     updateFilterBubbles();
 }
 
-function updateFilterBubbles() {
-    const selectedRegions = JSON.parse(localStorage.getItem('selectedRegions')) || [];
-    const selectedVilles = JSON.parse(localStorage.getItem('selectedVilles')) || [];
 
-    updateRegionFilterBubbles(selectedRegions);
-    updateVilleFilterBubbles(selectedVilles);
-    
-}
+    function saveFilters() {
+        const selectedRegions = Array.from(document.querySelectorAll('.region-filter:checked')).map(el => el.value);
+        const selectedVilles = Array.from(document.querySelectorAll('.ville-filter:checked')).map(el => el.value);
+        const selectedProduits = Array.from(document.querySelectorAll('.produits-filter:checked')).map(el => {
+    return {
+        id: el.value,
+        description: el.parentElement.textContent.trim()
+    };
+});
 
-function updateRegionFilterBubbles(selectedRegions) {
-    const regionBubblesContainer = document.getElementById('region-filter-bubbles');
-    regionBubblesContainer.innerHTML = '';
 
-    selectedRegions.forEach(region => {
-        const bubble = document.createElement('span');
-        bubble.classList.add('bg-blue-200', 'text-blue-800', 'text-sm','cursor-pointer', 'font-semibold', 'mr-2', 'px-2', 'py-1', 'rounded', 'flex', 'items-center', 'mb-2','hover:bg-red-500','hover:text-white','max-h-10');
-        bubble.innerHTML = `
-            ${region}
-              <span class="iconify w-4 h-4 ml-1 " data-icon="material-symbols:close"></span>
-        `;
+        localStorage.setItem('selectedRegions', JSON.stringify(selectedRegions));
+        localStorage.setItem('selectedVilles', JSON.stringify(selectedVilles));
+        localStorage.setItem('selectedProduits', JSON.stringify(selectedProduits));
 
-        bubble.addEventListener('click', () => {
-            
-            document.querySelectorAll('.region-filter').forEach(checkbox => {
-                if (checkbox.value === region) {
-                    checkbox.checked = false;
-                }
+        updateFilterBubbles();
+    }
+
+    function updateFilterBubbles() {
+        const selectedRegions = JSON.parse(localStorage.getItem('selectedRegions')) || [];
+        const selectedVilles = JSON.parse(localStorage.getItem('selectedVilles')) || [];
+        const selectedProduits = JSON.parse(localStorage.getItem('selectedProduits')) || [];
+
+        updateRegionFilterBubbles(selectedRegions);
+        updateVilleFilterBubbles(selectedVilles);
+        updateProduitsFilterBubbles(selectedProduits);
+    }
+
+    function updateRegionFilterBubbles(selectedRegions) {
+        const regionBubblesContainer = document.getElementById('region-filter-bubbles');
+        regionBubblesContainer.innerHTML = '';
+
+        selectedRegions.forEach(region => {
+            const bubble = document.createElement('span');
+            bubble.classList.add('bg-blue-200', 'text-blue-800', 'text-sm', 'cursor-pointer', 'font-semibold', 'mr-2', 'px-2', 'py-1', 'rounded', 'flex', 'items-center', 'mb-2', 'hover:bg-red-500', 'hover:text-white', 'max-h-10','truncate');
+            bubble.innerHTML = `
+                ${region}
+                <span class="iconify w-4 h-4 ml-1" data-icon="material-symbols:close"></span>
+            `;
+
+            bubble.addEventListener('click', async () => {
+                document.querySelectorAll('.region-filter').forEach(checkbox => {
+                    if (checkbox.value === region) {
+                        checkbox.checked = false;
+                    }
+                });
+                saveFilters();
+                await updateCityFilters();
+                await updateProduitsFilters();
+                await populateCategorieSelect();
+                await fetchData();
             });
-            saveFilters();
-            fetchData();
-            restoreFilters();
+
+            regionBubblesContainer.appendChild(bubble);
         });
+    }
 
-        regionBubblesContainer.appendChild(bubble);
-    });
-}
+    function updateVilleFilterBubbles(selectedVilles) {
+        const villeBubblesContainer = document.getElementById('ville-filter-bubbles');
+        villeBubblesContainer.innerHTML = '';
 
-function updateVilleFilterBubbles(selectedVilles) {
-    const villeBubblesContainer = document.getElementById('ville-filter-bubbles');
-    villeBubblesContainer.innerHTML = '';
+        selectedVilles.forEach(ville => {
+            const bubble = document.createElement('span');
+            bubble.classList.add('bg-blue-200', 'text-blue-800', 'text-sm', 'cursor-pointer', 'font-semibold', 'mr-2', 'px-2', 'py-1', 'rounded', 'flex', 'items-center', 'mb-2', 'hover:bg-red-500', 'hover:text-white', 'max-h-10');
+            bubble.innerHTML = `
+                ${ville}
+                <span class="iconify w-4 h-4 ml-1" data-icon="material-symbols:close"></span>
+            `;
 
-    selectedVilles.forEach(ville => {
-        const bubble = document.createElement('span');
-        bubble.classList.add('bg-blue-200', 'text-blue-800', 'text-sm','cursor-pointer', 'font-semibold', 'mr-2', 'px-2', 'py-1', 'rounded', 'flex', 'items-center', 'mb-2','hover:bg-red-500','hover:text-white','max-h-10');
-        bubble.innerHTML = `
-            ${ville}
-             <span class="iconify w-4 h-4 ml-1 " data-icon="material-symbols:close"></span>
-        `;
-
-        bubble.addEventListener('click', () => {
-           
-            document.querySelectorAll('.ville-filter').forEach(checkbox => {
-                if (checkbox.value === ville) {
-                    checkbox.checked = false;
-                }
+            bubble.addEventListener('click', async () => {
+                document.querySelectorAll('.ville-filter').forEach(checkbox => {
+                    if (checkbox.value === ville) {
+                        checkbox.checked = false;
+                    }
+                });
+                saveFilters();
+                await updateProduitsFilters();
+                await populateCategorieSelect();
+                await fetchData();
             });
-            saveFilters();
-            fetchData();
-            restoreFilters();
-        });
 
-        villeBubblesContainer.appendChild(bubble);
-    });
+            villeBubblesContainer.appendChild(bubble);
+        });
+    }
+
+    function updateProduitsFilterBubbles(selectedProduits) {
+        const produitsBubblesContainer = document.getElementById('produits-filter-bubbles');
+        produitsBubblesContainer.innerHTML = '';
+
+        selectedProduits.forEach(produit => {
+            const bubble = document.createElement('span');
+            bubble.classList.add('bg-blue-200', 'text-blue-800', 'text-sm', 'cursor-pointer', 'font-semibold', 'mr-2', 'px-2', 'py-1', 'rounded', 'flex', 'items-center', 'mb-2', 'hover:bg-red-500', 'hover:text-white', 'max-h-10' );
+            bubble.innerHTML = `
+                ${produit.description}
+                <span class="iconify w-4 h-4 ml-1" data-icon="material-symbols:close"></span>
+            `;
+
+            bubble.addEventListener('click', async () => {
+                document.querySelectorAll('.produits-filter').forEach(checkbox => {
+                    if (checkbox.value === produit.id) {
+    checkbox.checked = false;
 }
 
+                });
+                saveFilters();
+                await fetchData();
+            });
 
+            produitsBubblesContainer.appendChild(bubble);
+        });
+    }
 
+    function updateCheckboxAllState() {
+        const allCheckboxes = document.querySelectorAll('.row-checkbox');
+        const checkedCheckboxes = document.querySelectorAll('.row-checkbox:checked');
+        const selectAllCheckbox = document.getElementById('checkbox-all');
+
+        if (allCheckboxes.length === checkedCheckboxes.length && allCheckboxes.length > 0) {
+            selectAllCheckbox.checked = true;
+            selectAllCheckbox.indeterminate = false;
+        } else if (checkedCheckboxes.length > 0) {
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = true;
+        } else {
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = false;
+        }
+    }
 </script>
+
 @endsection
