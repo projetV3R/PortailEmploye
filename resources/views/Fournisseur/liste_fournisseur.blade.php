@@ -379,8 +379,9 @@ $etatStyles = [
             }
             checkbox.addEventListener('change', async () => {
                 saveFilters();
-                await populateCategorieSelect(); // Actualise les catégories
-                await fetchData(); // Actualise les fiches fournisseurs
+                await populateCategorieSelect(); 
+                await updateProduitsFilters();
+                await fetchData(); 
             });
         });
 
