@@ -7,28 +7,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4">
             <div class="flex flex-col justify-center">
                 <div class="mx-4 md:mx-8">
-                    @if (session('status'))
-                        <div id="alert-box"
-                            class="alert alert-success w-full md:w-2/3 lg:w-1/2 bg-green-100 border border-green-400 text-green-700 px-4 py-3 my-2 rounded relative"
-                            role="alert">
-                            {{ session('status') }}
-                            <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer" onclick="closeAlert()">
-                                <svg class="fill-current h-6 w-6 text-green-500" role="button"
-                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <title>Close</title>
-                                    <path
-                                        d="M14.348 5.652a.5.5 0 010 .707l-4.693 4.693 4.693 4.693a.5.5 0 01-.707.707l-4.693-4.693-4.693 4.693a.5.5 0 01-.707-.707l4.693-4.693-4.693-4.693a.5.5 0 11.707-.707l4.693 4.693 4.693-4.693a.5.5 0 01.707 0z" />
-                                </svg>
-                            </span>
-                        </div>
-
-                        <script>
-                            function closeAlert() {
-                                document.getElementById('alert-box').style.display = 'none';
-                            }
-                        </script>
-                    @endif
-
+                  
 
                     <h1 class="font-Alumni font-bold text-2xl md:text-4xl lg:text-6xl">Bon retour !</h1>
                     <h6 class="font-Alumni text-lg md:text-xl lg:text-2xl mt-2">Connectez-vous pour avoir accès à votre
@@ -81,4 +60,17 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "{{ session('success') }}",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            @endif
+        });
+        </script>
 @endsection

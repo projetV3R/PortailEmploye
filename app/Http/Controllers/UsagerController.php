@@ -62,9 +62,9 @@ class UsagerController extends Controller
         Auth::logout();
         Session::flush();
 
-        session()->flash('status', 'Vous avez été déconnecté avec succès.');
+   
 
-        return redirect()->route('login');
+        return redirect()->route('login')->with('success', 'Déconnexion réussie');
     }
 
 
