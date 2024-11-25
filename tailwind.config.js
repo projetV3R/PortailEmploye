@@ -9,6 +9,8 @@ export default {
     theme: {
         extend: {
             colors: {
+                daltonienYellow: '#FACC15',
+                daltonienBleu: "#849ED2",
                 blueV3R: "#0B2341",
                 primary: {
                     100: "#EFF8FC",
@@ -34,5 +36,11 @@ export default {
             },
         },
     },
-    plugins: [],
+    plugins: [
+        require("tailwindcss/plugin")(function ({ addVariant, e }) {
+            addVariant("daltonien", ({ modifySelectors, separator }) => {
+                modifySelectors(({ className }) => `html.daltonien .${e(`daltonien${separator}${className}`)}`);
+            });
+        }),
+    ],
 };
