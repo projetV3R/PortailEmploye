@@ -3,50 +3,74 @@
 @section('title', 'Connexion Employer')
 
 @section('contenu')
-<div class="w-full p-2">
-<div class="relative flex items-center justify-center w-full h-screen ">
-    <div class="w-full lg:w-3/4 xl:w-2/3 mx-auto lg:ml-4 xl:ml-8">
-        <div class="relative flex flex-col items-center justify-left p-4 shadow-lg max-w-md mx-auto z-10 daltonien:border border-black">
-            <div class="flex flex-col items-center justify-center p-4">
-                <strong>
-                    <h1 class="text-3xl md:text-5xl">Connexion</h1>
-                </strong>
-                <p class="text-base md:text-xl">
-                    Connectez-vous pour avoir accès à votre compte employé !
-                </p>
-            </div>
-            <!-- MESSAGE ERREUR SI le MAIL N'A PAS DE @ OU SI INFO PAS CORRECT-->
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-            <div class="flex flex-col items-center justify-center p-4 md:p-10">
-                <form method="post" action="{{route('connexion')}}" class="w-full">
-                @csrf 
-                    <div class="p-4">
-                        <label for="email" class="form-label block mb-2"><strong>Adresse courriel professionel</strong></label>
-                        <input type="text" name="email" id="email" autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-blue-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2 daltonien:border-black daltonien:placeholder:text-blue-800" placeholder="Votre adresse courriel">
-                        <a class="text-blue-500 hover:underline text-xs md:text-sm daltonien:text-blue-800" href="#">Adresse courriel oublié?</a>
-                    </div>   
+    <div class="container mx-auto bg-[url('images/vector1.svg')] bg-no-repeat bg-right bg-cover p-4 md:p-8 lg:p-16">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4">
+            <div class="flex flex-col justify-center">
+                <div class="mx-4 md:mx-8">
+                  
 
-                    <div class="p-4">
-                        <label for="password" class="form-label block mb-2"><strong>Votre mot de passe</strong></label>
-                        <input type="password" name="password" id="password" autocomplete="password" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-blue-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2 daltonien:border-black daltonien:placeholder:text-blue-800" placeholder="Votre mot de passe">
-                        <a class="text-blue-500 hover:underline text-xs md:text-sm text-right daltonien:text-blue-800" href="#">Mot de passe oublié?</a>
-                    </div>
-                    <div class="p-4">
-                        <button type="submit" class="block w-full py-2 px-4 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
-                            <strong>Suivant</strong>
-                        </button>
-                    </div>
-                </form> 
-            </div></div>
+                    <h1 class="font-Alumni font-bold text-2xl md:text-4xl lg:text-6xl">Bon retour !</h1>
+                    <h6 class="font-Alumni text-lg md:text-xl lg:text-2xl mt-2">Connectez-vous pour avoir accès à votre
+                        compte employé !</h6>
+
+                    <!-- Formulaire de connexion -->
+                    <form action="{{ route('connexion') }}" method="post" class="mt-6">
+                        @csrf
+                        <div class="mb-4">
+                            <label for="email" class="block font-Alumni md:text-lg lg:text-xl mb-2">
+                                Adresse courriel professionnel
+                            </label>
+                            <input type="text" id="email" name="email" autocomplete="email"
+                                placeholder="Entrer votre adresse courriel"
+                                class="font-Alumni w-full md:w-5/6 lg:w-2/3 p-2 focus:outline-none focus:border-blue-500 border border-black">
+                            <div class="w-full md:w-5/6 lg:w-2/3">
+                                @error('email')
+                                    <span class="text-red-500 font-Alumni md:text-sm">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="password" class="block font-Alumni md:text-lg lg:text-xl mb-2">
+                                Mot de passe
+                            </label>
+                            <input type="password" id="password" name="password" autocomplete="password"
+                                placeholder="Entrer votre mot de passe"
+                                class="font-Alumni w-full md:w-5/6 lg:w-2/3 p-2 focus:outline-none focus:border-blue-500 border border-black">
+                            <div class="w-full md:w-5/6 lg:w-2/3">
+                                @error('password')
+                                    <span class="text-red-500 font-Alumni md:text-sm">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="bg-red-500 w-full md:w-5/6 lg:w-2/3 mt-6 rounded">
+                            <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 py-2.5">
+                                <h1 class="font-Alumni font-bold text-lg md:text-xl lg:text-2xl">Connexion</h1>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="hidden lg:flex items-center justify-center">
+                <div class="w-full lg:w-3/4">
+                    <img src="{{ asset('images/output-onlinegiftools.gif') }}" alt="GIF animé" class="w-full h-auto">
+                </div>
+            </div>
         </div>
     </div>
-</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "{{ session('success') }}",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            @endif
+        });
+        </script>
 @endsection
