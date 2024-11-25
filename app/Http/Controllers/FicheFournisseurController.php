@@ -52,7 +52,7 @@ class FicheFournisseurController extends Controller
         $currentYear = Carbon::now()->year;
 
         // Requête pour compter les inscriptions par mois pour l'année en cours
-        $data = DB::table('users') // Remplacez 'users' par le nom de votre table d'inscriptions
+        $data = DB::table('fiche_fournisseurs') // Remplacez 'users' par le nom de votre table d'inscriptions
             ->selectRaw('MONTH(created_at) as month, COUNT(*) as count')
             ->whereYear('created_at', $currentYear)
             ->groupBy('month')
@@ -61,6 +61,8 @@ class FicheFournisseurController extends Controller
 
         // Formater les données pour le graphique
         $formattedData = array_fill(1, 12, 0); // Initialiser les mois avec 0
+
+        //Remplir les données récupérées
         foreach ($data as $item) {
             $formattedData[$item->month] = $item->count;
         }

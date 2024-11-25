@@ -10,10 +10,10 @@
 <div class="flex flex-col w-full h-full p-4 lg:p-16 gap-y-4 ">
     <div class="flex w-full flex-col lg:flex-row lg:h-3/4 h-full gap-4">
         <div class="flex lg:w-1/2 w-full h-full">
-            <div class="flex w-full justify-center border-2 border-dashed daltonien:border-black">HIGHCHARTS INSCRIPTION </div>
+            <div class="flex w-full justify-center border-2 border-dashed p-4 daltonien:border-black">HIGHCHARTS INSCRIPTION </div>
         </div>
         <div class="flex lg:w-1/2 w-full h-full">
-            <div class="flex w-full border-2 border-dashed justify-center daltonien:border-black" id="container">
+            <div class="flex w-full border-2 justify-center p-4 daltonien:border-black" id="linechart">
 
             </div>
         </div>
@@ -25,7 +25,7 @@
                 .then(response => {
                     const data = response.data;
 
-                    Highcharts.chart('container', {
+                    Highcharts.chart('linechart', {
                         title: {
                             text: 'Inscriptions Mensuelles',
                             align: 'center'
@@ -34,15 +34,15 @@
                             text: 'Nombre d\'inscriptions par mois pour l\'année en cours',
                             align: 'left'
                         },
-                        yAxis: {
-                            title: {
-                                text: 'Nombre d\'inscriptions'
-                            }
-                        },
                         xAxis: {
                             categories: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
                             title: {
                                 text: 'Mois'
+                            }
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Nombre d\'inscriptions'
                             }
                         },
                         legend: {
@@ -51,7 +51,7 @@
                             verticalAlign: 'middle'
                         },
                         series: [{
-                            name: 'Inscriptions',
+                            name: 'fiche_fournisseurs',
                             data: data
                         }],
                         responsive: {
