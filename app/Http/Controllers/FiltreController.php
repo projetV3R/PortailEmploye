@@ -102,5 +102,35 @@ public function getCategoriesProduits(Request $request)
     return response()->json(['categories' => $categories]);
 }
 
+public function getSousCategoriesFilter(Request $request)
+{
+    $regions = $request->input('regions', []);
+    $villes = $request->input('villes', []);
+
+    $query = SousCategorieLicence::select('sous_categories.id',
+        'sous_categories.code_sous_categorie',
+    )
+    ->distinct()
+    ->join('sous_categories', 'sous_categorie_licence.sous_categorie_id', '=', 'sous_categories.id')
+    ->join('licences', 'sous_categorie_licence.licence_id', '=', 'licences.id')
+    ->join('fiche_fournisseurs', 'licences.fiche_fournisseur_id', '=', 'fiche_fournisseurs.id')
+    ->join('coordonnees', 'fiche_fournisseurs.id', '=', 'coordonnees.fiche_fournisseur_id')
+    ->where('fiche_fournisseurs.etat', '!=', 'désactivé');
+
+    if (!empty($regions)) {
+        $query->whereIn('coordonnees.region_administrative', $regions);
+    }
+
+    if (!empty($villes)) {
+        $query->whereIn('coordonnees.ville', $villes);
+    }
+
+    $sousCategories = $query->get();
+
+    return response()->json(['sousCategories' => $sousCategories]);
+}
+
+
+
 
 }

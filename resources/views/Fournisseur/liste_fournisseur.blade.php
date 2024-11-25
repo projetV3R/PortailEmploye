@@ -161,14 +161,13 @@ $etatStyles = [
         </div>
 
         <div class="w-full lg:w-1/5">
-            <div id="licence-filter-bubbles" class="flex flex-wrap gap-2 mb-2 w-full h-16 max-h-16 overflow-y-auto ">
-          
-            </div>
-            <h3 class="font-bold text-lg mb-2 mt-8">Catégorie de travaux</h3>
+            <div id="licence-filter-bubbles" class="flex flex-wrap gap-2 mb-2 w-full h-16 max-h-16 overflow-y-auto"></div>
+            <h3 class="font-bold text-lg mb-2 mt-8">Sous-Catégories</h3>
             <div id="licence-checkboxes" class="space-y-2 max-h-48 overflow-y-auto border p-2 rounded">
-         
+               
             </div>
         </div>
+        
         <!-- Filtres par région administrative -->
         <div class="w-full lg:w-1/5">
             <div id="region-filter-bubbles" class="flex flex-wrap gap-2 mb-2 w-full h-16 max-h-16 overflow-y-auto">
@@ -325,6 +324,7 @@ $etatStyles = [
         await restoreFilters();
         await fetchData();
         await populateCategorieSelect(); 
+        await updateSousCategoriesFilters();
         updateSelectedCompaniesDisplay();
         
     });
@@ -391,6 +391,48 @@ $etatStyles = [
     }
 }
 
+async function updateSousCategoriesFilters() {
+
+    const regions = Array.from(document.querySelectorAll('.region-filter:checked')).map(el => el.value);
+    const villes = Array.from(document.querySelectorAll('.ville-filter:checked')).map(el => el.value);
+console.log("Test",villes);
+    try {
+       
+        const response = await axios.get('{{ route('get.sousCategoriesFilter') }}', {
+            params: { regions, villes }
+        });
+
+        const sousCategories = response.data.sousCategories || [];
+        const sousCategorieCheckboxesContainer = document.getElementById('licence-checkboxes');
+        sousCategorieCheckboxesContainer.innerHTML = '';
+
+    
+        sousCategories.forEach(sousCategorie => {
+            const label = document.createElement('label');
+            label.classList.add('flex', 'items-center', 'ml-4');
+            label.innerHTML = `
+                <input type="checkbox" value="${sousCategorie.id}" class="sous-categorie-filter mr-2">
+                ${sousCategorie.code_sous_categorie} 
+            `;
+            sousCategorieCheckboxesContainer.appendChild(label);
+        });
+
+       
+        document.querySelectorAll('.sous-categorie-filter').forEach(checkbox => {
+            checkbox.addEventListener('change', async () => {
+                saveFilters();
+                await fetchData();
+            });
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des sous-catégories :', error);
+    }
+}
+
+
+document.querySelectorAll('.region-filter, .ville-filter').forEach(checkbox => {
+    checkbox.addEventListener('change', updateSousCategoriesFilters);
+});
 
     async function updateProduitsFilters(selectedProduits = []) {
     produitsPage = 1; 
@@ -571,6 +613,7 @@ produitsCheckboxesContainer.addEventListener('scroll', () => {
     async function fetchData() {
         const regions = Array.from(document.querySelectorAll('.region-filter:checked')).map(el => el.value);
         const villes = Array.from(document.querySelectorAll('.ville-filter:checked')).map(el => el.value);
+        const licences = Array.from(document.querySelectorAll('.sous-categorie-filter:checked')).map(el => el.value);
         const produits = JSON.parse(localStorage.getItem('selectedProduits'))?.map(p => p.id) || [];
 
 
@@ -582,6 +625,7 @@ produitsCheckboxesContainer.addEventListener('scroll', () => {
                     regions: regions,
                     villes: villes,
                     produits: produits,
+                    licences:licences,
                 }
             });
 
@@ -864,10 +908,17 @@ produitsCheckboxesContainer.addEventListener('scroll', () => {
     };
 });
 
+const selectedLicences = Array.from(document.querySelectorAll('.sous-categorie-filter:checked')).map(el => {
+    return {
+        id: el.value,
+        code_sous_categorie: el.parentElement.textContent.trim()
+    };
+});
 
         localStorage.setItem('selectedRegions', JSON.stringify(selectedRegions));
         localStorage.setItem('selectedVilles', JSON.stringify(selectedVilles));
         localStorage.setItem('selectedProduits', JSON.stringify(selectedProduits));
+        localStorage.setItem('selectedLicences',JSON.stringify(selectedLicences));
 
         updateFilterBubbles();
     }
@@ -876,10 +927,12 @@ produitsCheckboxesContainer.addEventListener('scroll', () => {
         const selectedRegions = JSON.parse(localStorage.getItem('selectedRegions')) || [];
         const selectedVilles = JSON.parse(localStorage.getItem('selectedVilles')) || [];
         const selectedProduits = JSON.parse(localStorage.getItem('selectedProduits')) || [];
+        const selectedLicences = JSON.parse(localStorage.getItem('selectedLicences')) || [];
 
         updateRegionFilterBubbles(selectedRegions);
         updateVilleFilterBubbles(selectedVilles);
         updateProduitsFilterBubbles(selectedProduits);
+        updateLicencesFilterBubbles(selectedLicences);
     }
 
     function updateRegionFilterBubbles(selectedRegions) {
@@ -908,6 +961,32 @@ produitsCheckboxesContainer.addEventListener('scroll', () => {
             });
 
             regionBubblesContainer.appendChild(bubble);
+        });
+    }
+    function updateLicencesFilterBubbles(selectedLicences) {
+        const licencesBubblesContainer = document.getElementById('licence-filter-bubbles');
+        licencesBubblesContainer.innerHTML = '';
+
+        selectedLicences.forEach(sousCategorie => {
+            const bubble = document.createElement('span');
+            bubble.classList.add('bg-blue-200', 'text-blue-800', 'text-sm', 'cursor-pointer', 'font-semibold', 'mr-2', 'px-2', 'py-1', 'rounded', 'flex', 'items-center', 'mb-2', 'hover:bg-red-500', 'hover:text-white', 'max-h-10');
+            bubble.innerHTML = `
+                 ${sousCategorie.code_sous_categorie}
+                <span class="iconify w-4 h-4 ml-1" data-icon="material-symbols:close"></span>
+            `;
+
+            bubble.addEventListener('click', async () => {
+                document.querySelectorAll('.sous-categorie-filter').forEach(checkbox => {
+                    if (checkbox.value === sousCategorie.id) {
+                        checkbox.checked = false;
+                    }
+                });
+                saveFilters();
+              await  updateSousCategoriesFilters();
+                await fetchData();
+            });
+
+            licencesBubblesContainer.appendChild(bubble);
         });
     }
 

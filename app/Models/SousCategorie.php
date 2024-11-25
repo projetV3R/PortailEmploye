@@ -11,4 +11,15 @@ class SousCategorie extends Model
     protected $table = 'sous_categories';
     
     protected $guarded = ['*'];
+
+    public function licences()
+{
+    return $this->belongsToMany(
+        Licence::class,
+        'sous_categorie_licence', 
+        'sous_categorie_id', 
+        'licence_id' 
+    );
+}
+
 }

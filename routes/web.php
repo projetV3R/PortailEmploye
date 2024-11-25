@@ -68,12 +68,12 @@ Route::get('/profil/{id}', [FicheFournisseurController::class, 'profil'])->name(
 
 Route::post('/update-selection', [FicheFournisseurController::class, 'updateSelection'])->name('update.selection');
 
-Route::post('/filtre/fiches', [FiltreController::class, 'filtreFiches'])->name('filtre.fiches');
+
 Route::get('/get-villes', [FiltreController::class, 'getVillesByRegions'])->name('get.villes');
 Route::get('/get-produits', [FiltreController::class, 'getProduitsByFilters'])->name('get.produits');
 Route::get('/get-sous-categories-licences', [FiltreController::class, 'getSousCategoriesLicencesByFilters'])->name('get.sousCategoriesLicences');
 Route::get('/categories-produits', [FiltreController::class, 'getCategoriesProduits'])->name('get.categories');
-
+Route::get('/licence/filtre', [FiltreController::class, 'getSousCategoriesFilter'])->name('get.sousCategoriesFilter');
 //!!! ROUTE DE REDIRECTION ERREUR 404 TOUJOURS A LA FIN DU FICHIER DE ROUTE NE JAMAIS AVOIR DE ROUTE APRES !!!!
 Route::fallback(function () {
     return response()->view('redirection.404', [], 404);

@@ -8,6 +8,7 @@ use App\Models\ParametreSysteme;
 use App\Models\Coordonnee;
 use App\Models\Municipalites;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
      class FicheFournisseurController extends Controller
     {
     /**
@@ -19,8 +20,9 @@ use Illuminate\Http\Request;
         $page = $request->input('page', 1);
         $regions = $request->input('regions', []);
         $villes = $request->input('villes', []);
+        $licences = $request->input('licences', []);
     
-        $query = FicheFournisseur::with('coordonnees');
+        $query = FicheFournisseur::with(['coordonnees', 'licence.sousCategories']);
     
        
         if (!empty($regions)) {
@@ -40,6 +42,12 @@ use Illuminate\Http\Request;
                 $q->whereIn('produits_services.id', $produits);
             });
         }
+
+        if (!empty($licences)) {
+            $query->whereHas('licence.sousCategories', function ($q) use ($licences) {
+                $q->whereIn('sous_categorie_id', $licences); 
+            });
+        }   
 
         if ($request->has('etats') && !empty($request->etats)) {
             $etats = $request->input('etats');
