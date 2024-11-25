@@ -72,3 +72,7 @@ Route::post('/update-selection', [FicheFournisseurController::class, 'updateSele
 Route::fallback(function () {
     return response()->view('redirection.404', [], 404);
 });
+
+
+// route data line-Chart
+Route::get('/line-chart-data', [FicheFournisseurController::class, 'lineChart']);

@@ -14,100 +14,65 @@
         </div>
         <div class="flex lg:w-1/2 w-full h-full">
             <div class="flex w-full border-2 border-dashed justify-center daltonien:border-black" id="container">
-                
+
             </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            Highcharts.chart('container', {
+            axios.get('/line-chart-data')
+                .then(response => {
+                    const data = response.data;
 
-                title: {
-                    text: 'HIGHCHARTS CATEGORIE INSCRIPTION',
-                    align: 'centerF'
-                },
-
-                subtitle: {
-                    text: 'By Job Category. Source: <a href="https://irecusa.org/programs/solar-jobs-census/" target="_blank">IREC</a>.',
-                    align: 'left'
-                },
-
-                yAxis: {
-                    title: {
-                        text: 'Number of Employees'
-                    }
-                },
-
-                xAxis: {
-                    accessibility: {
-                        rangeDescription: 'Range: 2010 to 2022'
-                    }
-                },
-
-                legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'middle'
-                },
-
-                plotOptions: {
-                    series: {
-                        label: {
-                            connectorAllowed: false
+                    Highcharts.chart('container', {
+                        title: {
+                            text: 'Inscriptions Mensuelles',
+                            align: 'center'
                         },
-                        pointStart: 2010
-                    }
-                },
-
-                series: [{
-                    name: 'Installation & Developers',
-                    data: [
-                        43934, 48656, 65165, 81827, 112143, 142383,
-                        171533, 165174, 155157, 161454, 154610, 168960, 171558
-                    ]
-                }, {
-                    name: 'Manufacturing',
-                    data: [
-                        24916, 37941, 29742, 29851, 32490, 30282,
-                        38121, 36885, 33726, 34243, 31050, 33099, 33473
-                    ]
-                }, {
-                    name: 'Sales & Distribution',
-                    data: [
-                        11744, 30000, 16005, 19771, 20185, 24377,
-                        32147, 30912, 29243, 29213, 25663, 28978, 30618
-                    ]
-                }, {
-                    name: 'Operations & Maintenance',
-                    data: [
-                        null, null, null, null, null, null, null,
-                        null, 11164, 11218, 10077, 12530, 16585
-                    ]
-                }, {
-                    name: 'Other',
-                    data: [
-                        21908, 5548, 8105, 11248, 8989, 11816, 18274,
-                        17300, 13053, 11906, 10073, 11471, 11648
-                    ]
-                }],
-
-                responsive: {
-                    rules: [{
-                        condition: {
-                            maxWidth: 500
+                        subtitle: {
+                            text: 'Nombre d\'inscriptions par mois pour l\'année en cours',
+                            align: 'left'
                         },
-                        chartOptions: {
-                            legend: {
-                                layout: 'horizontal',
-                                align: 'center',
-                                verticalAlign: 'bottom'
+                        yAxis: {
+                            title: {
+                                text: 'Nombre d\'inscriptions'
                             }
+                        },
+                        xAxis: {
+                            categories: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+                            title: {
+                                text: 'Mois'
+                            }
+                        },
+                        legend: {
+                            layout: 'vertical',
+                            align: 'right',
+                            verticalAlign: 'middle'
+                        },
+                        series: [{
+                            name: 'Inscriptions',
+                            data: data
+                        }],
+                        responsive: {
+                            rules: [{
+                                condition: {
+                                    maxWidth: 500
+                                },
+                                chartOptions: {
+                                    legend: {
+                                        layout: 'horizontal',
+                                        align: 'center',
+                                        verticalAlign: 'bottom'
+                                    }
+                                }
+                            }]
                         }
-                    }]
-                }
-
-            });
+                    });
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des données :', error);
+                });
         });
     </script>
 

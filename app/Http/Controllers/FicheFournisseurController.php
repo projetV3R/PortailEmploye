@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\FicheFournisseur;
 use App\Models\ParametreSysteme;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class FicheFournisseurController extends Controller
 {
@@ -44,12 +46,26 @@ class FicheFournisseurController extends Controller
     }
 
 
-    public function lineChart ()
+    public function lineChart()
     {
-        //prends fiche fournisseurs
-        //regroupe par groupe code catégorie(produits et services)
-        //compteur des fiches dans chaque catégories
-        //renvoie le tout en json.
+        // Récupérer l'année en cours
+        $currentYear = Carbon::now()->year;
+
+        // Requête pour compter les inscriptions par mois pour l'année en cours
+        $data = DB::table('users') // Remplacez 'users' par le nom de votre table d'inscriptions
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+            ->whereYear('created_at', $currentYear)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        // Formater les données pour le graphique
+        $formattedData = array_fill(1, 12, 0); // Initialiser les mois avec 0
+        foreach ($data as $item) {
+            $formattedData[$item->month] = $item->count;
+        }
+
+        return response()->json(array_values($formattedData));
     }
 
     /**
