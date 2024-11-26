@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\FicheFournisseur;
 use App\Models\ParametreSysteme;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class FicheFournisseurController extends Controller
 {

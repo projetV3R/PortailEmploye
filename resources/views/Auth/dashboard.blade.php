@@ -10,7 +10,7 @@
 <div class="flex flex-col w-full h-full p-4 lg:p-16 gap-y-4 ">
     <div class="flex w-full flex-col lg:flex-row lg:h-3/4 h-full gap-4">
         <div class="flex lg:w-1/2 w-full h-full">
-            <div class="flex w-full justify-center border-2 border-dashed p-4 daltonien:border-black">HIGHCHARTS INSCRIPTION </div>
+            <div class="flex w-full justify-center border-2 border-dashed p-4 daltonien:border-black">HIGHCHARTS SOUS CATEGORIE RBQ PIE CHARTS </div>
         </div>
         <div class="flex lg:w-1/2 w-full h-full">
             <div class="flex w-full border-2 justify-center p-4 daltonien:border-black" id="linechart">
@@ -20,19 +20,16 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', initializeLineChart);
         function initializeLineChart() {
             axios.get('/line-chart-data')
                 .then(response => {
                     const data = response.data;
-
+                    const currentYear = new Date().getFullYear();
                     Highcharts.chart('linechart', {
                         title: {
-                            text: 'Inscriptions Mensuelles',
+                            text: `Inscriptions Mensuelles (${currentYear})`,
                             align: 'center'
-                        },
-                        subtitle: {
-                            text: 'Nombre d\'inscriptions par mois pour l\'année en cours',
-                            align: 'left'
                         },
                         xAxis: {
                             categories: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
@@ -74,7 +71,7 @@
                     console.error('Erreur lors de la récupération des données :', error);
                 });
         }
-        document.addEventListener('DOMContentLoaded', initializeLineChart);
+        
     </script>
 
 
