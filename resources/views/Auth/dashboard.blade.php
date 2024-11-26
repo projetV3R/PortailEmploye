@@ -20,7 +20,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        function initializeLineChart() {
             axios.get('/line-chart-data')
                 .then(response => {
                     const data = response.data;
@@ -73,8 +73,10 @@
                 .catch(error => {
                     console.error('Erreur lors de la récupération des données :', error);
                 });
-        });
+        }
+        document.addEventListener('DOMContentLoaded', initializeLineChart);
     </script>
+
 
     <div class="flex w-full ">
         <div class="flex w-full h-36 border-2 border-dashed justify-center daltonien:border-black">

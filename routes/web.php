@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsagerController;
 use App\Http\Controllers\ParametresSystemeController;
 use App\Http\Controllers\ModelesController;
- 
+use App\Http\Controllers\ChartsController;
  
  
 // FORMULAIRE CONNEXION
@@ -58,7 +58,8 @@ Route::get('/modeles/{id}', [ModelesController::class, 'show']);
  
 Route::put('/modeles/{id}', [ModelesController::class, 'update']);
 
-
+// route data line-Chart
+Route::get('/line-chart-data', [ChartsController::class, 'lineChart']);
 
 Route::get('/listeFournisseur', [FicheFournisseurController::class, 'index'])->name('fiches.index');
 
@@ -72,7 +73,3 @@ Route::post('/update-selection', [FicheFournisseurController::class, 'updateSele
 Route::fallback(function () {
     return response()->view('redirection.404', [], 404);
 });
-
-
-// route data line-Chart
-Route::get('/line-chart-data', [FicheFournisseurController::class, 'lineChart']);
