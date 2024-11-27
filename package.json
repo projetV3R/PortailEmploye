@@ -14,7 +14,8 @@
         "vite": "^5.0"
     },
     "dependencies": {
+        "highcharts": "^11.4.8",
         "quill": "^2.0.2",
-        "sweetalert2": "^11.14.3"
+        "sweetalert2": "^11.6.13"
     }
 }

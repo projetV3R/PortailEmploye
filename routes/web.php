@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsagerController;
 use App\Http\Controllers\ParametresSystemeController;
 use App\Http\Controllers\ModelesController;
+use App\Http\Controllers\ChartsController;
 use App\Http\Controllers\FiltreController;
  
  
@@ -58,7 +59,8 @@ Route::get('/modeles/{id}', [ModelesController::class, 'show']);
  
 Route::put('/modeles/{id}', [ModelesController::class, 'update']);
 
-
+// route data line-Chart
+Route::get('/line-chart-data', [ChartsController::class, 'lineChart']);
 
 Route::get('/listeFournisseur', [FicheFournisseurController::class, 'index'])->name('fiches.index');
 
