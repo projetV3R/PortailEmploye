@@ -19,4 +19,9 @@ class Coordonnee extends Model
         "region_administrative",
         "fiche_fournisseur_id"
     ];
+    public function ficheFournisseur()
+{
+    return $this->belongsTo(FicheFournisseur::class);
+}
+
 }
