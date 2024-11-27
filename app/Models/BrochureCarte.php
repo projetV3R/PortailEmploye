@@ -16,4 +16,8 @@ class BrochureCarte extends Model
         'taille',
         'fiche_fournisseur_id'
     ];
+    public function ficheFournisseur()
+    {
+        return $this->belongsTo(FicheFournisseur::class, 'fiche_fournisseur_id');
+    }
 }

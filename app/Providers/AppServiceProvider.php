@@ -4,6 +4,11 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
+use App\Models\Finance;
+use App\Observers\FinanceObserver;
+use App\Models\FicheFournisseur;
+use App\Observers\FicheFournisseurObserver;
+
 class AppServiceProvider extends ServiceProvider
 {
     
@@ -29,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('endrole', function () {
             return "<?php endif; ?>";
         });          
-       
+        Finance::observe(FinanceObserver::class);
+        FicheFournisseur::observe(FicheFournisseurObserver::class);
 }
 }
