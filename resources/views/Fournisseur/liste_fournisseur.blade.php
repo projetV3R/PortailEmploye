@@ -145,36 +145,13 @@ $etatStyles = [
                 </label>
             </div>
         </div>
-        
-        <div class="w-full lg:w-1/5">
-            <div id="produits-filter-bubbles" class="flex flex-wrap gap-2 mb-2 w-full h-16 max-h-16 overflow-y-auto ">
-                <div id="scroll-trigger" class="h-1"></div>
-            </div>
-            <h3 class="font-bold text-lg mb-2 mt-8">Produits&Services</h3>
-       
-            <div>     <select id="categorie-select" class="border px-2 py-1 w-full ">
-                <option value="">Toutes les catégories</option>
-                <!-- Les options seront ajoutées dynamiquement -->
-            </select></div><div id="produits-checkboxes" class="space-y-2 max-h-48 overflow-y-auto border p-2 rounded">
-         
-            </div>
-        </div>
-
-        <div class="w-full lg:w-1/5">
-            <div id="licence-filter-bubbles" class="flex flex-wrap gap-2 mb-2 w-full h-16 max-h-16 overflow-y-auto"></div>
-            <h3 class="font-bold text-lg mb-2 mt-8">Sous-Catégories</h3>
-            <div id="licence-checkboxes" class="space-y-2 max-h-48 overflow-y-auto border p-2 rounded">
-               
-            </div>
-        </div>
-        
-        <!-- Filtres par région administrative -->
-        <div class="w-full lg:w-1/5">
+         <!-- Filtres par région administrative -->
+         <div class="w-full lg:w-1/5">
             <div id="region-filter-bubbles" class="flex flex-wrap gap-2 mb-2 w-full h-16 max-h-16 overflow-y-auto">
           
             </div>
             <h3 class="font-bold text-lg mb-2 mt-8">Régions Administratives</h3>
-            <div id="region-checkboxes" class="space-y-2 max-h-48 overflow-y-auto border p-2 rounded ">
+            <div id="region-checkboxes" class="space-y-2 max-h-72 overflow-y-auto border p-2 rounded ">
                 <label class="flex items-center">
                     <input type="checkbox" value="Bas-Saint-Laurent (01)" class="region-filter mr-2">
                     Bas-Saint-Laurent (01)
@@ -244,17 +221,41 @@ $etatStyles = [
                 </label>
             </div>
         </div>
-    
-        <!-- Filtres par ville -->
-        <div class="w-full lg:w-1/5">
+         <!-- Filtres par ville -->
+         <div class="w-full lg:w-1/5">
             <div id="ville-filter-bubbles" class="flex flex-wrap gap-2 mb-2 w-full h-16 max-h-16 overflow-y-auto ">
           
             </div>
             <h3 class="font-bold text-lg mb-2 mt-8">Villes</h3>
-            <div id="ville-checkboxes" class="space-y-2 max-h-48 overflow-y-auto border p-2 rounded">
+            <div id="ville-checkboxes" class="space-y-2 max-h-72 overflow-y-auto border p-2 rounded">
          
             </div>
         </div>
+        <div class="w-full lg:w-1/5">
+            <div id="produits-filter-bubbles" class="flex flex-wrap gap-2 mb-2 w-full h-16 max-h-16 overflow-y-auto ">
+                <div id="scroll-trigger" class="h-1"></div>
+            </div>
+            <h3 class="font-bold text-lg mb-2 mt-8">Produits&Services</h3>
+       
+            <div>     <select id="categorie-select" class="border px-2 py-1 w-full rounded-t ">
+                <option value="">Toutes les catégories</option>
+                <!-- Les options seront ajoutées dynamiquement -->
+            </select></div><div id="produits-checkboxes" class="space-y-2 max-h-64 overflow-y-auto border p-2 rounded-b">
+         
+            </div>
+        </div>
+
+        <div class="w-full lg:w-1/5">
+            <div id="licence-filter-bubbles" class="flex flex-wrap gap-2 mb-2 w-full h-16 max-h-16 overflow-y-auto"></div>
+            <h3 class="font-bold text-lg mb-2 mt-8">Sous-Catégories</h3>
+            <div id="licence-checkboxes" class="space-y-2 max-h-72 overflow-y-auto border p-2 rounded">
+               
+            </div>
+        </div>
+        
+       
+    
+       
     </div>
     
     
