@@ -41,44 +41,47 @@
     @endphp
 
     <div class="p-4 md:p-16">
-        <div class="flex flex-col md:flex-row w-full">
-            <div class="flex flex-col w-full md:w-1/2">
-                <h6 class="font-Alumni font-bold text-3xl md:text-5xl">{{ $fournisseur->nom_entreprise }}</h6>
+    <div class="flex flex-col lg:flex-row w-full gap-6">
+    <div class="flex flex-col w-full lg:w-1/2">
+        <h6 class="font-Alumni font-bold text-3xl lg:text-5xl">{{ $fournisseur->nom_entreprise }}</h6>
+    </div>
 
+    <div class="{{ $etatStyle['bgColor'] }} mt-4 lg:mt-0 lg:ml-6 w-full lg:w-1/2 py-6 px-4 flex flex-col xl:flex-row items-center justify-between rounded-lg shadow-md gap-4">
+        <div class="flex items-center space-x-4">
+            <div class="{{ $etatStyle['textColor'] }}">
+                <span class="iconify" data-icon="{{ $etatStyle['icon'] }}" data-inline="false" style="font-size: 2.5rem;"></span>
             </div>
-
-            <div class="{{ $etatStyle['bgColor'] }} mt-4 md:mt-0 md:ml-2 w-full md:w-1/2 py-4 px-6 flex items-center">
-                <div class="{{ $etatStyle['textColor'] }}">
-                    <span class="iconify" data-icon="{{ $etatStyle['icon'] }}" data-inline="false"
-                        style="font-size: 2rem;"></span>
-                </div>
-                <div class="ml-4">
-                    <h4 class="font-Alumni font-bold text-lg md:text-2xl">Statut de la demande :
-                        <span class="{{ $etatStyle['labelColor'] }} block mt-1 text-lg md:text-xl font-semibold">
-                            {{ $etatStyle['text'] }}
-                        </span>
-                    </h4>
-                </div>
-                @role('admin', 'responsable')
-                    @if($etat === 'En attente' || $etat === 'a reviser')
-                        @if(!in_array($etat, ['accepter']))
-                            <button type="button"
-                                class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
-                                id="approveButton">
-                                Approuver
-                            </button>
-                        @endif
-                        @if(!in_array($etat, ['refuser']))
-                            <button type="button"
-                                class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-                                id="rejectButton">
-                                Refuser
-                            </button>
-                        @endif
-                    @endif
-                @endrole
-            </div>
+            <div class="flex flex-col lg:flex-row items-start lg:items-center space-y-2 lg:space-y-0 lg:space-x-2">
+            <h4 class="font-Alumni font-bold text-lg lg:text-xl">Statut de la demande :</h4>
+            <span class="{{ $etatStyle['labelColor'] }} text-lg lg:text-xl font-semibold">
+                {{ $etatStyle['text'] }}
+            </span>
         </div>
+        </div>
+
+        <div class="flex w-full lg:w-auto justify-end flex-col lg:flex-row gap-4">
+            @role('admin', 'responsable')
+                @if($etat === 'En attente' || $etat === 'a reviser')
+                    @if(!in_array($etat, ['accepter']))
+                        <button type="button"
+                            class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out"
+                            id="approveButton">
+                            Approuver
+                        </button>
+                    @endif
+                    @if(!in_array($etat, ['refuser']))
+                        <button type="button"
+                            class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out"
+                            id="rejectButton">
+                            Refuser
+                        </button>
+                    @endif
+                @endif
+            @endrole   
+        </div>
+    </div>
+</div>
+
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <!-- Première colonne -->

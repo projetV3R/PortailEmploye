@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\FicheFournisseur;
 use App\Models\ParametreSysteme;
+use App\Models\Coordonnee;
+use App\Models\Municipalites;
 use Illuminate\Http\Request;
 use App\Notifications\FournisseurApproveNotification;
 use App\Notifications\FournisseurRefusNotification;
@@ -19,18 +21,70 @@ class FicheFournisseurController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('perPage', 5);
-        $fiches = FicheFournisseur::with('coordonnees')->paginate($perPage);
-        $selectedCompanies = session('selectedCompanies', []);
+        $page = $request->input('page', 1);
+        $regions = $request->input('regions', []);
+        $villes = $request->input('villes', []);
+        $licences = $request->input('licences', []);
+        $etats = $request->input('etats', []);
+        $searchQuery = $request->input('search', ''); 
+        $query = FicheFournisseur::with(['coordonnees', 'licence.sousCategories', 'contacts']);
+    
+       
+        if (!empty($regions)) {
+            $query->whereHas('coordonnees', function ($q) use ($regions) {
+                $q->whereIn('region_administrative', $regions);
+            });
+        }
+    
+        if (!empty($villes)) {
+            $query->whereHas('coordonnees', function ($q) use ($villes) {
+                $q->whereIn('ville', $villes);
+            });
+        }
+        if ($request->has('produits') && !empty($request->produits)) {
+            $produits = $request->input('produits');
+            $query->whereHas('produitsServices', function($q) use ($produits) {
+                $q->whereIn('produits_services.id', $produits);
+            });
+        }
 
+        if (!empty($licences)) {
+            $query->whereHas('licence.sousCategories', function ($q) use ($licences) {
+                $q->whereIn('sous_categorie_id', $licences); 
+            });
+        }   
+
+        if (!empty($etats)) {
+        $query->whereIn('etat', $etats);
+    }
+
+    if (!empty($searchQuery)) {
+        $query->where(function ($q) use ($searchQuery) {
+        $q->where('nom_entreprise', 'LIKE', "%$searchQuery%")
+        ->orWhere('adresse_courriel', 'LIKE', "%$searchQuery%")
+        ->orWhereHas('contacts', function ($subQuery) use ($searchQuery) {
+         $subQuery->where('nom', 'LIKE', "%$searchQuery%")
+         ->orWhere('prenom', 'LIKE', "%$searchQuery%");
+                });
+        });
+    }
+    
+       
+        $query->where('etat', '!=', 'désactivé');
+    
+        $fiches = $query->paginate($perPage, ['*'], 'page', $page);
+    
         if ($request->ajax()) {
             return response()->json($fiches);
         }
-
+    
+        $selectedCompanies = session('selectedCompanies', []);
         return view('Fournisseur.liste_fournisseur', compact('fiches', 'selectedCompanies'));
     }
+    
 
 
-    public function profil($id)
+     public function profil($id)
     {
         $fournisseur = FicheFournisseur::find($id);
         $licence = $fournisseur->licence()->with('sousCategories.categorie')->first();

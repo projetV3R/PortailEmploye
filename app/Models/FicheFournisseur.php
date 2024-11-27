@@ -16,7 +16,6 @@ class FicheFournisseur extends Authenticatable
         "password",
         "nom_entreprise",
         "adresse_courriel",
-        "password",
         "details_specifications",
         "date_changement_etat",
     ];

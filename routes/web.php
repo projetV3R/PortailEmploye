@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsagerController;
 use App\Http\Controllers\ParametresSystemeController;
 use App\Http\Controllers\ModelesController;
- 
+use App\Http\Controllers\ChartsController;
+use App\Http\Controllers\FiltreController;
  
  
 // FORMULAIRE CONNEXION
@@ -58,7 +59,8 @@ Route::get('/modeles/{id}', [ModelesController::class, 'show']);
  
 Route::put('/modeles/{id}', [ModelesController::class, 'update']);
 
-
+// route data line-Chart
+Route::get('/line-chart-data', [ChartsController::class, 'lineChart']);
 
 Route::get('/listeFournisseur', [FicheFournisseurController::class, 'index'])->name('fiches.index');
 Route::post('/fiches/reject/{id}', [FicheFournisseurController::class, 'reject'])->name('fiches.reject');
@@ -71,6 +73,12 @@ Route::get('/profil/{id}', [FicheFournisseurController::class, 'profil'])->name(
 
 Route::post('/update-selection', [FicheFournisseurController::class, 'updateSelection'])->name('update.selection');
 
+
+Route::get('/get-villes', [FiltreController::class, 'getVillesByRegions'])->name('get.villes');
+Route::get('/get-produits', [FiltreController::class, 'getProduitsByFilters'])->name('get.produits');
+Route::get('/get-sous-categories-licences', [FiltreController::class, 'getSousCategoriesLicencesByFilters'])->name('get.sousCategoriesLicences');
+Route::get('/categories-produits', [FiltreController::class, 'getCategoriesProduits'])->name('get.categories');
+Route::get('/licence/filtre', [FiltreController::class, 'getSousCategoriesFilter'])->name('get.sousCategoriesFilter');
 //!!! ROUTE DE REDIRECTION ERREUR 404 TOUJOURS A LA FIN DU FICHIER DE ROUTE NE JAMAIS AVOIR DE ROUTE APRES !!!!
 Route::fallback(function () {
     return response()->view('redirection.404', [], 404);
