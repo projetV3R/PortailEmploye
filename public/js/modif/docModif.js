@@ -6,6 +6,8 @@ function initializeDocFormScript() {
     const messageContainer = document.getElementById('messageContainer');
     const uploadButton = document.getElementById('uploadButton');
     const fichiersASupprimerContainer = document.getElementById('fichiersASupprimerContainer');
+    const fournisseurId = localStorage.getItem('fournisseurId');
+
 
     let MAX_TOTAL_SIZE_MB = 0;
     let brochuresFromSession = [];
@@ -13,7 +15,7 @@ function initializeDocFormScript() {
     let totalSize = 0; 
 
     // Appel API pour récupérer les fichiers existants et la taille maximale autorisée
-    axios.get('/Brochures/getDocuments')
+    axios.get(`/fournisseur/${fournisseurId}/get-documents`)
         .then(response => {
             brochuresFromSession = response.data.brochures;
             MAX_TOTAL_SIZE_MB = response.data.maxFileSize;

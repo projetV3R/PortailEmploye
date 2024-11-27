@@ -7,7 +7,7 @@
     <div class="mb-5">
  
 
-    <form id="fileUploadForm" action="{{ route('UpdateDoc') }}" method="POST" enctype="multipart/form-data" >
+    <form id="fileUploadForm" action="{{ route('UpdateDoc', ['id' => $fournisseur->id]) }}" method="POST" enctype="multipart/form-data" >
         @csrf
         @if(session('errorsFichiers'))
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
