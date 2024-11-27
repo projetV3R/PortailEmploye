@@ -21,7 +21,8 @@ use Illuminate\Support\Facades\Log;
         $regions = $request->input('regions', []);
         $villes = $request->input('villes', []);
         $licences = $request->input('licences', []);
-    
+        $etats = $request->input('etats', []);
+
         $query = FicheFournisseur::with(['coordonnees', 'licence.sousCategories']);
     
        
@@ -49,10 +50,9 @@ use Illuminate\Support\Facades\Log;
             });
         }   
 
-        if ($request->has('etats') && !empty($request->etats)) {
-            $etats = $request->input('etats');
-            $query->whereIn('etat', $etats);
-        }
+        if (!empty($etats)) {
+        $query->whereIn('etat', $etats);
+    }
        
         $query->where('etat', '!=', 'désactivé');
     

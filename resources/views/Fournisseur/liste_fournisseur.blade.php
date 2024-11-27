@@ -129,19 +129,19 @@ $etatStyles = [
             <div id="etat-checkboxes" class="space-y-2 max-h-48 overflow-y-auto border p-2 rounded">
                 <label class="flex items-center">
                     <input type="checkbox" value="En attente" class="etat-filter mr-2">
-                    En attente
+                    <span class="iconify" data-icon="material-symbols:hourglass-top"></span>   En attente
                 </label>
                 <label class="flex items-center">
-                    <input type="checkbox" value="Accepter" class="etat-filter mr-2">
-                    Accepté
+                    <input type="checkbox" value="accepter" class="etat-filter mr-2">
+                    <span class="iconify" data-icon="material-symbols:check-circle-outline"></span>  Accepté
                 </label>
                 <label class="flex items-center">
-                    <input type="checkbox" value="Refuser" class="etat-filter mr-2">
-                    Refusé
+                    <input type="checkbox" value="refuser" class="etat-filter mr-2">
+                    <span class="iconify" data-icon="material-symbols:cancel"></span>  Refusé
                 </label>
                 <label class="flex items-center">
                     <input type="checkbox" value="A reviser" class="etat-filter mr-2">
-                    À réviser
+                    <span class="iconify" data-icon="material-symbols:hourglass-top"></span>  À réviser
                 </label>
             </div>
         </div>
@@ -392,6 +392,13 @@ $etatStyles = [
     }
 }
 
+document.querySelectorAll('.etat-filter').forEach(checkbox => {
+            checkbox.addEventListener('change', async () => {
+                saveFilters();
+                await fetchData();
+            });
+        });
+
 async function updateSousCategoriesFilters() {
 
     const regions = Array.from(document.querySelectorAll('.region-filter:checked')).map(el => el.value);
@@ -616,7 +623,7 @@ produitsCheckboxesContainer.addEventListener('scroll', () => {
         const villes = Array.from(document.querySelectorAll('.ville-filter:checked')).map(el => el.value);
         const licences = Array.from(document.querySelectorAll('.sous-categorie-filter:checked')).map(el => el.value);
         const produits = JSON.parse(localStorage.getItem('selectedProduits'))?.map(p => p.id) || [];
-
+        const etats = Array.from(document.querySelectorAll('.etat-filter:checked')).map(el => el.value);
 
         try {
             const response = await axios.get(`{{ route('fiches.index') }}`, {
@@ -627,6 +634,7 @@ produitsCheckboxesContainer.addEventListener('scroll', () => {
                     villes: villes,
                     produits: produits,
                     licences:licences,
+                    etats: etats
                 }
             });
 
@@ -908,7 +916,7 @@ produitsCheckboxesContainer.addEventListener('scroll', () => {
         description: el.parentElement.textContent.trim()
     };
 });
-
+const selectedEtats = Array.from(document.querySelectorAll('.etat-filter:checked')).map(el => el.value); 
 const selectedLicences = Array.from(document.querySelectorAll('.sous-categorie-filter:checked')).map(el => {
     return {
         id: el.value,
@@ -920,7 +928,7 @@ const selectedLicences = Array.from(document.querySelectorAll('.sous-categorie-f
         localStorage.setItem('selectedVilles', JSON.stringify(selectedVilles));
         localStorage.setItem('selectedProduits', JSON.stringify(selectedProduits));
         localStorage.setItem('selectedLicences',JSON.stringify(selectedLicences));
-
+        localStorage.setItem('selectedEtats', JSON.stringify(selectedEtats));
         updateFilterBubbles();
     }
 
@@ -929,12 +937,40 @@ const selectedLicences = Array.from(document.querySelectorAll('.sous-categorie-f
         const selectedVilles = JSON.parse(localStorage.getItem('selectedVilles')) || [];
         const selectedProduits = JSON.parse(localStorage.getItem('selectedProduits')) || [];
         const selectedLicences = JSON.parse(localStorage.getItem('selectedLicences')) || [];
-
+        const selectedEtats = JSON.parse(localStorage.getItem('selectedEtats')) || []
         updateRegionFilterBubbles(selectedRegions);
         updateVilleFilterBubbles(selectedVilles);
         updateProduitsFilterBubbles(selectedProduits);
         updateLicencesFilterBubbles(selectedLicences);
+        updateEtatFilterBubbles(selectedEtats); 
     }
+
+
+function updateEtatFilterBubbles(selectedEtats) {
+    const etatBubblesContainer = document.getElementById('etat-filter-bubbles');
+    etatBubblesContainer.innerHTML = '';
+
+    selectedEtats.forEach(etat => {
+        const bubble = document.createElement('span');
+        bubble.classList.add('bg-blue-200', 'text-blue-800', 'text-sm', 'cursor-pointer', 'font-semibold', 'mr-2', 'px-2', 'py-1', 'rounded', 'flex', 'items-center', 'mb-2', 'hover:bg-red-500', 'hover:text-white', 'max-h-10');
+        bubble.innerHTML = `
+            ${etat}
+            <span class="iconify w-4 h-4 ml-1" data-icon="material-symbols:close"></span>
+        `;
+
+        bubble.addEventListener('click', async () => {
+            document.querySelectorAll('.etat-filter').forEach(checkbox => {
+                if (checkbox.value === etat) {
+                    checkbox.checked = false;
+                }
+            });
+            saveFilters();
+            await fetchData();
+        });
+
+        etatBubblesContainer.appendChild(bubble);
+    });
+}
 
     function updateRegionFilterBubbles(selectedRegions) {
         const regionBubblesContainer = document.getElementById('region-filter-bubbles');
