@@ -147,7 +147,7 @@
                         Administration
                     </a>
                     @endrole
-                    <a href="/fournisseurs" class="block hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
+                    <a href="{{ route('fiches.index') }}" class="block hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
                         Fournisseurs
                     </a>
                     <a href="/profil" class="block hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
