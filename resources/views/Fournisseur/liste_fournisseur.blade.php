@@ -260,7 +260,11 @@ $etatStyles = [
     
     
     
-
+    <div class="flex items-center justify-end mb-4 w-full">
+        <span class="iconify size-8" data-icon="material-symbols:search"></span>
+ <input type="text" id="search-bar" class="border-4 rounded px-2 py-1 w-full md:w-1/2 daltonien:text-black daltonien:border-black" placeholder="Rechercher une entreprise, un courriel d'entreprise, un nom ou prénom d'un contact " 
+ oninput="fetchData()"   />   
+    </div>
     <!-- Tableau de données dynamique -->
     <div class="relative overflow-x-auto shadow-md rounded-lg">
         <table class="w-full text-sm text-left text-gray-500 font-Alumni md:text-xl">
@@ -629,7 +633,7 @@ produitsCheckboxesContainer.addEventListener('scroll', () => {
         const licences = Array.from(document.querySelectorAll('.sous-categorie-filter:checked')).map(el => el.value);
         const produits = JSON.parse(localStorage.getItem('selectedProduits'))?.map(p => p.id) || [];
         const etats = Array.from(document.querySelectorAll('.etat-filter:checked')).map(el => el.value);
-
+        const searchQuery = document.getElementById('search-bar').value;
         try {
             const response = await axios.get(`{{ route('fiches.index') }}`, {
                 params: {
@@ -639,7 +643,8 @@ produitsCheckboxesContainer.addEventListener('scroll', () => {
                     villes: villes,
                     produits: produits,
                     licences:licences,
-                    etats: etats
+                    etats: etats,
+                    search:searchQuery,
                 }
             });
 

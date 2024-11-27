@@ -22,8 +22,8 @@ use Illuminate\Support\Facades\Log;
         $villes = $request->input('villes', []);
         $licences = $request->input('licences', []);
         $etats = $request->input('etats', []);
-
-        $query = FicheFournisseur::with(['coordonnees', 'licence.sousCategories']);
+        $searchQuery = $request->input('search', ''); 
+        $query = FicheFournisseur::with(['coordonnees', 'licence.sousCategories', 'contacts']);
     
        
         if (!empty($regions)) {
@@ -53,6 +53,18 @@ use Illuminate\Support\Facades\Log;
         if (!empty($etats)) {
         $query->whereIn('etat', $etats);
     }
+
+    if (!empty($searchQuery)) {
+        $query->where(function ($q) use ($searchQuery) {
+        $q->where('nom_entreprise', 'LIKE', "%$searchQuery%")
+        ->orWhere('adresse_courriel', 'LIKE', "%$searchQuery%")
+        ->orWhereHas('contacts', function ($subQuery) use ($searchQuery) {
+         $subQuery->where('nom', 'LIKE', "%$searchQuery%")
+         ->orWhere('prenom', 'LIKE', "%$searchQuery%");
+                });
+        });
+    }
+    
        
         $query->where('etat', '!=', 'désactivé');
     
