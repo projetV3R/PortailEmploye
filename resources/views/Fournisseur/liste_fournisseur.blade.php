@@ -399,13 +399,11 @@ document.querySelectorAll('.etat-filter').forEach(checkbox => {
             });
         });
 
-async function updateSousCategoriesFilters() {
-
+        async function updateSousCategoriesFilters() {
     const regions = Array.from(document.querySelectorAll('.region-filter:checked')).map(el => el.value);
     const villes = Array.from(document.querySelectorAll('.ville-filter:checked')).map(el => el.value);
-console.log("Test",villes);
+
     try {
-       
         const response = await axios.get('{{ route('get.sousCategoriesFilter') }}', {
             params: { regions, villes }
         });
@@ -414,18 +412,25 @@ console.log("Test",villes);
         const sousCategorieCheckboxesContainer = document.getElementById('licence-checkboxes');
         sousCategorieCheckboxesContainer.innerHTML = '';
 
-    
+   
+        const selectedLicences = JSON.parse(localStorage.getItem('selectedLicences')) || [];
+
         sousCategories.forEach(sousCategorie => {
+            const isChecked = selectedLicences.some(
+                licence => licence.id === sousCategorie.id.toString() 
+            );
+
             const label = document.createElement('label');
             label.classList.add('flex', 'items-center', 'ml-4');
             label.innerHTML = `
-                <input type="checkbox" value="${sousCategorie.id}" class="sous-categorie-filter mr-2">
-                ${sousCategorie.code_sous_categorie} 
+                <input type="checkbox" value="${sousCategorie.id}" class="sous-categorie-filter mr-2" ${
+                isChecked ? 'checked' : ''
+            }>
+                ${sousCategorie.code_sous_categorie}
             `;
             sousCategorieCheckboxesContainer.appendChild(label);
         });
 
-       
         document.querySelectorAll('.sous-categorie-filter').forEach(checkbox => {
             checkbox.addEventListener('change', async () => {
                 saveFilters();
@@ -639,12 +644,22 @@ produitsCheckboxesContainer.addEventListener('scroll', () => {
             });
 
             const data = response.data;
-            document.getElementById('fiches-content').innerHTML = '';
+            const contentContainer =document.getElementById('fiches-content');
             document.getElementById('total').textContent = data.total;
             document.getElementById('current-count').textContent = data.to;
-
+            contentContainer.innerHTML = '';
             totalPages = data.last_page;
-
+            if (data.data.length === 0) {
+       
+            const noDataRow = document.createElement('tr');
+            noDataRow.innerHTML = `
+                <td colspan="5" class="text-center text-gray-500 font-Alumni py-4">
+                    <span>Aucune fiche fournisseur trouvée avec les filtres appliqués.</span>
+                </td>
+            `;
+            contentContainer.appendChild(noDataRow);
+            return;
+        }
             data.data.forEach(fiche => {
                 const etatStyle = etatStyles[fiche.etat] || { textColor: '', icon: '', text: fiche.etat };
                 const row = document.createElement('tr');
@@ -676,7 +691,7 @@ produitsCheckboxesContainer.addEventListener('scroll', () => {
                         <a href="${profilRoute.replace(':id', fiche.id)}" class="font-medium text-blue-600 hover:underline daltonien:text-black daltonien:hover:bg-daltonienBleu">Ouvrir</a>
                     </td>
                 `;
-                document.getElementById('fiches-content').appendChild(row);
+                contentContainer.appendChild(row);
 
                 if (document.getElementById('checkbox-all').checked && !selectedCompanies.some(item => item.id === fiche.id)) {
                     selectedCompanies.push({ id: fiche.id, name: fiche.nom_entreprise, email: fiche.adresse_courriel });
@@ -886,7 +901,8 @@ produitsCheckboxesContainer.addEventListener('scroll', () => {
     const selectedRegions = JSON.parse(localStorage.getItem('selectedRegions')) || [];
     const selectedVilles = JSON.parse(localStorage.getItem('selectedVilles')) || [];
     const selectedProduits = JSON.parse(localStorage.getItem('selectedProduits')) || [];
-
+    const selectedLicences = JSON.parse(localStorage.getItem('selectedLicences')) || [];
+    const selectedEtats = JSON.parse(localStorage.getItem('selectedEtats')) || [];
     loadedProduitIds = []; 
 
 
@@ -898,10 +914,20 @@ produitsCheckboxesContainer.addEventListener('scroll', () => {
         });
     });
 
+    selectedEtats.forEach(etat => {
+        document.querySelectorAll('.etat-filter').forEach(checkbox => {
+            if (checkbox.value === etat) {
+                checkbox.checked = true;
+            }
+        });
+    });
+
    
     await updateCityFilters(selectedVilles);
     await populateCategorieSelect();
     await updateProduitsFilters(selectedProduits);
+    await updateSousCategoriesFilters(selectedLicences);
+
 
     updateFilterBubbles();
 }
