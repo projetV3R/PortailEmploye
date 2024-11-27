@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\FicheFournisseur;
 use App\Models\ParametreSysteme;
 use Illuminate\Http\Request;
+use App\Notifications\FournisseurApproveNotification;
+use App\Notifications\FournisseurRefusNotification;
+
+
 
 class FicheFournisseurController extends Controller
 {
@@ -42,30 +46,35 @@ class FicheFournisseurController extends Controller
 
         return response()->json(['message' => 'Sélection mise à jour']);
     }
+    public function reject(Request $request, $id)
+    {
+        $fournisseur = FicheFournisseur::findOrFail($id);
+
+        // Mise à jour de l'état à "refuser"
+        $fournisseur->etat = 'refuser';
+        $fournisseur->save();
+
+        // Envoi d'une notification de refus
+        $reason = $request->input('reason', null);
+        $includeReason = $request->input('includeReason', false);
+        $fournisseur->notify(new FournisseurRefusNotification($fournisseur, $reason, $includeReason));
+
+        return response()->json(['message' => 'Demande refusée avec succès.']);
+    }
 
     public function approve($id)
     {
-        $fournisseur = FicheFournisseur::find($id);
-        if ($fournisseur) {
-            $fournisseur->etat = 'accepter';
-            $fournisseur->save();
-            return response()->json(['message' => 'Demande approuvée avec succès.']);
-        }
-        return response()->json(['message' => 'Fournisseur non trouvé.'], 404);
+        $fournisseur = FicheFournisseur::findOrFail($id);
+
+        // Mise à jour de l'état à "accepter"
+        $fournisseur->etat = 'accepter';
+        $fournisseur->save();
+
+        // Envoi d'une notification d'approbation
+        $fournisseur->notify(new FournisseurApproveNotification($fournisseur));
+
+        return response()->json(['message' => 'Demande approuvée avec succès.']);
     }
-
-    public function reject(Request $request, $id)
-    {
-        $fournisseur = FicheFournisseur::find($id);
-        if ($fournisseur) {
-            $fournisseur->etat = 'refuser';
-            $fournisseur->save();
-            return response()->json(['message' => 'Demande refusée avec succès.']);
-        }
-        return response()->json(['message' => 'Fournisseur non trouvé.'], 404);
-    }
-
-
 
     /**
      * Show the form for creating a new resource.

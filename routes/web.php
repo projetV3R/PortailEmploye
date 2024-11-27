@@ -61,8 +61,8 @@ Route::put('/modeles/{id}', [ModelesController::class, 'update']);
 
 
 Route::get('/listeFournisseur', [FicheFournisseurController::class, 'index'])->name('fiches.index');
-Route::post('/fiches/{id}/approve', [FicheFournisseurController::class, 'approve'])->name('fiches.approve');
-Route::post('/fiches/{id}/reject', [FicheFournisseurController::class, 'reject'])->name('fiches.reject');
+Route::post('/fiches/reject/{id}', [FicheFournisseurController::class, 'reject'])->name('fiches.reject');
+Route::post('/fiches/approve/{id}', [FicheFournisseurController::class, 'approve'])->name('fiches.approve');
 
 
 //Route::get('/profil', [FicheFournisseurController::class, 'profil'])->name('profil');
