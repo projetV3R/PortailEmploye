@@ -105,7 +105,7 @@ Route::post('/Contacts/update', [FicheFournisseurController::class, "updateConta
 Route::get('/Contacts/getData', [FicheFournisseurController::class, "getContacts"])->name("getContacts")->middleware('auth');
 
 
-Route::get('/fournisseur/${fournisseurId}/edit-doc', [FicheFournisseurController::class, "editDoc"])->name("EditDoc")->middleware('auth');
+Route::get('/fournisseur/{fournisseurId}/edit-doc', [FicheFournisseurController::class, "editDoc"])->name("EditDoc")->middleware('auth');
 Route::post('/fournisseur/{id}/update-doc', [FicheFournisseurController::class, "updateDoc"])->name("UpdateDoc")->middleware('auth');
 Route::get('/fournisseur/{id}/get-documents', [FicheFournisseurController::class, 'getDocuments']);
 

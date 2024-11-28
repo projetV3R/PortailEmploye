@@ -7,6 +7,7 @@ function initializeDocFormScript() {
     const uploadButton = document.getElementById('uploadButton');
     const fichiersASupprimerContainer = document.getElementById('fichiersASupprimerContainer');
     const fournisseurId = localStorage.getItem('fournisseurId');
+  
 
 
     let MAX_TOTAL_SIZE_MB = 0;

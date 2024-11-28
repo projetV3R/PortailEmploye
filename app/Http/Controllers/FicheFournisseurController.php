@@ -126,8 +126,8 @@ use App\Notifications\NotificationModification;
 
         public function editDoc($id)
         { 
-            $id = session()->get('idFournisseur');
-                $fournisseur = FicheFournisseur::find( $id );
+            
+                $fournisseur = FicheFournisseur::find($id);
                 $maxFileSize = ParametreSysteme::where('cle', 'taille_fichier')->value('valeur_numerique');
                 return view("modificationCompte/docModif" , compact('fournisseur','maxFileSize'));
         }

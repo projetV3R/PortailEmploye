@@ -513,12 +513,14 @@
 @endsection
 
 <script>
-          const fournisseurId = {{ $fournisseur->id }};
+        
     
     // Stocker l'ID dans le localStorage
-    localStorage.setItem('fournisseurId', fournisseurId);
+   
     document.addEventListener('DOMContentLoaded', function() {
-       
+        const fournisseurId = {{ $fournisseur->id }};
+        localStorage.setItem('fournisseurId', fournisseurId);
+        console.log(fournisseurId);
         @if (session()->has('errorsId'))
             openIdentificationModal();
         @endif
@@ -596,7 +598,7 @@ function openDocModal() {
     }
     document.getElementById('docModal').classList.remove('hidden');
 
-    axios.get('/fournisseur/${fournisseurId}/edit-doc') 
+    axios.get(`/fournisseur/${fournisseurId}/edit-doc`) 
         .then(function (response) {
             document.getElementById('docFormContainer').innerHTML = response.data;
 
