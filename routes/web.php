@@ -110,8 +110,8 @@ Route::get('/fournisseur/{fournisseurId}/edit-doc', [FicheFournisseurController:
 Route::post('/fournisseur/{id}/update-doc', [FicheFournisseurController::class, "updateDoc"])->name("UpdateDoc")->middleware('auth');
 Route::get('/fournisseur/{id}/get-documents', [FicheFournisseurController::class, 'getDocuments']);
 
-Route::get('/Finances/modif', [FicheFournisseurController::class, "editFinance"])->name("EditFinance")->middleware('auth');
-Route::post('/Finances/update', [FicheFournisseurController::class, "updateFinance"])->name("UpdateFinance")->middleware('auth');
+Route::get('/Finances/{fournisseurId}/modif', [FicheFournisseurController::class, "editFinance"])->name("EditFinance")->middleware('auth');
+Route::post('/Finances/update/{id}', [FicheFournisseurController::class, "updateFinance"])->name("UpdateFinance")->middleware('auth');
 
 Route::post('/Activation', [FicheFournisseurController::class, "reactivationFiche"])->name("reactivationFiche")->middleware('auth');
 Route::post('/Desactivation', [FicheFournisseurController::class, 'desactivationFiche'])->name('desactivationFiche')->middleware('auth');

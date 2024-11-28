@@ -207,8 +207,8 @@ function initializeCoordonneeFormScript() {
                         value="${poste}"
                         class="font-Alumni w-full p-2 h-12 focus:outline-none focus:border-blue-500 border border-black">
                 </div>
-                <div class="w-full flex flex-row justify-start items-end pl-2">
-                    <button type="button" class="remove-ligne cursor-pointer hover:bg-red-500 items-center flex justify-center bg-tertiary-400 text-white h-12 w-12" data-index="${index}">
+                <div class="w-full flex flex-row justify-start items-end pl-2 px-2">
+                    <button type="button" class="remove-ligne cursor-pointer hover:bg-red-500 items-center flex justify-center bg-tertiary-400  text-white h-12 w-12 p-2" data-index="${index}">
                         <span class="iconify size-6 remove-ligne" data-icon="mdi:trash-can-outline"></span>
                     </button>
                 </div>

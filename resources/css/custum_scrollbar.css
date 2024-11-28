@@ -1,0 +1,20 @@
+/* Personnalisation de la scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #6b7280; /* Couleur du pouce de la scrollbar */
+    border-radius: 10px;
+    border: 2px solid transparent; /* Espace autour pour créer l'effet arrondi */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #4b5563;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background-color: #e5e7eb; /* Couleur du fond de la scrollbar */
+    border-radius: 10px;
+}

@@ -499,7 +499,15 @@
                     </div>
                 </div>
                 @else
+                <div class="bg-primary-100 py-8 px-4 mt-8 relative">
+                    <div class="absolute right-4 top-4">
+                    <button type="button" class="text-tertiary-400 hover:text-tertiary-300">
+                        <span class="iconify" data-icon="material-symbols:edit" data-inline="false"  onclick="openFinanceModal()"
+                            style="font-size: 1.5rem;"></span>
+                    </button>
+                </div>
             <p class="font-Alumni mt-4 text-md md:text-lg">Aucune information financière disponible.</p>
+        </div>
         @endif
                 @endif
                     <!-- Conteneurs pour les catégories avec défilement -->
@@ -773,7 +781,36 @@ function closeCoordonneeModal() {
     document.getElementById('coordonneeModal').classList.add('hidden');
 }
 
+function openFinanceModal() {
+    const fournisseurId = localStorage.getItem('fournisseurId');
+    if (etatFiche === 'desactiver') {
+        Swal.fire({
+            title: 'Fiche désactivée',
+            text: 'Vous devez réactiver votre fiche fournisseur pour pouvoir modifier vos informations.',
+            icon: 'warning',
+            confirmButtonText: 'Ok',
+        });
+        return; 
+    }
+    document.getElementById('financeModal').classList.remove('hidden');
 
+    axios.get(`/Finances/${fournisseurId}/modif`) 
+        .then(function (response) {
+            document.getElementById('financeFormContainer').innerHTML = response.data;
+
+            loadScript('{{ asset('js/modif/financeModif.js') }}', function() {
+                setTimeout( initializeFinanceFormScript, 100);
+            });
+          
+        })
+        .catch(function (error) {
+            console.error("Erreur lors du chargement de la page des finances", error);
+        });
+}
+
+function closeFinanceModal() {
+    document.getElementById('financeModal').classList.add('hidden');
+}
 const etatFiche = "{{ $fournisseur->etat }}"; 
     </script>
     

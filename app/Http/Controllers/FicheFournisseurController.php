@@ -632,30 +632,34 @@ use App\Notifications\NotificationModification;
 
 //Modifier Finance
 
-    public function editFinance()
+    public function editFinance($id)
         {
-            $id = session()->get('idFournisseur');
-            $fournisseur = FicheFournisseur::find( $id );
-                return view("modificationCompte/financeModif" , compact('fournisseur'));
+        
+            $fournisseur = FicheFournisseur::find($id);
+             return view("modificationCompte/financeModif" , compact('fournisseur'));
 
         }
 
-        public function updateFinance(FinanceRequest $request)
+        public function updateFinance(FinanceRequest $request,$id)
         {
-            $id = session()->get('idFournisseur');
-            $fournisseur = FicheFournisseur::find( $id );
+     
+            $fournisseur = FicheFournisseur::find($id);
         
             
             if ( $fournisseur->etat === 'accepter') {
-                $fournisseur->finance->updateOrCreate([
-                    'numero_tps' => $request->input('numeroTPS'),
-                    'numero_tvq' => $request->input('numeroTVQ'),
-                    'condition_paiement' => $request->input('conditionDePaiement'),
-                    'devise' => $request->input('devise'),
-                    'mode_communication' => $request->input('modeCommunication'),
-                ]);
-        
-                return redirect()->route('profil')->with('success', 'Informations financières mises à jour avec succès.');
+                $fournisseur->finance()->updateOrCreate(
+                    ['fiche_fournisseur_id' => $id], // Condition pour vérifier l'existence
+                    [
+                        'numero_tps' => $request->input('numeroTPS'),
+                        'numero_tvq' => $request->input('numeroTVQ'),
+                        'condition_paiement' => $request->input('conditionDePaiement'),
+                        'devise' => $request->input('devise'),
+                        'mode_communication' => $request->input('modeCommunication'),
+                    ]
+                );
+                return redirect()->back()
+                ->with('success', 'Informations financières mises à jour avec succès.');
+
             }
         
             return redirect()->back()->withErrors('Erreur lors de la mise à jour des informations financières.');

@@ -15,7 +15,7 @@
                     <li class="font-Alumni">{{ $error }}</li>
                 @endforeach
             </ul>
-        </div  
+        </div>  
     @endif
         <div class="p-4 md:p-16 flex flex-col  w-full">
             <div class="flex w-full flex-col 2xl:flex-row gap-4 ">
