@@ -888,12 +888,11 @@ return response()->json($categories);
    return redirect()->back();
 }
 
-public function getMultiple(Request $request)
+public function getMultiple(Request $request,$id)
 {
     // Vérifier si l'utilisateur est connecté
     if (auth()->check()) {
-        $id = session()->get('idFournisseur');
-        $fournisseur = FicheFournisseur::find( $id );
+        $fournisseur = FicheFournisseur::find($id);
         
         // Récupérer les produits et services associés à l'utilisateur connecté
         $produits = $fournisseur->produitsServices;
@@ -908,19 +907,20 @@ public function getMultiple(Request $request)
 
 
 
-public function editProduit()
+public function editProduit($id)
 {
-    $id = session()->get('idFournisseur');
-    $fournisseur = FicheFournisseur::find( $id );
+
+    $fournisseur = FicheFournisseur::find($id);
     $produitsServices = $fournisseur->produitsServices; 
     return view("modificationCompte/produitModif", compact('fournisseur', 'produitsServices'));
 }
 
 
-public function updateProduit(ProduitServiceRequest $request)
+public function updateProduit(ProduitServiceRequest $request,$id)
 {
-    $id = session()->get('idFournisseur');
-    $fournisseur = FicheFournisseur::find( $id );
+
+    $usager = Auth::user();
+    $fournisseur = FicheFournisseur::find($id);
 
  
     $oldDetailsSpecifications = $fournisseur->details_specifications;
@@ -950,10 +950,10 @@ public function updateProduit(ProduitServiceRequest $request)
 
     if ($oldDetailsSpecifications !== $newDetailsSpecifications) {
         if (!empty($oldDetailsSpecifications)) {
-            $historiqueRemove[] = "details et specifications: {$oldDetailsSpecifications}";
+            $historiqueRemove[] = "-details et specifications: {$oldDetailsSpecifications}";
         }
         if (!empty($newDetailsSpecifications)) {
-            $historiqueDetails[] = "details et specifications: {$newDetailsSpecifications}";
+            $historiqueDetails[] = "+details et specifications: {$newDetailsSpecifications}";
         }
     }
 
@@ -977,7 +977,7 @@ public function updateProduit(ProduitServiceRequest $request)
     if (!empty($historiqueDetails) || !empty($historiqueRemove)) {
         Historique::create([
             'table_name' => 'Produits&Services',
-            'author' => $fournisseur->adresse_courriel,
+            'author' => $usager->email,
             'action' => 'Modifier',
             'old_values' => !empty($historiqueRemove) ? implode(", ", $historiqueRemove) : null,
             'new_values' => !empty($historiqueDetails) ? implode(", ", $historiqueDetails) : null,
@@ -989,7 +989,6 @@ public function updateProduit(ProduitServiceRequest $request)
             'nomEntreprise' => $fournisseur->nom_entreprise,
             'emailEntreprise' => $fournisseur->adresse_courriel,
             'dateModification' => now()->format('d-m-Y H:i:s'),
-            'auteur' => $fournisseur->adresse_courriel,
         ];
         $fournisseur->notify(new NotificationModification($data));
     }
@@ -999,10 +998,10 @@ public function updateProduit(ProduitServiceRequest $request)
 
 
 
-public function desactivationFiche()
+public function desactivationFiche($id)
 {
-    $id = session()->get('idFournisseur');
-    $fournisseur = FicheFournisseur::find( $id );
+    $fournisseur = FicheFournisseur::find($id);
+    $usager = Auth::user();
 
     if ($fournisseur->etat == 'accepter') {
         $historiqueRemove = [];
@@ -1028,7 +1027,7 @@ public function desactivationFiche()
      
         Historique::create([
             'table_name' => 'Identification et statut',
-            'author' => $fournisseur->adresse_courriel,
+            'author' => $usager->email,
             'action' => 'Désactivée',
             'old_values' => "-état : Accepter, {$historiqueRemove}",
             'new_values' => '+état : Desactiver',
@@ -1042,10 +1041,11 @@ public function desactivationFiche()
 
 
     
-    public function reactivationFiche()
+    public function reactivationFiche($id)
     {
-        $id = session()->get('idFournisseur');
-        $fournisseur = FicheFournisseur::find( $id );
+
+        $fournisseur = FicheFournisseur::find($id);
+        $usager = Auth::user();
         if ($fournisseur->etat=='desactiver'){
             
 
@@ -1054,7 +1054,7 @@ public function desactivationFiche()
       
             Historique::create([
                 'table_name' => 'Identification et statut',
-                'author' => $fournisseur->adresse_courriel,
+                'author' =>  $usager->email,
                 'action' => 'Acceptée',
                 'old_values' => "-état : Desactiver ",
                 'new_values' => '+état : Accepter',

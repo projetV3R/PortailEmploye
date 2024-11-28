@@ -590,7 +590,7 @@ function openDocModal() {
     if (etatFiche === 'desactiver') {
         Swal.fire({
             title: 'Fiche désactivée',
-            text: 'Vous devez réactiver la fiche fournisseur pour pouvoir modifier les informations.',
+            text: 'Vous devez réactiver la fiche fournisseur pour pouvoir modifier ses informations.',
             icon: 'warning',
             confirmButtonText: 'Ok',
         });
@@ -621,7 +621,7 @@ function openIdentificationModal() {
         if (etatFiche === 'desactiver') {
         Swal.fire({
             title: 'Fiche désactivée',
-            text: 'Vous devez réactiver votre fiche fournisseur pour pouvoir modifier vos informations.',
+            text: 'Vous devez réactiver la fiche fournisseur pour pouvoir modifier ses informations.',
             icon: 'warning',
             confirmButtonText: 'Ok',
         });
@@ -648,6 +648,37 @@ function openIdentificationModal() {
     function closeModal() {
         document.getElementById('identificationModal').classList.add('hidden');
     }
+
+    function openProduitsServicesModal() {
+        const fournisseurId = localStorage.getItem('fournisseurId');
+        if (etatFiche === 'desactiver') {
+        Swal.fire({
+            title: 'Fiche désactivée',
+            text: 'Vous devez réactiver la fiche fournisseur pour pouvoir modifier ses informations.',
+            icon: 'warning',
+            confirmButtonText: 'Ok',
+        });
+        return; 
+    }
+    document.getElementById('produitsServicesModal').classList.remove('hidden');
+
+    axios.get(`/produits-services/${fournisseurId}}/modif/`) 
+        .then(function (response) {
+            document.getElementById('produitsServicesFormContainer').innerHTML = response.data;
+
+           
+            loadScript('{{ asset('js/modif/produitModif.js') }}', function() {
+                setTimeout(initializeProduitsServicesFormScript, 100);
+            });
+        })
+        .catch(function (error) {
+            console.error("Erreur lors du chargement de la page Produits et Services:", error);
+        });
+}
+
+function closeProduitsServicesModal() {
+    document.getElementById('produitsServicesModal').classList.add('hidden');
+}
 
 const etatFiche = "{{ $fournisseur->etat }}"; 
     </script>

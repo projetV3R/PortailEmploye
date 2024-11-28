@@ -4,7 +4,7 @@
 
 @section('contenu')
 
-<form id="produitsServicesForm" action="{{ route('UpdateProduit') }}" method="post" id="produitForm">
+<form id="produitsServicesForm" action="{{ route('UpdateProduit', ['id' => $fournisseur->id]) }}" method="post" id="produitForm">
     @csrf
     @if(session('errorsPS'))
     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">

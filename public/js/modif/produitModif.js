@@ -3,8 +3,9 @@ let selectedProductIds = [];
 let selectedProducts = [];
 const itemsPerPageSelected = 10; // 2 colonnes x 5 lignes
 let currentPageSelected = 1;
+const fournisseurId = localStorage.getItem('fournisseurId');
 
-    axios.get('/produits-services/multiple')
+    axios.get(`/produits-services/multiple/${fournisseurId}`)
         .then(response => {
             selectedProducts = response.data;
             selectedProductIds = selectedProducts.map(produit => produit.id);

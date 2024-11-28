@@ -81,10 +81,10 @@ Route::get('/licence/filtre', [FiltreController::class, 'getSousCategoriesFilter
 Route::get('/Identification/{fournisseurId}/modif', [FicheFournisseurController::class, "editIdentif"])->name("EditIdentification")->middleware('auth');
 Route::post('/Identification/{id}/update', [FicheFournisseurController::class, "updateProfile"])->name("UpdateIdentification")->middleware('auth');
 
-Route::get('/produits-services/multiple', [FicheFournisseurController::class, 'getMultiple'])->name('produits-services.getMultiple');
+Route::get('/produits-services/multiple/{id}', [FicheFournisseurController::class, 'getMultiple'])->name('produits-services.getMultiple');
 Route::get('/categories', [FicheFournisseurController::class, 'getCategories']);
-Route::get('/produits-services/modif', [FicheFournisseurController::class, "editProduit"])->name("EditProduit")->middleware('auth');
-Route::post('/produits-services/update', [FicheFournisseurController::class, "updateProduit"])->name("UpdateProduit")->middleware('auth');
+Route::get('/produits-services/{fournisseurId}/modif/', [FicheFournisseurController::class, "editProduit"])->name("EditProduit")->middleware('auth');
+Route::post('/produits-services/update/{id}', [FicheFournisseurController::class, "updateProduit"])->name("UpdateProduit")->middleware('auth');
 Route::get('/search', [FicheFournisseurController::class, 'search']);
 
 Route::get('/municipalites-par-region', [RegionMunicipalitesController::class, 'getMunicipalitesParRegion']);
@@ -95,10 +95,10 @@ Route::get('/fournisseur/coordonnees/data', [FicheFournisseurController::class, 
 
 
 Route::get('/sous-categories/{type}', [FicheFournisseurController::class, 'getSousCategories']);
-Route::get('/sous-categories/affichage/multiple', [FicheFournisseurController::class, 'getSousCategoriesMultiple']);
-Route::get('/Licences/modif', [FicheFournisseurController::class, "editLicence"])->name("EditLicence")->middleware('auth');
-Route::post('/Licences/update', [FicheFournisseurController::class, "updateLicence"])->name("UpdateLicence")->middleware('auth');
-Route::get('/Licence/get-licence-data', [FicheFournisseurController::class, 'getLicenceData'])->name('getLicenceData');
+Route::get('/sous-categories/affichage/multiple/{id}', [FicheFournisseurController::class, 'getSousCategoriesMultiple']);
+Route::get('/Licences/{fournisseurId}/modif', [FicheFournisseurController::class, "editLicence"])->name("EditLicence")->middleware('auth');
+Route::post('/Licences/{id}/update', [FicheFournisseurController::class, "updateLicence"])->name("UpdateLicence")->middleware('auth');
+Route::get('/Licence/get-licence-data/{id}', [FicheFournisseurController::class, 'getLicenceData'])->name('getLicenceData');
 
 Route::get('/Contacts/modif', [FicheFournisseurController::class, "editContact"])->name("EditContact")->middleware('auth');
 Route::post('/Contacts/update', [FicheFournisseurController::class, "updateContact"])->name("UpdateContact")->middleware('auth');
