@@ -215,14 +215,6 @@
     @endif
 
 
-    @if($fournisseur->etat == 'accepter')
-  
-    <div class="flex"> <button onclick="desactivation()" class="border-2 px-2 p-2 bg-red-500 text-white hover:text-primary-300 rounded-md  ">Désactiver votre fiche fournisseur</button></div>
-    @endif
-    @if($fournisseur->etat == 'desactiver')
-  
-    <div class="flex"> <button onclick="reactivation()" class="border-2 px-2 p-2 bg-green-500 text-white hover:text-primary-300 rounded-md  ">Réactiver votre fiche fournisseur</button></div>
-    @endif
         <div class="{{ $etatStyle['bgColor'] }} mt-4 md:mt-0 md:ml-2 w-full md:w-1/2 py-4 px-6 flex items-center">
             <div class="{{ $etatStyle['textColor'] }}">
                 <span class="iconify" data-icon="{{ $etatStyle['icon'] }}" data-inline="false" style="font-size: 2rem;"></span>
