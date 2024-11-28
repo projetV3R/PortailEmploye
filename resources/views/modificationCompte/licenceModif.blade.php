@@ -3,7 +3,7 @@
 @section('title', 'LicencesAutorisations')
 
 @section('contenu')
-    <form action="{{ route('UpdateLicence') }}" method="post" id="licenceForm">
+    <form action="{{ route('UpdateLicence', ['id' => $fournisseur->id]) }}" method="post" id="licenceForm">
         @csrf
         @if(session('errorsLicence'))
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">

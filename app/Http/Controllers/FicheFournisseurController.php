@@ -451,7 +451,7 @@ use App\Notifications\NotificationModification;
 
     public function updateCoordonnee(CoordonneeRequest $request)
     {
-        $id = session()->get('idFournisseur');
+     
         $fournisseur = FicheFournisseur::find( $id );
 
         $coordonnee = $fournisseur->coordonnee;
@@ -668,11 +668,11 @@ use App\Notifications\NotificationModification;
 
         //Modif Licence
 
-        public function editLicence()
+        public function editLicence($id)
         {
     
-            $id = session()->get('idFournisseur');
-            $fournisseur = FicheFournisseur::find( $id );
+         
+            $fournisseur = FicheFournisseur::find($id);
             return view("modificationCompte/licenceModif", compact('fournisseur'));
         }
         public function getSousCategories($type)
@@ -712,10 +712,10 @@ use App\Notifications\NotificationModification;
         return redirect()->back();
     }
 
-    public function getLicenceData()
+    public function getLicenceData($id)
     {
-        $id = session()->get('idFournisseur');
-        $fournisseur = FicheFournisseur::find( $id );
+    
+        $fournisseur = FicheFournisseur::find($id);
         $licence = $fournisseur->licence()->with('sousCategories.categorie')->first();
 
         return response()->json([
@@ -724,10 +724,10 @@ use App\Notifications\NotificationModification;
         ]);
     }
 
-    public function deleteLicence()
+    public function deleteLicence($id)
     {
-        $id = session()->get('idFournisseur');
-        $fournisseur = FicheFournisseur::find( $id );
+        $usager = Auth::user();
+        $fournisseur = FicheFournisseur::find($id);
         $licence = $fournisseur->licence()->first();
     
         if ($licence) {
@@ -739,7 +739,7 @@ use App\Notifications\NotificationModification;
     
             Historique::create([
                 'table_name' => 'Licence',
-                'author' => $fournisseur->adresse_courriel,
+                'author' => $usager->email,
                 'action' => 'Modifier',
                 'old_values' => "-Licence: {$licence->numero_licence_rbq}, Statut: {$licence->statut}, Type: {$licence->type_licence}",
                 'new_values' => "+Licence: supprimer",
@@ -751,7 +751,6 @@ use App\Notifications\NotificationModification;
                 'nomEntreprise' => $fournisseur->nom_entreprise,
                 'emailEntreprise' => $fournisseur->adresse_courriel,
                 'dateModification' => now()->format('d-m-Y H:i:s'),
-                'auteur' => $fournisseur->adresse_courriel,
             ];
             $fournisseur->notify(new NotificationModification($data));
     
@@ -761,10 +760,10 @@ use App\Notifications\NotificationModification;
         return response()->json(['success' => false, 'message' => 'Aucune licence à supprimer.'], 404);
     }
 
-    public function updateLicence(LicenceRequest $request)
+    public function updateLicence(LicenceRequest $request,$id)
 {
-    $id = session()->get('idFournisseur');
-    $fournisseur = FicheFournisseur::find( $id );
+    $usager = Auth::user();
+    $fournisseur = FicheFournisseur::find($id);
 
    
     $licence = $fournisseur->licence()->firstOrNew();
@@ -830,7 +829,7 @@ use App\Notifications\NotificationModification;
     if (!empty($oldValues) || !empty($newValues)) {
         Historique::create([
             'table_name' => 'Licence',
-            'author' => $fournisseur->adresse_courriel,
+            'author' =>  $usager->email,
             'action' => 'Modifier',
             'old_values' => !empty($oldValues) ? implode(", ", $oldValues) : null,
             'new_values' => !empty($newValues) ? implode(", ", $newValues) : null,
@@ -842,7 +841,6 @@ use App\Notifications\NotificationModification;
             'nomEntreprise' => $fournisseur->nom_entreprise,
             'emailEntreprise' => $fournisseur->adresse_courriel,
             'dateModification' => now()->format('d-m-Y H:i:s'),
-            'auteur' => $fournisseur->adresse_courriel,
         ];
         $fournisseur->notify(new NotificationModification($data));
     }

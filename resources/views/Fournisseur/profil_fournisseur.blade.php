@@ -680,6 +680,37 @@ function closeProduitsServicesModal() {
     document.getElementById('produitsServicesModal').classList.add('hidden');
 }
 
+function openLicenceModal() {
+    const fournisseurId = localStorage.getItem('fournisseurId');
+    if (etatFiche === 'desactiver') {
+        Swal.fire({
+            title: 'Fiche désactivée',
+            text: 'Vous devez réactiver votre fiche fournisseur pour pouvoir modifier vos informations.',
+            icon: 'warning',
+            confirmButtonText: 'Ok',
+        });
+        return; 
+    }
+    document.getElementById('licenceModal').classList.remove('hidden');
+
+    axios.get(`/Licences/${fournisseurId}/modif`) 
+        .then(function (response) {
+            document.getElementById('licenceFormContainer').innerHTML = response.data;
+
+            loadScript('{{ asset('js/modif/licenceModif.js') }}', function() {
+                setTimeout( initializeLicenceFormScript, 100);
+            });
+          
+        })
+        .catch(function (error) {
+            console.error("Erreur lors du chargement de la page des licences RBQ", error);
+        });
+}
+
+function closeLicenceModal() {
+    document.getElementById('licenceModal').classList.add('hidden');
+}
+
 const etatFiche = "{{ $fournisseur->etat }}"; 
     </script>
     

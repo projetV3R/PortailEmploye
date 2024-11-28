@@ -4,9 +4,10 @@ function initializeLicenceFormScript() {
     const typeLicenceSelect = document.getElementById('typeLicence');
     const checklistContainer = document.getElementById('checklistContainer');
     let selectedSousCategories = [];
+    const fournisseurId = localStorage.getItem('fournisseurId');
 
     // Récupérer les informations de la licence pour l'utilisateur connecté
-    axios.get('/Licence/get-licence-data')
+    axios.get(`/Licence/get-licence-data/${fournisseurId}`)
         .then(response => {
             const licenceData = response.data.licence;
             selectedSousCategories = response.data.selectedSousCategories || [];
@@ -156,11 +157,11 @@ function initializeLicenceFormScript() {
             cancelButtonText: 'Annuler'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete('/licence/delete')
+                axios.delete(`/licence/delete/${fournisseurId}`)
                     .then(response => {
                         Swal.fire(
                             'Supprimée !',
-                            'Votre licence a été supprimée avec succès.',
+                            'La licence a été supprimée avec succès.',
                             'success'
                         ).then(() => {
                             location.reload(); 
