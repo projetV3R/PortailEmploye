@@ -152,7 +152,7 @@ use App\Notifications\NotificationModification;
 
     public function updateDoc(Request $request,$id)
     {
-
+        $usager = Auth::user();
         $fournisseur = FicheFournisseur::find($id);
     
         $maxFileSize = ParametreSysteme::where('cle', 'taille_fichier')->value('valeur_numerique');
@@ -241,7 +241,7 @@ use App\Notifications\NotificationModification;
     
             Historique::create([
                 'table_name' => 'BrochuresCarte',
-                'author' => $fournisseur->adresse_courriel,
+                'author' =>  $usager->email,
                 'action' => 'Modifier',
                 'old_values' => $oldValues,
                 'new_values' => $newValues,
@@ -253,7 +253,6 @@ use App\Notifications\NotificationModification;
                 'nomEntreprise' => $fournisseur->nom_entreprise,
                 'emailEntreprise' => $fournisseur->adresse_courriel,
                 'dateModification' => now()->format('d-m-Y H:i:s'),
-                'auteur' => $fournisseur->adresse_courriel,
             ];
             $fournisseur->notify(new NotificationModification($data));
         }
