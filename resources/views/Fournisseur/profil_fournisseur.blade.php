@@ -711,6 +711,37 @@ function closeLicenceModal() {
     document.getElementById('licenceModal').classList.add('hidden');
 }
 
+function openContactModal() {
+    const fournisseurId = localStorage.getItem('fournisseurId');
+    if (etatFiche === 'desactiver') {
+        Swal.fire({
+            title: 'Fiche désactivée',
+            text: 'Vous devez réactiver votre fiche fournisseur pour pouvoir modifier vos informations.',
+            icon: 'warning',
+            confirmButtonText: 'Ok',
+        });
+        return; 
+    }
+    document.getElementById('contactModal').classList.remove('hidden');
+
+    axios.get(`/Contacts/${fournisseurId}/modif`)
+        .then(function (response) {
+            document.getElementById('contactFormContainer').innerHTML = response.data;
+
+            loadScript('{{ asset('js/modif/contactModif.js') }}', function() {
+                setTimeout( initializeContactFormScript, 100);
+            });
+          
+        })
+        .catch(function (error) {
+            console.error("Erreur lors du chargement de la page des contacts", error);
+        });
+}
+
+function closeContactModal() {
+    document.getElementById('contactModal').classList.add('hidden');
+}
+
 const etatFiche = "{{ $fournisseur->etat }}"; 
     </script>
     

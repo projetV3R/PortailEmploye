@@ -100,9 +100,9 @@ Route::get('/Licences/{fournisseurId}/modif', [FicheFournisseurController::class
 Route::post('/Licences/{id}/update', [FicheFournisseurController::class, "updateLicence"])->name("UpdateLicence")->middleware('auth');
 Route::get('/Licence/get-licence-data/{id}', [FicheFournisseurController::class, 'getLicenceData'])->name('getLicenceData');
 
-Route::get('/Contacts/modif', [FicheFournisseurController::class, "editContact"])->name("EditContact")->middleware('auth');
-Route::post('/Contacts/update', [FicheFournisseurController::class, "updateContact"])->name("UpdateContact")->middleware('auth');
-Route::get('/Contacts/getData', [FicheFournisseurController::class, "getContacts"])->name("getContacts")->middleware('auth');
+Route::get('/Contacts/{fournisseurId}/modif', [FicheFournisseurController::class, "editContact"])->name("EditContact")->middleware('auth');
+Route::post('/Contacts/update/{id}', [FicheFournisseurController::class, "updateContact"])->name("UpdateContact")->middleware('auth');
+Route::get('/Contacts/getData/{id}', [FicheFournisseurController::class, "getContacts"])->name("getContacts")->middleware('auth');
 
 
 Route::get('/fournisseur/{fournisseurId}/edit-doc', [FicheFournisseurController::class, "editDoc"])->name("EditDoc")->middleware('auth');

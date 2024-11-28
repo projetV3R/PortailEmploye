@@ -263,27 +263,27 @@ use App\Notifications\NotificationModification;
 
         //Modifier contact
 
-        public function editContact()
+        public function editContact($id)
         {
-            $id = session()->get('idFournisseur');
-            $fournisseur = FicheFournisseur::find( $id );
+           
+            $fournisseur = FicheFournisseur::find($id);
         return view("modificationCompte/contactModif" , compact('fournisseur'));
         }
 
-        public function getContacts()
+        public function getContacts($id)
         {
-            $id = session()->get('idFournisseur');
-            $fournisseur = FicheFournisseur::find( $id );
+         
+            $fournisseur = FicheFournisseur::find($id);
             
             $contacts = $fournisseur->contacts()->with('telephone:id,numero_telephone,poste,type')->get();
             
             return response()->json($contacts);
         }
         
-        public function updateContact(ContactRequest $request)
+        public function updateContact(ContactRequest $request,$id)
     {
-        $id = session()->get('idFournisseur');
-        $fournisseur = FicheFournisseur::find( $id );
+        $usager = Auth::user();
+        $fournisseur = FicheFournisseur::find($id);
 
         $existingContactIds = $fournisseur->contacts()->pluck('id')->toArray();
         $submittedContactIds = array_filter(array_column($request->input('contacts', []), 'id'));
@@ -381,7 +381,7 @@ use App\Notifications\NotificationModification;
         if (!empty($oldValues) || !empty($newValues)) {
             Historique::create([
                 'table_name' => 'Contacts',
-                'author' => $fournisseur->adresse_courriel,
+                'author' => $usager->email ,
                 'action' => 'Modifier',
                 'old_values' => !empty($oldValues) ? implode("; ", $oldValues) : null,
                 'new_values' => !empty($newValues) ? implode("; ", $newValues) : null,
@@ -395,12 +395,10 @@ use App\Notifications\NotificationModification;
                 'nomEntreprise' => $fournisseur->nom_entreprise,
                 'emailEntreprise' => $fournisseur->adresse_courriel,
                 'dateModification' => now()->format('d-m-Y H:i:s'),
-                'auteur' => $fournisseur->adresse_courriel,
             ];
             $fournisseur->notify(new NotificationModification($data));
         }
-
-        return redirect()->route('profil')->with('success', 'Informations de contact mises à jour avec succès.');
+        return redirect()->back()->with('success', 'Vos Informations de contact mises à jour avec succès.');
     }
 
         //Modifier coordonnée

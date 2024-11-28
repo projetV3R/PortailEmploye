@@ -1,6 +1,7 @@
 function initializeContactFormScript() {
     const confirmButton = document.getElementById('submitBtn');
     const form = document.getElementById('contactForm');
+    const fournisseurId = localStorage.getItem('fournisseurId');
 
     document.querySelectorAll('[name^="contacts"][name$="[numeroTelephone]"]').forEach(function(input) {
         formatTel(input);
@@ -39,7 +40,7 @@ function initializeContactFormScript() {
     }
 
 
-    axios.get('/Contacts/getData')
+    axios.get(`/Contacts/getData/${fournisseurId}`)
         .then(response => {
             const contacts = response.data;
 
