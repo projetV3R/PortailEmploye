@@ -78,8 +78,8 @@ Route::get('/categories-produits', [FiltreController::class, 'getCategoriesProdu
 Route::get('/licence/filtre', [FiltreController::class, 'getSousCategoriesFilter'])->name('get.sousCategoriesFilter');
 
 //Route pour MODIFICATION 
-Route::get('/Identification/modif', [FicheFournisseurController::class, "editIdentif"])->name("EditIdentification")->middleware('auth');
-Route::post('/Identification/update', [FicheFournisseurController::class, "updateProfile"])->name("UpdateIdentification")->middleware('auth');
+Route::get('/Identification/{fournisseurId}/modif', [FicheFournisseurController::class, "editIdentif"])->name("EditIdentification")->middleware('auth');
+Route::post('/Identification/{id}/update', [FicheFournisseurController::class, "updateProfile"])->name("UpdateIdentification")->middleware('auth');
 
 Route::get('/produits-services/multiple', [FicheFournisseurController::class, 'getMultiple'])->name('produits-services.getMultiple');
 Route::get('/categories', [FicheFournisseurController::class, 'getCategories']);

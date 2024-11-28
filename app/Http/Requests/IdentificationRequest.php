@@ -42,6 +42,14 @@ class IdentificationRequest extends FormRequest
             $rules['password_confirmation'] = [
                 'required_with:password',
             ];
+            
+            $rules['numeroEntreprise'] = [
+                'nullable',
+                'string',
+                'size:10',
+                'regex:/^(11|22|33|88)\d{8}$/',
+                'unique:fiche_fournisseurs,neq,'
+            ];
 
             $rules['email'] = [
                 'required',

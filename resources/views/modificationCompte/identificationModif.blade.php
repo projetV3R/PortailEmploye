@@ -4,7 +4,7 @@
 
 @section('contenu')
 
-    <form action="{{ route('UpdateIdentification') }}" method="post" id="identificationForm" >
+    <form action="{{ route('UpdateIdentification', ['id' => $fournisseur->id]) }}" method="post" id="identificationForm" >
         @csrf
         @if(session('errorsId'))
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
@@ -93,10 +93,10 @@
                                 Numéro d’entreprise du Québec (NEQ)
                                 <p class="italic text-sm ml-2">*Ce numéro n'est pas obligatoire</p>
                             </label>
-                            <input disabled type="text" id="numeroEntreprise"
+                            <input  type="text" id="numeroEntreprise" name="numeroEntreprise"
                                 value="{{ old('numeroEntreprise',  $fournisseur->neq) }}"
                                 placeholder="Entrer votre numéro d’entreprise du Québec"
-                                class="font-Alumni w-full max-w-md p-2 focus:outline-none focus:border-blue-500 border border-black cursor-not-allowed">
+                                class="font-Alumni w-full max-w-md p-2 focus:outline-none focus:border-blue-500 border border-black ">
 
                             @error('numeroEntreprise')
                                 <span

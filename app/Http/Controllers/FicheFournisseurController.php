@@ -607,20 +607,20 @@ use App\Notifications\NotificationModification;
 
     //Modifier identification 
 
-    public function editIdentif()
+    public function editIdentif($id)
     {
-        $id = session()->get('idFournisseur');
-        $fournisseur = FicheFournisseur::find( $id );
+    
+        $fournisseur = FicheFournisseur::find($id);
         return view("modificationCompte/identificationModif", compact('fournisseur'));
     }
 
-    public function updateProfile(IdentificationRequest $request)
+    public function updateProfile(IdentificationRequest $request,$id)
 {
-    $id = session()->get('idFournisseur');
-    $fournisseur = FicheFournisseur::find( $id );
+    $fournisseur = FicheFournisseur::find($id);
 
   
     $fournisseur->adresse_courriel = $request->input('email');
+    $fournisseur->neq = $request->input('numeroEntreprise');
 
     if ($request->filled('password')) {
         $fournisseur->password = bcrypt(($request->input('password')));

@@ -616,6 +616,39 @@ function closeDocModal() {
     document.getElementById('docModal').classList.add('hidden');
 }
 
+function openIdentificationModal() {
+    const fournisseurId = localStorage.getItem('fournisseurId');
+        if (etatFiche === 'desactiver') {
+        Swal.fire({
+            title: 'Fiche désactivée',
+            text: 'Vous devez réactiver votre fiche fournisseur pour pouvoir modifier vos informations.',
+            icon: 'warning',
+            confirmButtonText: 'Ok',
+        });
+        return; 
+    }
+        document.getElementById('identificationModal').classList.remove('hidden');
+    
+        axios.get(`/Identification/${fournisseurId}/modif`)
+            .then(function (response) {
+          
+                document.getElementById('identificationFormContainer').innerHTML = response.data;
+    
+              
+                loadScript('{{ asset('js/modif/identificationModif.js') }}', function() {
+                
+                    setTimeout(initializeIdentificationFormScript, 100);
+                });
+            })
+            .catch(function (error) {
+                console.error("Erreur lors du chargement de la page d'identification:", error);
+            });
+    }
+       
+    function closeModal() {
+        document.getElementById('identificationModal').classList.add('hidden');
+    }
+
 const etatFiche = "{{ $fournisseur->etat }}"; 
     </script>
     
