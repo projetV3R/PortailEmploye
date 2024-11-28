@@ -43,7 +43,7 @@
                                     Numero TPS
                                 </label>
                                 <input type="text" id="numeroTPS" name="numeroTPS" placeholder="123456789"
-                                    class="font-Alumni w-full p-2 h-12 h-12focus:outline-none focus:border-blue-500 border border-black"  value="{{ old('numeroTVQ', $fournisseur->finance->numero_tps) }}">
+                                    class="font-Alumni w-full p-2 h-12 h-12focus:outline-none focus:border-blue-500 border border-black"   value="{{ old('numeroTPS', $fournisseur->finance->numero_tps ?? null) }}">
     
                                 @error('numeroTPS')
                                     <span
@@ -60,7 +60,7 @@
                             </label>
     
                             <input type="text" id="numeroTVQ" name="numeroTVQ" placeholder="1234567890"
-                                class="font-Alumni w-full p-2 h-12 h-12focus:outline-none focus:border-blue-500 border border-black"  value="{{ old('numeroTVQ', $fournisseur->finance->numero_tvq) }}">
+                                class="font-Alumni w-full p-2 h-12 h-12focus:outline-none focus:border-blue-500 border border-black"   value="{{ old('numeroTVQ', $fournisseur->finance->numero_tvq ?? null) }}">
     
                             @error('numeroTVQ')
                                 <span
@@ -77,15 +77,15 @@
                             <!-- Select -->
                             <select name="conditionDePaiement" id="conditionDePaiement" class="font form-select w-full">
                                 <option value="" disabled selected  class="font-Alumni">Condition de paiement</option>
-                                <option value="Z001"{{ old('conditionDePaiement', $fournisseur->finance->condition_paiement) === 'Z001' ? 'selected' : '' }} >Payable immédiatement sans déduction</option>
-                                <option value="Z155"{{ old('conditionDePaiement', $fournisseur->finance->condition_paiement) === 'Z155' ? 'selected' : '' }}>Payable immédiatement sans déduction,Date de base au 15 du mois suivant</option>
-                                <option value="Z152" {{ old('conditionDePaiement', $fournisseur->finance->condition_paiement) === 'Z152' ? 'selected' : '' }}>Dans les 15 jours 2% escpte, dans les 30 jours sans déduction</option>
-                                <option value="Z153"{{ old('conditionDePaiement', $fournisseur->finance->condition_paiement) === 'Z153' ? 'selected' : '' }}>Après entrée facture jusqu'au 15 du mois,jusqu'au 15 du mois suivant 2%</option>
-                                <option value="Z210"{{ old('conditionDePaiement', $fournisseur->finance->condition_paiement) === 'Z210' ? 'selected' : '' }}>Dans les 10 jours 2% escpte , dans les 30 jours sans déduction</option>
-                                <option value="ZT15"{{ old('conditionDePaiement', $fournisseur->finance->condition_paiement) === 'ZT15' ? 'selected' : '' }}>Dans les 15 jours sans déduction</option>
-                                <option value="ZT30"{{ old('conditionDePaiement', $fournisseur->finance->condition_paiement) === 'ZT30' ? 'selected' : '' }}>Dans les 30 jours sans déduction</option>
-                                <option value="ZT45"{{ old('conditionDePaiement', $fournisseur->finance->condition_paiement) === 'ZT45' ? 'selected' : '' }}>Dans les 45 jours sans déduction</option>
-                                <option value="ZT60"{{ old('conditionDePaiement', $fournisseur->finance->condition_paiement) === 'ZT60' ? 'selected' : '' }}>Dans les 60 jours sans déduction</option>
+                                <option value="Z001"{{ old('conditionDePaiement', $fournisseur->finance->condition_paiement ?? '') === 'Z001' ? 'selected' : '' }} >Payable immédiatement sans déduction</option>
+                                <option value="Z155"{{ old('conditionDePaiement', $fournisseur->finance->condition_paiement ?? '') === 'Z155' ? 'selected' : '' }}>Payable immédiatement sans déduction,Date de base au 15 du mois suivant</option>
+                                <option value="Z152" {{ old('conditionDePaiement', $fournisseur->finance->condition_paiement ?? '') === 'Z152' ? 'selected' : '' }}>Dans les 15 jours 2% escpte, dans les 30 jours sans déduction</option>
+                                <option value="Z153"{{ old('conditionDePaiement', $fournisseur->finance->condition_paiement ?? '') === 'Z153' ? 'selected' : '' }}>Après entrée facture jusqu'au 15 du mois,jusqu'au 15 du mois suivant 2%</option>
+                                <option value="Z210"{{ old('conditionDePaiement', $fournisseur->finance->condition_paiement ?? '') === 'Z210' ? 'selected' : '' }}>Dans les 10 jours 2% escpte , dans les 30 jours sans déduction</option>
+                                <option value="ZT15"{{ old('conditionDePaiement', $fournisseur->finance->condition_paiement ?? '') === 'ZT15' ? 'selected' : '' }}>Dans les 15 jours sans déduction</option>
+                                <option value="ZT30"{{ old('conditionDePaiement', $fournisseur->finance->condition_paiement ?? '') === 'ZT30' ? 'selected' : '' }}>Dans les 30 jours sans déduction</option>
+                                <option value="ZT45"{{ old('conditionDePaiement', $fournisseur->finance->condition_paiement ?? '') === 'ZT45' ? 'selected' : '' }}>Dans les 45 jours sans déduction</option>
+                                <option value="ZT60"{{ old('conditionDePaiement', $fournisseur->finance->condition_paiement ?? '') === 'ZT60' ? 'selected' : '' }}>Dans les 60 jours sans déduction</option>
                             </select>
     
                             @error('conditionDePaiement')
@@ -118,8 +118,8 @@
                                 <!-- Select -->
                                 <select name="devise" id="devise" class="font-Alumni form-select w-full">
                                     <option value="" disabled selected class="font-Alumni">Choisir une devise</option>
-                                    <option value="CAD" {{ old('devise', $fournisseur->finance->devise) === 'CAD' ? 'selected' : '' }}>CAD</option>
-                                    <option value="USD" {{ old('devise', $fournisseur->finance->devise) === 'USD' ? 'selected' : '' }}>USD</option>
+                                    <option value="CAD" {{ old('devise', $fournisseur->finance->devise ?? '') === 'CAD' ? 'selected' : '' }}>CAD</option>
+                                    <option value="USD" {{ old('devise', $fournisseur->finance->devise ?? '') === 'USD' ? 'selected' : '' }}>USD</option>
                                 </select>
     
                                 <!-- End Select -->
@@ -140,8 +140,8 @@
                                 <!-- Select -->
                                 <select name="modeCommunication" id="modeCommunication" class="form-select font-Alumni">
                                     <option value=""  disabled selected  class="font-Alumni">Mode de communication</option>
-                                    <option value="courriel" {{ old('modeCommunication', $fournisseur->finance->mode_communication) === 'courriel' ? 'selected' : '' }}>Courriel</option>
-                                    <option value="courrier" {{ old('modeCommunication', $fournisseur->finance->mode_communication) === 'courrier' ? 'selected' : '' }}>Courrier régulier</option>
+                                    <option value="courriel" {{ old('modeCommunication', $fournisseur->finance->mode_communication ?? '') === 'courriel' ? 'selected' : '' }}>Courriel</option>
+                                    <option value="courrier" {{ old('modeCommunication', $fournisseur->finance->mode_communication ?? '') === 'courrier' ? 'selected' : '' }}>Courrier régulier</option>
                                 </select>
     
                                 <!-- End Select -->

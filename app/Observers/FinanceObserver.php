@@ -44,5 +44,36 @@ class FinanceObserver
     ];
     $fournisseur->notify(new NotificationModification($data));
     }
+
+    public function creating(Finance $finance)
+    {
+        $usager = Auth::user();
+        $historique = new Historique();
+        $historique->table_name = $finance->getTable();
+        $historique->author = $usager->email;
+        $historique->action = 'Modifier';
+
+      
+        $newValues = [];
+        foreach ($finance->getAttributes() as $key => $value) {
+            $newValues[] = "+$key: $value";
+        }
+        $historique->new_values = implode(", ", $newValues);
+        $historique->old_values = null; 
+
+        $historique->fiche_fournisseur_id = $finance->fiche_fournisseur_id;
+        $historique->save();
+
+     
+        $fournisseur = FicheFournisseur::find($finance->fiche_fournisseur_id);
+        $sectionModifiee = 'Finance';
+        $data = [
+            'sectionModifiee' => $sectionModifiee,
+            'nomEntreprise' => $fournisseur->nom_entreprise,
+            'emailEntreprise' => $fournisseur->adresse_courriel,
+            'dateModification' => now()->format('d-m-Y H:i:s'),
+        ];
+        $fournisseur->notify(new NotificationModification($data));
+    }
 }
 
