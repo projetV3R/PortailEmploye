@@ -742,6 +742,38 @@ function closeContactModal() {
     document.getElementById('contactModal').classList.add('hidden');
 }
 
+function openCoordonneeModal() {
+    const fournisseurId = localStorage.getItem('fournisseurId');
+    if (etatFiche === 'desactiver') {
+        Swal.fire({
+            title: 'Fiche désactivée',
+            text: 'Vous devez réactiver votre fiche fournisseur pour pouvoir modifier vos informations.',
+            icon: 'warning',
+            confirmButtonText: 'Ok',
+        });
+        return; 
+    }
+    document.getElementById('coordonneeModal').classList.remove('hidden');
+
+    axios.get(`/Coordonnees/${fournisseurId}/modif`) 
+        .then(function (response) {
+            document.getElementById('coordonneeFormContainer').innerHTML = response.data;
+
+          
+            loadScript('{{ asset('js/modif/coordonneeModif.js') }}', function() {
+                setTimeout(initializeCoordonneeFormScript, 100);
+            });
+        })
+        .catch(function (error) {
+            console.error("Erreur lors du chargement de la page coordonnée", error);
+        });
+}
+
+function closeCoordonneeModal() {
+    document.getElementById('coordonneeModal').classList.add('hidden');
+}
+
+
 const etatFiche = "{{ $fournisseur->etat }}"; 
     </script>
     

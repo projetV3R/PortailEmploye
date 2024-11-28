@@ -7,6 +7,7 @@ use App\Http\Controllers\ParametresSystemeController;
 use App\Http\Controllers\ModelesController;
 use App\Http\Controllers\ChartsController;
 use App\Http\Controllers\FiltreController;
+use App\Http\Controllers\RegionMunicipalitesController;
  
  
 // FORMULAIRE CONNEXION
@@ -89,9 +90,9 @@ Route::get('/search', [FicheFournisseurController::class, 'search']);
 
 Route::get('/municipalites-par-region', [RegionMunicipalitesController::class, 'getMunicipalitesParRegion']);
 Route::get('/region-par-municipalite', [RegionMunicipalitesController::class, 'getRegionByMunicipalite']);
-Route::get('/Coordonnees/modif', [FicheFournisseurController::class, "editCord"])->name("EditCoordonnee")->middleware('auth');
-Route::post('/Coordonnees/update', [FicheFournisseurController::class, "updateCoordonnee"])->name("UpdateCoordonnee")->middleware('auth');
-Route::get('/fournisseur/coordonnees/data', [FicheFournisseurController::class, 'getCoordonneeData'])->name('CoordonneesData');
+Route::get('/Coordonnees/{fournisseurId}/modif', [FicheFournisseurController::class, "editCord"])->name("EditCoordonnee")->middleware('auth');
+Route::post('/Coordonnees/update/{id}', [FicheFournisseurController::class, "updateCoordonnee"])->name("UpdateCoordonnee")->middleware('auth');
+Route::get('/fournisseur/coordonnees/data/{id}', [FicheFournisseurController::class, 'getCoordonneeData'])->name('CoordonneesData');
 
 
 Route::get('/sous-categories/{type}', [FicheFournisseurController::class, 'getSousCategories']);

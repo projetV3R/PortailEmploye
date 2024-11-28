@@ -403,17 +403,15 @@ use App\Notifications\NotificationModification;
 
         //Modifier coordonnée
 
-        public function editCord()
+        public function editCord($id)
         {
-            $id = session()->get('idFournisseur');
-            $fournisseur = FicheFournisseur::find( $id );
+            $fournisseur = FicheFournisseur::find($id);
             $coordonnee = $fournisseur->coordonnee()->with('telephones')->first();
             return view('modificationCompte.coordonneeModif', compact('fournisseur', 'coordonnee'));
         }
 
-        public function getCoordonneeData()
+        public function getCoordonneeData($id)
     {
-        $id = session()->get('idFournisseur');
         $fournisseur = FicheFournisseur::find( $id );
     
 
@@ -447,10 +445,10 @@ use App\Notifications\NotificationModification;
         return response()->json(['coordonnee' => $coordonneeData]);
     }
 
-    public function updateCoordonnee(CoordonneeRequest $request)
+    public function updateCoordonnee(CoordonneeRequest $request,$id)
     {
-     
-        $fournisseur = FicheFournisseur::find( $id );
+        $usager = Auth::user();
+        $fournisseur = FicheFournisseur::find($id);
 
         $coordonnee = $fournisseur->coordonnee;
 
@@ -583,7 +581,7 @@ use App\Notifications\NotificationModification;
         if (!empty($oldValues) || !empty($newValues)) {
             Historique::create([
                 'table_name' => 'Coordonnee', 
-                'author' => $fournisseur->adresse_courriel,
+                'author' => $usager->email,
                 'action' => 'Modifier',
                 'old_values' => !empty($oldValues) ? implode("; ", $oldValues) : null,
                 'new_values' => !empty($newValues) ? implode("; ", $newValues) : null,
@@ -595,7 +593,6 @@ use App\Notifications\NotificationModification;
                 'nomEntreprise' => $fournisseur->nom_entreprise,
                 'emailEntreprise' => $fournisseur->adresse_courriel,
                 'dateModification' => now()->format('d-m-Y H:i:s'),
-                'auteur' => $fournisseur->adresse_courriel,
             ];
             $fournisseur->notify(new NotificationModification($data));
         }

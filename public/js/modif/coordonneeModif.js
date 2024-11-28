@@ -1,4 +1,5 @@
 function initializeCoordonneeFormScript() {
+    const fournisseurId = localStorage.getItem('fournisseurId');
     // Supprime les espaces créés par l'utilisateur dans l'input de code postal
     document.getElementById('codePostale').addEventListener('input', function() {
         this.value = this.value.replace(/\s+/g, ''); 
@@ -67,7 +68,7 @@ function initializeCoordonneeFormScript() {
     }
 
     // Charger les données de l'utilisateur connecté via une requête AJAX
-    axios.get('/fournisseur/coordonnees/data') // Endpoint to get the user's coordonnee data
+    axios.get(`/fournisseur/coordonnees/data/${fournisseurId}`) // Endpoint to get the user's coordonnee data
         .then(function(response) {
             coordonneeData = response.data.coordonnee || {};
             // Pre-fill the form fields

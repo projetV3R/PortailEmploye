@@ -5,7 +5,7 @@
 
 @section('contenu')
 
-    <form action="{{ route('UpdateCoordonnee') }}" method="post">
+    <form action="{{ route('UpdateCoordonnee', ['id' => $fournisseur->id]) }}" method="post">
         @csrf
         @if(session('errorsCoordonnees'))
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
