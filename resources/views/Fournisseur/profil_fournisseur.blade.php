@@ -85,7 +85,7 @@
   
 @endphp
            <!-- Modal pour l'édition d'identification -->
-
+           @role('admin','responsable')
            <div id="identificationModal" class="fixed z-20 inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden overflow-auto">
             <div class="bg-white rounded-lg shadow-lg p-6 md:p-8 w-full max-w-4xl mx-4 md:mx-8 lg:mx-12 lg:max-w-5xl relative max-h-screen overflow-y-auto">
                 <h2 class="font-Alumni font-bold text-2xl md:text-3xl mb-4">Modifier les informations d'identification</h2>
@@ -196,7 +196,7 @@
                 </div>
             </div>
         </div>
-        
+        @endrole
         
 <div class="p-4 md:p-16">
     <div class="flex flex-col md:flex-row w-full">
@@ -238,13 +238,14 @@
                     <h4 class="font-Alumni font-bold text-lg md:text-2xl underline">Informations d’authentification</h4>
 
                     <!-- Bouton "modifier" ajouté en haut à droite du cadre -->
+                    @role('admin','responsable')
                     <div class="absolute right-4 top-4">
                         <button type="button" class="text-tertiary-400 hover:text-tertiary-300" onclick="openIdentificationModal()">
                             <span class="iconify" data-icon="material-symbols:edit" data-inline="false"
                                 style="font-size: 1.5rem;"></span>
                         </button>
                     </div>
-
+                    @endrole
 
                     <div class="mt-6">
                         <p class="font-Alumni text-md md:text-lg"><strong>Email :</strong> {{ $fournisseur->adresse_courriel }}</p>
@@ -261,13 +262,15 @@
                     <h4 class="font-Alumni font-bold text-lg md:text-2xl underline">Coordonnées</h4>
 
                     <!-- Bouton "modifier" en haut à droite -->
+                    @role('admin','responsable')
                     <div class="absolute right-4 top-4">
+                        
                         <button type="button" class="text-tertiary-400 hover:text-tertiary-300" onclick="openCoordonneeModal()">
                             <span class="iconify" data-icon="material-symbols:edit" data-inline="false"
                                 style="font-size: 1.5rem;"></span>
                         </button>
                     </div>
-
+                    @endrole
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                         <div>
                             <p class="font-Alumni md:text-lg"><strong>Numéro Civique:</strong> {{ $fournisseur->coordonnee->numero_civique }}</p>
@@ -302,11 +305,13 @@
     <div class="mt-8 bg-primary-100 p-4 relative">
         <h4 class="font-Alumni font-bold text-lg md:text-2xl underline">Documents téléchargés</h4>
         <div class="overflow-auto max-h-48 mt-4">
+            @role('admin','responsable')
             <div class="absolute right-4 top-4">
                 <button type="button" class="text-tertiary-400 hover:text-tertiary-300"  onclick="openDocModal()">
                     <span class="iconify" data-icon="material-symbols:edit" data-inline="false" style="font-size: 1.5rem;"></span>
                 </button>
             </div>
+            @endrole
             @forelse($fournisseur->brochuresCarte as $brochure)
                 <div class="bg-white shadow-md rounded p-4 mb-2 relative">
                     <h6 class="font-Alumni font-semibold text-md md:text-lg">{{ $brochure->nom }}</h6>
@@ -322,11 +327,13 @@
 
                 <div class="bg-primary-100 py-8 px-4 mt-8 relative">
                     <h4 class="font-Alumni font-bold text-lg md:text-2xl underline">Licences</h4>
+                    @role('admin','responsable')
                     <div class="absolute right-4 top-4">
                         <button type="button" class="text-tertiary-400 hover:text-tertiary-300">
                             <span class="iconify" data-icon="material-symbols:edit" data-inline="false" style="font-size: 1.5rem;" onclick="openLicenceModal()"></span>
                         </button>
                     </div>
+                    @endrole
                     @if($licence)
                         <div class="mt-6 w-full max-w-md">
                             <h5 class="font-Alumni font-semibold text-md md:text-lg underline">Informations sur la Licence</h5>
@@ -362,13 +369,14 @@
                     <h4 class="font-Alumni font-bold text-lg md:text-2xl underline">Informations de l’entreprise</h4>
 
                     <!-- Bouton "modifier" en haut à droite -->
+                    @role('admin','responsable')
                     <div class="absolute right-4 top-4">
                         <button type="button" class="text-tertiary-400 hover:text-tertiary-300" onclick="openIdentificationModal()">
                             <span class="iconify" data-icon="material-symbols:edit" data-inline="false"
                                 style="font-size: 1.5rem;"></span>
                         </button>
                     </div>
-
+                    @endrole
                     <div class="mt-6">
                         <p class="font-Alumni text-md md:text-lg"><strong>Numéro d’entreprise du Québec (NEQ) :</strong>
                             {{ $fournisseur->neq,'N/A' }}</p>
@@ -384,12 +392,14 @@
                     <h4 class="font-Alumni font-bold text-lg md:text-2xl underline">Produits et services</h4>
 
                     <!-- Bouton "modifier" en haut à droite -->
+                    @role('admin','responsable')
                     <div class="absolute right-4 top-4">
                         <button type="button" class="text-tertiary-400 hover:text-tertiary-300"  onclick="openProduitsServicesModal()">
                             <span class="iconify" data-icon="material-symbols:edit" data-inline="false"
                                 style="font-size: 1.5rem;"></span>
                         </button>
                     </div>
+                    @endrole
 
                     <div id="produitsServicesResumes" class="max-h-64 mt-8 overflow-y-auto custom-scrollbar grid grid-cols-1 sm:grid-cols-2 gap-4">
                         @forelse($fournisseur->produitsServices as $produitService)
@@ -425,11 +435,13 @@
     <h4 class="font-Alumni font-bold text-lg md:text-2xl underline">Contacts</h4>
 
     <!-- Bouton "modifier" en haut à droite -->
+    @role('admin','responsable')
     <div class="absolute right-4 top-4">
         <button type="button" class="text-tertiary-400 hover:text-tertiary-300">
             <span class="iconify" data-icon="material-symbols:edit" data-inline="false" style="font-size: 1.5rem;"  onclick="openContactModal()"></span>
         </button>
     </div>
+    @endrole
 
     <!-- Section scrollable pour afficher plusieurs contacts -->
     <div id="contactContainer" class="max-h-64 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
@@ -462,12 +474,14 @@
                 @if($fournisseur->finance)
                 <div class="bg-primary-100 py-8 px-4 mt-8 relative">
                     <!-- Bouton "modifier" en haut à droite -->
+                    @role('admin','responsable')
                     <div class="absolute right-4 top-4">
                         <button type="button" class="text-tertiary-400 hover:text-tertiary-300">
                             <span class="iconify" data-icon="material-symbols:edit" data-inline="false"  onclick="openFinanceModal()"
                                 style="font-size: 1.5rem;"></span>
                         </button>
                     </div>
+                    @endrole
                     <h4 class="font-Alumni font-bold text-lg md:text-2xl underline">Finances</h4>
 
                     <div class="mt-6 w-full max-w-md">
@@ -492,12 +506,14 @@
                 </div>
                 @else
                 <div class="bg-primary-100 py-8 px-4 mt-8 relative">
+                    @role('admin','responsable')
                     <div class="absolute right-4 top-4">
                     <button type="button" class="text-tertiary-400 hover:text-tertiary-300">
                         <span class="iconify" data-icon="material-symbols:edit" data-inline="false"  onclick="openFinanceModal()"
                             style="font-size: 1.5rem;"></span>
                     </button>
                 </div>
+                @endrole
             <p class="font-Alumni mt-4 text-md md:text-lg">Aucune information financière disponible.</p>
         </div>
         @endif
