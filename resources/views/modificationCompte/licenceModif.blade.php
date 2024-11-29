@@ -98,7 +98,7 @@
                             <select name="typeLicence" id="typeLicence" class="font-Alumni w-full p-2 h-12 focus:outline-none focus:border-blue-500 border border-black">
                                 <option value="" disabled selected>Choisir un type de licence</option>
                                 <option value="entrepreneur" >Entrepreneur</option>
-                                <option value="Constructeur-propriétaire" >Constructeur-propriétaire</option>
+                                <option value="constructeur-propriétaire" >Constructeur-propriétaire</option>
                             </select>
                             @error('typeLicence')
                                 <span class="font-Alumni text-lg flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
