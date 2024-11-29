@@ -28,7 +28,7 @@ Route::get('/dashboard',
 Route::get('/redirection', function () {
     return view('redirection.403');});
  
-Route::get('/usagers', [UsagerController::class, 'index']);
+/*Route::get('/usagers', [UsagerController::class, 'index']);
 
  
 Route::get('/admin', function () {
@@ -44,7 +44,7 @@ Route::post('/storeusager',
 [UsagerController::class, 'store'])->middleware('auth');
  
 Route::get('/usagers/count-admins', 
-[UsagerController::class, 'countAdmins']);
+[UsagerController::class, 'countAdmins']);*/
 
  
     //STORE PARAMETRE SYSTEME  TODO RAJOUTER CHECK ROLE ADMIN
@@ -117,6 +117,21 @@ Route::post('/Activation', [FicheFournisseurController::class, "reactivationFich
 Route::post('/Desactivation', [FicheFournisseurController::class, 'desactivationFiche'])->name('desactivationFiche')->middleware('auth');
 Route::delete('/licence/delete/{id}', [FicheFournisseurController::class, 'deleteLicence'])->name('deleteLicence')->middleware('auth');
 
+
+Route::middleware(['auth', 'checkRole:admin,responsable'])->group(function () {
+    Route::get('/listeFournisseur', [FicheFournisseurController::class, 'index'])->name('fiches.index');
+        Route::post('/fiches/reject/{id}', [FicheFournisseurController::class, 'reject'])->name('fiches.reject');
+        Route::post('/fiches/approve/{id}', [FicheFournisseurController::class, 'approve'])->name('fiches.approve');
+    });
+        Route::get('/usagers', [UsagerController::class, 'index']);
+        Route::get('/admin', function () { return view('admin.admin');});
+    
+    Route::middleware(['auth', 'checkRole:admin'])->group(function () {
+        Route::post('/usagers/update',[UsagerController::class, 'update'])->name('usagers.update');
+        Route::delete('/admin/usager/{id}',[UsagerController::class, 'destroy']);
+        Route::post('/storeusager', [UsagerController::class, 'store']);
+        Route::get('/usagers/count-admins', [UsagerController::class, 'countAdmins']);
+    });
 
 //!!! ROUTE DE REDIRECTION ERREUR 404 TOUJOURS A LA FIN DU FICHIER DE ROUTE NE JAMAIS AVOIR DE ROUTE APRES !!!!
 Route::fallback(function () {
