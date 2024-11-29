@@ -266,7 +266,7 @@ $etatStyles = [
  oninput="fetchData()"   />   
     </div>
     <!-- Tableau de données dynamique -->
-    <div class="relative overflow-x-auto shadow-md rounded-lg">
+    <div class="relative overflow-x-auto shadow-md border-2 rounded-lg">
         <table class="w-full text-sm text-left text-gray-500 font-Alumni md:text-xl">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 daltonien:text-black daltonien:border border-black">
                 <tr>
