@@ -32,6 +32,7 @@ use App\Models\Historique;
 use App\Models\ProduitsServices;
 use App\Models\SousCategorie;
 use App\Notifications\NotificationModification;
+use Carbon\Carbon;
      class FicheFournisseurController extends Controller
     {
     /**
@@ -39,6 +40,7 @@ use App\Notifications\NotificationModification;
      */
     public function getHistorique($id)
     {
+        $this->revision();
         $historique = DB::table('historiques')
             ->where('fiche_fournisseur_id', $id)
             ->orderBy('created_at', 'desc')
@@ -46,6 +48,39 @@ use App\Notifications\NotificationModification;
     
         return response()->json($historique);
     }
+    protected function revision()
+    {
+        Log::info('Méthode revision() exécutée');
+    
+        $moisRevision = DB::table('parametres_systeme')
+            ->where('cle', 'mois_revision')
+            ->value('valeur_numerique');
+    
+        if ($moisRevision) {
+            $fiches = FicheFournisseur::where('etat', 'refuser')->get();
+    
+            foreach ($fiches as $fournisseur) {
+                $lastChangeDate = Carbon::parse($fournisseur->date_changement_etat);
+                $monthsSinceLastChange = $lastChangeDate->diffInMonths(Carbon::now());
+    
+                if ($monthsSinceLastChange >= $moisRevision) {
+                    $fournisseur->update([
+                        'etat' => 'a reviser',
+                        'date_changement_etat' => Carbon::now(),
+                    ]);
+                }
+                Historique::create([
+                    'table_name' => 'FicheFournisseur',
+                    'author' =>'Système',
+                    'action' => 'A reviser',
+                    'old_values' => "-état: Refuser",
+                    'new_values' => "+état: A reviser",
+                    'fiche_fournisseur_id' => $fournisseur->id,
+                ]);
+            }
+        }
+    }
+    
     
     public function index(Request $request)
     {
@@ -120,7 +155,7 @@ use App\Notifications\NotificationModification;
         $fournisseur = FicheFournisseur::find($id);
         $licence = $fournisseur->licence()->with('sousCategories.categorie')->first();
         $maxFileSize = ParametreSysteme::where('cle', 'taille_fichier')->value('valeur_numerique');
-
+        $this->revision();
         return view('Fournisseur/profil_fournisseur', compact('maxFileSize', 'fournisseur', 'licence'));
     }
 
