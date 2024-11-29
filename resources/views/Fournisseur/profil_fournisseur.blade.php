@@ -201,9 +201,13 @@
 <div class="p-4 md:p-16">
     <div class="flex flex-col md:flex-row w-full">
         <div class="flex flex-col w-full md:w-1/2">
-            <h6 class="font-Alumni font-bold text-3xl md:text-5xl">Profil Utilisateur</h6>
-            <h1 class="font-Alumni font-semibold text-md md:text-lg mt-2">Vérifiez vos informations personnelles et les
-                détails de votre compte </h1>
+            <h6 class="font-Alumni font-bold text-3xl md:text-5xl truncate"> Fournisseur: {{ $fournisseur->nom_entreprise }}</h6>
+            <button class="flex items-center rounded-full w-fit py-2 text-xl font-semibold underline text-blue-600 hover:text-blue-800  transition duration-300 ease-in-out">
+                Historique Fiche
+                
+            </button>
+            
+              
         </div>
 
         @if (session('success'))
