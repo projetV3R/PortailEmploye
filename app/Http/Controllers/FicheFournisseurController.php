@@ -32,6 +32,8 @@ use App\Models\Historique;
 use App\Models\ProduitsServices;
 use App\Models\SousCategorie;
 use App\Notifications\NotificationModification;
+use App\Notifications\NotificationRevisionFiche;
+use Illuminate\Support\Facades\Notification;
 use Carbon\Carbon;
      class FicheFournisseurController extends Controller
     {
@@ -77,6 +79,15 @@ use Carbon\Carbon;
                     'new_values' => "+état: A reviser",
                     'fiche_fournisseur_id' => $fournisseur->id,
                 ]);
+                $data = [
+                    'nomEntreprise' => $fournisseur->nom_entreprise,
+                    'emailEntreprise' => $fournisseur->adresse_courriel,
+                    'dateModification' => now()->format('d-m-Y H:i:s'),
+                ];
+                $emailApprovisionnement = ParametreSysteme::where('cle', 'email_approvisionnement')
+                ->value('valeur');
+                Notification::route('mail', $emailApprovisionnement)
+                ->notify(new NotificationRevisionFiche($data));
             }
         }
     }
