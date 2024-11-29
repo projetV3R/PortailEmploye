@@ -63,6 +63,9 @@ Route::put('/modeles/{id}', [ModelesController::class, 'update']);
 // route data line-Chart
 Route::get('/line-chart-data', [ChartsController::class, 'lineChart']);
 
+// route data pie-Chart
+Route::get('/chart/pie', [ChartsController::class, 'pieChart']);
+
 Route::get('/listeFournisseur', [FicheFournisseurController::class, 'index'])->name('fiches.index');
 
 //Route::get('/profil', [FicheFournisseurController::class, 'profil'])->name('profil');
