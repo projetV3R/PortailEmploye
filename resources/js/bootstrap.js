@@ -13,3 +13,4 @@ window.Quill = Quill;
 
 import Highcharts from 'highcharts';
 window.Highcharts = Highcharts;
+

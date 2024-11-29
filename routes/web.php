@@ -7,6 +7,7 @@ use App\Http\Controllers\ParametresSystemeController;
 use App\Http\Controllers\ModelesController;
 use App\Http\Controllers\ChartsController;
 use App\Http\Controllers\FiltreController;
+use App\Http\Controllers\RegionMunicipalitesController;
  
  
 // FORMULAIRE CONNEXION
@@ -76,6 +77,47 @@ Route::get('/get-produits', [FiltreController::class, 'getProduitsByFilters'])->
 Route::get('/get-sous-categories-licences', [FiltreController::class, 'getSousCategoriesLicencesByFilters'])->name('get.sousCategoriesLicences');
 Route::get('/categories-produits', [FiltreController::class, 'getCategoriesProduits'])->name('get.categories');
 Route::get('/licence/filtre', [FiltreController::class, 'getSousCategoriesFilter'])->name('get.sousCategoriesFilter');
+
+//Route pour MODIFICATION 
+Route::get('/Identification/{fournisseurId}/modif', [FicheFournisseurController::class, "editIdentif"])->name("EditIdentification")->middleware('auth');
+Route::post('/Identification/{id}/update', [FicheFournisseurController::class, "updateProfile"])->name("UpdateIdentification")->middleware('auth');
+
+Route::get('/produits-services/multiple/{id}', [FicheFournisseurController::class, 'getMultiple'])->name('produits-services.getMultiple');
+Route::get('/categories', [FicheFournisseurController::class, 'getCategories']);
+Route::get('/produits-services/{fournisseurId}/modif/', [FicheFournisseurController::class, "editProduit"])->name("EditProduit")->middleware('auth');
+Route::post('/produits-services/update/{id}', [FicheFournisseurController::class, "updateProduit"])->name("UpdateProduit")->middleware('auth');
+Route::get('/search', [FicheFournisseurController::class, 'search']);
+
+Route::get('/municipalites-par-region', [RegionMunicipalitesController::class, 'getMunicipalitesParRegion']);
+Route::get('/region-par-municipalite', [RegionMunicipalitesController::class, 'getRegionByMunicipalite']);
+Route::get('/Coordonnees/{fournisseurId}/modif', [FicheFournisseurController::class, "editCord"])->name("EditCoordonnee")->middleware('auth');
+Route::post('/Coordonnees/update/{id}', [FicheFournisseurController::class, "updateCoordonnee"])->name("UpdateCoordonnee")->middleware('auth');
+Route::get('/fournisseur/coordonnees/data/{id}', [FicheFournisseurController::class, 'getCoordonneeData'])->name('CoordonneesData');
+
+
+Route::get('/sous-categories/{type}', [FicheFournisseurController::class, 'getSousCategories']);
+Route::get('/sous-categories/affichage/multiple/{id}', [FicheFournisseurController::class, 'getSousCategoriesMultiple']);
+Route::get('/Licences/{fournisseurId}/modif', [FicheFournisseurController::class, "editLicence"])->name("EditLicence")->middleware('auth');
+Route::post('/Licences/{id}/update', [FicheFournisseurController::class, "updateLicence"])->name("UpdateLicence")->middleware('auth');
+Route::get('/Licence/get-licence-data/{id}', [FicheFournisseurController::class, 'getLicenceData'])->name('getLicenceData');
+
+Route::get('/Contacts/{fournisseurId}/modif', [FicheFournisseurController::class, "editContact"])->name("EditContact")->middleware('auth');
+Route::post('/Contacts/update/{id}', [FicheFournisseurController::class, "updateContact"])->name("UpdateContact")->middleware('auth');
+Route::get('/Contacts/getData/{id}', [FicheFournisseurController::class, "getContacts"])->name("getContacts")->middleware('auth');
+
+
+Route::get('/fournisseur/{fournisseurId}/edit-doc', [FicheFournisseurController::class, "editDoc"])->name("EditDoc")->middleware('auth');
+Route::post('/fournisseur/{id}/update-doc', [FicheFournisseurController::class, "updateDoc"])->name("UpdateDoc")->middleware('auth');
+Route::get('/fournisseur/{id}/get-documents', [FicheFournisseurController::class, 'getDocuments']);
+
+Route::get('/Finances/{fournisseurId}/modif', [FicheFournisseurController::class, "editFinance"])->name("EditFinance")->middleware('auth');
+Route::post('/Finances/update/{id}', [FicheFournisseurController::class, "updateFinance"])->name("UpdateFinance")->middleware('auth');
+
+Route::post('/Activation', [FicheFournisseurController::class, "reactivationFiche"])->name("reactivationFiche")->middleware('auth');
+Route::post('/Desactivation', [FicheFournisseurController::class, 'desactivationFiche'])->name('desactivationFiche')->middleware('auth');
+Route::delete('/licence/delete/{id}', [FicheFournisseurController::class, 'deleteLicence'])->name('deleteLicence')->middleware('auth');
+
+
 //!!! ROUTE DE REDIRECTION ERREUR 404 TOUJOURS A LA FIN DU FICHIER DE ROUTE NE JAMAIS AVOIR DE ROUTE APRES !!!!
 Route::fallback(function () {
     return response()->view('redirection.404', [], 404);
