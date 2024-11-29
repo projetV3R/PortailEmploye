@@ -202,8 +202,8 @@
     <div class="flex flex-col md:flex-row w-full">
         <div class="flex flex-col w-full md:w-1/2">
             <h6 class="font-Alumni font-bold text-3xl md:text-5xl truncate"> Fournisseur: {{ $fournisseur->nom_entreprise }}</h6>
-            <button class="flex items-center rounded-full w-fit py-2 text-xl font-semibold underline text-blue-600 hover:text-blue-800  transition duration-300 ease-in-out">
-                Historique Fiche
+            <button  onclick="openHistoriqueModal()" class="flex items-center rounded-full w-fit py-2 text-xl font-semibold underline text-blue-600 hover:text-blue-800  transition duration-300 ease-in-out">
+                <span class="iconify size-8 " data-icon="material-symbols:history" data-inline="false"></span>       Historique Fiche
                 
             </button>
             
@@ -822,6 +822,131 @@ function openFinanceModal() {
 
 function closeFinanceModal() {
     document.getElementById('financeModal').classList.add('hidden');
+}
+
+function openHistoriqueModal() {
+    const fournisseurId = localStorage.getItem('fournisseurId');
+    const actionIcons = {
+        "En attente": '<span class="iconify text-yellow-500 size-8 sm:size-6 " data-icon="material-symbols:hourglass-top"></span>',
+        "Modifier": '<span class="iconify text-blue-500 size-8 sm:size-6" data-icon="material-symbols:edit" ></span>',
+        "Accepter": '<span class="iconify text-green-500 size-8 sm:size-6" data-icon="material-symbols:check-circle-outline" ></span>',
+        "Refuser": '<span class="iconify text-red-500 size-8 sm:size-6" data-icon="material-symbols:cancel" ></span>',
+        "A reviser": '<span class="iconify text-orange-500 size-8 sm:size-6" data-icon="material-symbols:edit-document" ></span>'
+    };
+
+    axios.get(`/historique/${fournisseurId}`)
+    .then(function (response) {
+        window.historiqueData = response.data;
+
+        const historique = window.historiqueData;
+
+        let htmlContent = `
+            <div class="overflow-auto max-h-64">
+                <table class="table-auto w-full border-collapse">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-2 border font-semibold text-gray-600 w-1/5">Date</th>
+                            <th class="px-4 py-2 border font-semibold text-gray-600 w-1/5">Auteur</th>
+                            <th class="px-4 py-2 border font-semibold text-gray-600 w-1/5  hidden md:table-cell  ">Section</th>
+                            <th class="px-4 py-2 border font-semibold text-gray-600 w-1/5">Action</th>
+                            <th class="px-4 py-2 border font-semibold text-gray-600 w-1/5">Voir les détails</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+
+        if (historique.length > 0) {
+            historique.forEach((entry, index) => {
+                const actionIcon = actionIcons[entry.action] || '';
+                htmlContent += `
+                    <tr class="hover:bg-gray-100">
+                        <td class="px-4 py-2 border text-sm text-gray-700">${new Date(entry.created_at).toLocaleString()}</td>
+                        <td class="px-4 py-2 border text-sm text-gray-700">${entry.author}</td>
+                        <td class="px-4 py-2 border text-sm text-gray-700 hidden md:table-cell uppercase">
+                            ${entry.table_name}</td>
+                        <td class="px-4 py-2 border text-sm  ">
+                            <div class="flex items-center justify-center">
+                            ${actionIcon}
+                             <span class="hidden md:block  ml-2 font-bold ">${entry.action}</span>
+                             </div>
+                        </td>
+                        <td class="px-4 py-2 border text-sm text-gray-700">
+                             <div class="flex items-center justify-center">
+                           <button 
+                        class="bg-blue-500 text-white py-1 px-3 rounded-md text-sm hover:bg-blue-600 flex items-center gap-2"
+                        onclick="openDetailsModal(${index})">
+                        <span class="hidden sm:inline">Voir les changements</span>
+                        <span class="iconify sm:hidden" data-icon="material-symbols:visibility" style="font-size: 1.2rem;"></span>
+                        </button>
+                        </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        } else {
+            htmlContent += `
+                <tr>
+                    <td colspan="5" class="px-4 py-2 border text-center text-sm text-gray-500">Aucun historique disponible.</td>
+                </tr>
+            `;
+        }
+
+        htmlContent += '</tbody></table></div>';
+
+        Swal.fire({
+            title: 'Historique de la fiche fournisseur',
+            html: htmlContent,
+            width: '80%',
+            confirmButtonText: 'Fermer',
+            scrollbarPadding: false,
+            showCloseButton: true,
+            focusConfirm: false
+        });
+    })
+    .catch(function (error) {
+        console.error("Erreur lors du chargement de l'historique :", error);
+        Swal.fire({
+            title: 'Erreur',
+            text: 'Impossible de charger l\'historique. Veuillez réessayer plus tard.',
+            icon: 'error',
+            confirmButtonText: 'Fermer'
+        });
+    });
+}
+
+function openDetailsModal(index) {
+    const entry = window.historiqueData[index];
+
+    const oldValues = entry.old_values ? entry.old_values.split(';').map(val => `<li class=" ml-4">${val}</li>`).join('')
+        : '<li class=" ml-4 text-gray-500">Aucune ancienne valeur</li>';
+    const newValues = entry.new_values ? entry.new_values.split(';').map(val => `<li class=" ml-4">${val}</li>`).join('')
+        : '<li class=" ml-4 text-gray-500">Aucune nouvelle valeur</li>';
+
+    const htmlContent = `
+        <div class="max-h-96 overflow-auto">
+            <h3 class="text-lg font-bold mb-2">Détails des changements</h3>
+            <h4 class="text-md font-semibold mt-4">Anciennes valeurs :</h4>
+            <ul class="mt-2">
+                ${oldValues}
+            </ul>
+            <h4 class="text-md font-semibold mt-4">Nouvelles valeurs :</h4>
+            <ul class="mt-2">
+                ${newValues}
+            </ul>
+        </div>
+    `;
+
+    Swal.fire({
+        title: 'Détails des changements',
+        html: htmlContent,
+        width: '50%',
+        confirmButtonText: 'Fermer',
+        scrollbarPadding: false,
+        showCloseButton: true,
+        focusConfirm: false
+    }).then(() => {
+        openHistoriqueModal();
+    });
 }
 const etatFiche = "{{ $fournisseur->etat }}"; 
     </script>

@@ -37,6 +37,16 @@ use App\Notifications\NotificationModification;
     /**
      * Display a listing of the resource.
      */
+    public function getHistorique($id)
+    {
+        $historique = DB::table('historiques')
+            ->where('fiche_fournisseur_id', $id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        return response()->json($historique);
+    }
+    
     public function index(Request $request)
     {
         $perPage = $request->input('perPage', 5);
