@@ -12,8 +12,8 @@
         <div class="flex lg:w-1/2 w-full h-full">
             <div class="flex w-full justify-center border-2 border-dashed p-4 daltonien:border-black">HIGHCHARTS SOUS CATEGORIE RBQ PIE CHARTS </div>
         </div>
-        <div class="flex lg:w-1/2 w-full h-full">
-            <div class="flex w-full border-2 justify-center p-4 daltonien:border-black" id="linechart">
+        <div class="flex lg:w-1/2 w-full h-full ">
+            <div class="flex w-full border-2 rounded-sm shadow-md justify-center p-4 daltonien:border-black" id="linechart">
 
             </div>
         </div>
