@@ -1067,24 +1067,26 @@ public function desactivationFiche($id)
     public function reject(Request $request, $id)
     {
         $fournisseur = FicheFournisseur::findOrFail($id);
-        $fournisseurold = $fournisseur;
+        $changes = $fournisseur->getChanges(); 
+        $original = $fournisseur->getOriginal(); 
+    
         $usager = Auth::user();
-
+    
         $fournisseur->etat = 'refuser';
         $fournisseur->date_changement_etat = now();
-        
+    
         $reason = $request->input('reason', null);
         $hashedReason = $reason ? bcrypt($reason) : null;
         $fournisseur->raison_refus = $hashedReason;
-        
+    
         $fournisseur->save();
-
+    
         Historique::create([
             'table_name' => 'Identification et statut',
             'author' => $usager->email,
             'action' => 'Refuser',
-            'old_values' => "-état : ".$fournisseurold->etat,
-            'new_values' => '+état : '.$fournisseur->etat,
+            'old_values' => "-état : " . $original['etat'],
+            'new_values' => '+état : ' . $fournisseur->etat,
             'fiche_fournisseur_id' => $fournisseur->id,
         ]);
     
@@ -1094,10 +1096,12 @@ public function desactivationFiche($id)
         return response()->json(['message' => 'Demande refusée avec succès.']);
     }
     
+    
     public function approve($id)
     {
         $fournisseur = FicheFournisseur::findOrFail($id);
-        $fournisseurold = $fournisseur;
+        $changes = $fournisseur->getChanges(); 
+        $original = $fournisseur->getOriginal();
         $usager = Auth::user();
 
         $fournisseur->etat = 'accepter';
@@ -1107,8 +1111,8 @@ public function desactivationFiche($id)
             'table_name' => 'Identification et statut',
             'author' => $usager->email,
             'action' => 'Accepter',
-            'old_values' => "-état : ".$fournisseurold->etat,
-            'new_values' => '+état : '.$fournisseur->etat,
+            'old_values' => "-état : " . $original['etat'],
+            'new_values' => '+état : ' . $fournisseur->etat,
             'fiche_fournisseur_id' => $fournisseur->id,
         ]);
         $fournisseur->notify(new FournisseurApproveNotification($fournisseur));

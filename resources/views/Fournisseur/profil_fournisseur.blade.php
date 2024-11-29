@@ -229,27 +229,42 @@
         </div>
 
         <div class="flex w-full lg:w-auto justify-end flex-col lg:flex-row gap-4">
+    
+
         @role('admin', 'responsable')
                 @if($etat === 'En attente')
-                    @if(!in_array($etat, ['accepter']))
-                        <button type="button"
-                            class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out"
-                            id="approveButton">
-                            Approuver
-                        </button>
-                    @endif
-                    @if(!in_array($etat, ['refuser']))
-                        <button type="button"
-                            class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out"
-                            id="rejectButton">
-                            Refuser
-                        </button>
-                    @endif
+                    <button type="button"
+                        class="approveButton bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out">
+                        Approuver
+                    </button>
+                    <button type="button"
+                        class="rejectButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out">
+                        Refuser
+                    </button>
+                @elseif($etat === 'A reviser')
+                <button type="button"
+                    class="approveButton bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out">
+                    Approuver
+                </button>
+                <button type="button"
+                        class="rejectButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out">
+                        Refuser
+                </button>
+                @elseif($etat === 'accepter')
+                    <button type="button"
+                        class="rejectButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out">
+                        Refuser
+                    </button>
+                @elseif($etat === 'refuser')
+                <button type="button"
+                    class="approveButton bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out">
+                    Approuver
+                </button>
                 @endif
-        @endrole  
+            @endrole  
         </div>
     </div>
-    </div>
+</div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
@@ -556,6 +571,87 @@
     // Stocker l'ID dans le localStorage
    
     document.addEventListener('DOMContentLoaded', function() {
+
+        document.querySelectorAll('.approveButton').forEach(function(button) {
+                button.addEventListener('click', function() {
+                Swal.fire({
+                    title: 'Êtes-vous sûr ?',
+                    text: "Voulez-vous vraiment approuver cette demande ?",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#28a745',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui, approuver',
+                    cancelButtonText: 'Annuler'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        approuverDemande();
+                    }
+                });
+            });
+            });
+        document.querySelectorAll('.rejectButton').forEach(function(button) {
+                button.addEventListener('click', function() {
+                Swal.fire({
+                    title: 'Êtes-vous sûr ?',
+                    html: `
+                        <p>Voulez-vous vraiment refuser cette demande ?</p>
+                        <textarea id="raisonRefus" class="swal2-textarea" placeholder="Veuillez entrer la raison du refus (facultatif)"></textarea>
+                        <div class="flex items-center mt-2">
+                            <input type="checkbox" id="includeReason" name="includeReason">
+                            <label for="includeReason" class="ml-2">Inclure la raison du refus dans l'email</label>
+                        </div>
+                        `,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#28a745',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Refuser',
+                    cancelButtonText: 'Annuler',
+                    preConfirm: () => {
+                        return {
+                            reason: document.getElementById('raisonRefus').value,
+                            includeReason: document.getElementById('includeReason').checked
+                        }
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let reason = result.value.reason;
+                        const includeReason = result.value.includeReason;
+                        if (!includeReason) {
+                            reason = 'Non spécifiée';
+                        }
+                        refuserDemande(reason, includeReason);
+                    }
+                });
+            });
+            });
+
+            function refuserDemande(reason, includeReason) {
+                axios.post('{{ route('fiches.reject', ['id' => $fournisseur->id]) }}', {
+                    reason: reason,
+                    includeReason: includeReason
+                })
+                .then(response => {
+                    Swal.fire('Refusé!', 'La demande a été refusée.', 'success')
+                        .then(() => location.reload());
+                })
+                .catch(error => {
+                    Swal.fire('Erreur!', "Une erreur s'est produite.", 'error');
+                });
+            }
+
+            function approuverDemande() {
+                axios.post('{{ route('fiches.approve', ['id' => $fournisseur->id]) }}')
+                    .then(response => {
+                        Swal.fire('Approuvé!', 'La demande a été approuvée.', 'success')
+                            .then(() => location.reload());
+                    })
+                    .catch(error => {
+                        Swal.fire('Erreur!', "Une erreur s'est produite.", 'error');
+                    });
+            }
+
         const fournisseurId = {{ $fournisseur->id }};
         localStorage.setItem('fournisseurId', fournisseurId);
         console.log(fournisseurId);
@@ -591,85 +687,7 @@
                 title: successMessage,
                 showConfirmButton: false,
                 timer: 1500
-                    });
-
-document.getElementById('approveButton'||'approveButton1').addEventListener('click', function() {
-    Swal.fire({
-        title: 'Êtes-vous sûr ?',
-        text: "Voulez-vous vraiment approuver cette demande ?",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#28a745',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Oui, approuver',
-        cancelButtonText: 'Annuler'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            approuverDemande();
-        }
-    });
-});
-
-document.getElementById('rejectButton').addEventListener('click', function() {
-    Swal.fire({
-        title: 'Êtes-vous sûr ?',
-        html: `
-            <p>Voulez-vous vraiment refuser cette demande ?</p>
-            <textarea id="raisonRefus" class="swal2-textarea" placeholder="Veuillez entrer la raison du refus (facultatif)"></textarea>
-            <div class="flex items-center mt-2">
-                <input type="checkbox" id="includeReason" name="includeReason">
-                <label for="includeReason" class="ml-2">Inclure la raison du refus dans l'email</label>
-            </div>
-            `,
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#28a745',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Refuser',
-        cancelButtonText: 'Annuler',
-        preConfirm: () => {
-            return {
-                reason: document.getElementById('raisonRefus').value,
-                includeReason: document.getElementById('includeReason').checked
-            }
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            let reason = result.value.reason;
-            const includeReason = result.value.includeReason;
-            if (!includeReason) {
-                reason = 'Non spécifiée';
-            }
-            refuserDemande(reason, includeReason);
-        }
-    });
-});
-
-function refuserDemande(reason, includeReason) {
-    axios.post('{{ route('fiches.reject', ['id' => $fournisseur->id]) }}', {
-        reason: reason,
-        includeReason: includeReason
-    })
-    .then(response => {
-        Swal.fire('Refusé!', 'La demande a été refusée.', 'success')
-            .then(() => location.reload());
-    })
-    .catch(error => {
-        Swal.fire('Erreur!', "Une erreur s'est produite.", 'error');
-    });
-}
-
-function approuverDemande() {
-    axios.post('{{ route('fiches.approve', ['id' => $fournisseur->id]) }}')
-        .then(response => {
-            Swal.fire('Approuvé!', 'La demande a été approuvée.', 'success')
-                .then(() => location.reload());
-        })
-        .catch(error => {
-            Swal.fire('Erreur!', "Une erreur s'est produite.", 'error');
-        });
-}
-
+                    });          
         }
         //Formattage rbq et tel format canadien ###-###-####
     function formatPhoneNumber(number) {
