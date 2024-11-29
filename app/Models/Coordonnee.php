@@ -24,4 +24,9 @@ class Coordonnee extends Model
     return $this->belongsTo(FicheFournisseur::class);
 }
 
+public function telephones()
+{
+    return $this->belongsToMany(Telephone::class, 'coordonnee_telephone');
+}
+
 }

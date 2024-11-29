@@ -6,6 +6,7 @@
         "build": "vite build"
     },
     "devDependencies": {
+        "@tailwindcss/forms": "^0.5.9",
         "autoprefixer": "^10.4.20",
         "axios": "^1.7.7",
         "laravel-vite-plugin": "^1.0",
@@ -14,7 +15,10 @@
         "vite": "^5.0"
     },
     "dependencies": {
+        "dropzone": "^6.0.0-beta.2",
         "highcharts": "^11.4.8",
+        "lodash": "^4.17.21",
+        "preline": "^2.5.1",
         "quill": "^2.0.2",
         "sweetalert2": "^11.6.13"
     }

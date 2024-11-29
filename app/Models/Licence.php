@@ -25,4 +25,8 @@ class Licence extends Model
     {
         return $this->hasMany(SousCategorieLicence::class);
     }
+    public function sousCategoriess()
+    {
+        return $this->belongsToMany(SousCategorie::class, 'sous_categorie_licence', 'licence_id', 'sous_categorie_id');
+    }
 }
