@@ -111,9 +111,9 @@ $etatStyles = [
 
 
     <!-- Options de sélection du nombre d'éléments par page -->
-    <div class="mb-4">
+    <div class="mb-4 w-full">
         <label for="items-per-page" class="text-sm text-gray-600 font-Alumni md:text-lg daltonien:text-black">Afficher par :</label>
-        <select id="items-per-page" class="border rounded px-2 py-1 font-Alumni md:text-lg"
+        <select id="items-per-page" class="border rounded px-2 py-1 font-Alumni md:text-lg  w-16"
             onchange="updatePagination()">
             <option value="5">5</option>
             <option value="10">10</option>
