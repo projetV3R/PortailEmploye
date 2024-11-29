@@ -118,11 +118,10 @@ Route::post('/Desactivation', [FicheFournisseurController::class, 'desactivation
 Route::delete('/licence/delete/{id}', [FicheFournisseurController::class, 'deleteLicence'])->name('deleteLicence')->middleware('auth');
 
 
-Route::middleware(['auth', 'checkRole:admin,responsable'])->group(function () {
     Route::get('/listeFournisseur', [FicheFournisseurController::class, 'index'])->name('fiches.index');
         Route::post('/fiches/reject/{id}', [FicheFournisseurController::class, 'reject'])->name('fiches.reject');
         Route::post('/fiches/approve/{id}', [FicheFournisseurController::class, 'approve'])->name('fiches.approve');
-    });
+
         Route::get('/usagers', [UsagerController::class, 'index']);
         Route::get('/admin', function () { return view('admin.admin');});
     

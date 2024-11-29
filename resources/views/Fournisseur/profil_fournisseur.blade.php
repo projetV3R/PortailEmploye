@@ -230,22 +230,17 @@
 
         <div class="flex w-full lg:w-auto justify-end flex-col lg:flex-row gap-4">
             @role('admin', 'responsable')
-                @if($etat === 'En attente' || $etat === 'a reviser')
-                    @if(!in_array($etat, ['accepter']))
-                        <button type="button"
-                            class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out"
-                            id="approveButton">
-                            Approuver
-                        </button>
-                    @endif
-                    @if(!in_array($etat, ['refuser']))
-                        <button type="button"
-                            class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out"
-                            id="rejectButton">
-                            Refuser
-                        </button>
-                    @endif
-                @endif
+                    <button type="button"
+                        class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out"
+                        id="approveButton">
+                        Approuver
+                    </button>
+                    <button type="button"
+                        class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out"
+                        id="rejectButton">
+                        Refuser
+                    </button>
+                
             @endrole   
         </div>
     </div>
@@ -581,16 +576,95 @@
         openContactModal();
         @endif
 
+
         
         var successMessage = document.getElementById('successMessage');
         if (successMessage) {
             Swal.fire({
-  position: "top-end",
-  icon: "success",
-  title: successMessage,
-  showConfirmButton: false,
-  timer: 1500
+                position: "top-end",
+                icon: "success",
+                title: successMessage,
+                showConfirmButton: false,
+                timer: 1500
+                    });
+
+document.getElementById('approveButton'||'approveButton1').addEventListener('click', function() {
+    Swal.fire({
+        title: 'Êtes-vous sûr ?',
+        text: "Voulez-vous vraiment approuver cette demande ?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Oui, approuver',
+        cancelButtonText: 'Annuler'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            approuverDemande();
+        }
+    });
 });
+
+document.getElementById('rejectButton').addEventListener('click', function() {
+    Swal.fire({
+        title: 'Êtes-vous sûr ?',
+        html: `
+            <p>Voulez-vous vraiment refuser cette demande ?</p>
+            <textarea id="raisonRefus" class="swal2-textarea" placeholder="Veuillez entrer la raison du refus (facultatif)"></textarea>
+            <div class="flex items-center mt-2">
+                <input type="checkbox" id="includeReason" name="includeReason">
+                <label for="includeReason" class="ml-2">Inclure la raison du refus dans l'email</label>
+            </div>
+            `,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Refuser',
+        cancelButtonText: 'Annuler',
+        preConfirm: () => {
+            return {
+                reason: document.getElementById('raisonRefus').value,
+                includeReason: document.getElementById('includeReason').checked
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let reason = result.value.reason;
+            const includeReason = result.value.includeReason;
+            if (!includeReason) {
+                reason = 'Non spécifiée';
+            }
+            refuserDemande(reason, includeReason);
+        }
+    });
+});
+
+function refuserDemande(reason, includeReason) {
+    axios.post('{{ route('fiches.reject', ['id' => $fournisseur->id]) }}', {
+        reason: reason,
+        includeReason: includeReason
+    })
+    .then(response => {
+        Swal.fire('Refusé!', 'La demande a été refusée.', 'success')
+            .then(() => location.reload());
+    })
+    .catch(error => {
+        Swal.fire('Erreur!', "Une erreur s'est produite.", 'error');
+    });
+}
+
+function approuverDemande() {
+    axios.post('{{ route('fiches.approve', ['id' => $fournisseur->id]) }}')
+        .then(response => {
+            Swal.fire('Approuvé!', 'La demande a été approuvée.', 'success')
+                .then(() => location.reload());
+        })
+        .catch(error => {
+            Swal.fire('Erreur!', "Une erreur s'est produite.", 'error');
+        });
+}
+
         }
         //Formattage rbq et tel format canadien ###-###-####
     function formatPhoneNumber(number) {
@@ -843,82 +917,7 @@ function closeFinanceModal() {
 }
 const etatFiche = "{{ $fournisseur->etat }}"; 
     
-        document.getElementById('approveButton').addEventListener('click', function() {
-    Swal.fire({
-        title: 'Êtes-vous sûr ?',
-        text: "Voulez-vous vraiment approuver cette demande ?",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#28a745',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Oui, approuver',
-        cancelButtonText: 'Annuler'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            approuverDemande();
-        }
-    });
-});
 
-document.getElementById('rejectButton').addEventListener('click', function() {
-    Swal.fire({
-        title: 'Êtes-vous sûr ?',
-        html: `
-            <p>Voulez-vous vraiment refuser cette demande ?</p>
-            <textarea id="raisonRefus" class="swal2-textarea" placeholder="Veuillez entrer la raison du refus (facultatif)"></textarea>
-            <div class="flex items-center mt-2">
-                <input type="checkbox" id="includeReason" name="includeReason">
-                <label for="includeReason" class="ml-2">Inclure la raison du refus dans l'email</label>
-            </div>
-            `,
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#28a745',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Refuser',
-        cancelButtonText: 'Annuler',
-        preConfirm: () => {
-            return {
-                reason: document.getElementById('raisonRefus').value,
-                includeReason: document.getElementById('includeReason').checked
-            }
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            let reason = result.value.reason;
-            const includeReason = result.value.includeReason;
-            if (!includeReason) {
-                reason = 'Non spécifiée';
-            }
-            refuserDemande(reason, includeReason);
-        }
-    });
-});
-
-function refuserDemande(reason, includeReason) {
-    axios.post('{{ route('fiches.reject', ['id' => $fournisseur->id]) }}', {
-        reason: reason,
-        includeReason: includeReason
-    })
-    .then(response => {
-        Swal.fire('Refusé!', 'La demande a été refusée.', 'success')
-            .then(() => location.reload());
-    })
-    .catch(error => {
-        Swal.fire('Erreur!', "Une erreur s'est produite.", 'error');
-    });
-}
-
-function approuverDemande() {
-    axios.post('{{ route('fiches.approve', ['id' => $fournisseur->id]) }}')
-        .then(response => {
-            Swal.fire('Approuvé!', 'La demande a été approuvée.', 'success')
-                .then(() => location.reload());
-        })
-        .catch(error => {
-            Swal.fire('Erreur!', "Une erreur s'est produite.", 'error');
-        });
-}
 
 </script>
 

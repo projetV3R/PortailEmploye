@@ -32,6 +32,8 @@ use App\Models\Historique;
 use App\Models\ProduitsServices;
 use App\Models\SousCategorie;
 use App\Notifications\NotificationModification;
+use App\Notifications\FournisseurApproveNotification;
+use App\Notifications\FournisseurRefusNotification;
      class FicheFournisseurController extends Controller
     {
     /**
@@ -1060,6 +1062,58 @@ public function desactivationFiche($id)
             return response()->json(['success' => true, 'message' => 'Votre fiche fournisseur a été réactivée avec succès.']);
         }
 
+    }
+
+    public function reject(Request $request, $id)
+    {
+        $fournisseur = FicheFournisseur::findOrFail($id);
+        $fournisseurold = $fournisseur;
+        $usager = Auth::user();
+
+        $fournisseur->etat = 'refuser';
+        $fournisseur->date_changement_etat = now();
+        
+        $reason = $request->input('reason', null);
+        $hashedReason = $reason ? bcrypt($reason) : null;
+        $fournisseur->raison_refus = $hashedReason;
+        
+        $fournisseur->save();
+
+        Historique::create([
+            'table_name' => 'Identification et statut',
+            'author' => $usager->email,
+            'action' => 'Refuser',
+            'old_values' => "-état : ".$fournisseurold->etat,
+            'new_values' => '+état : '.$fournisseur->etat,
+            'fiche_fournisseur_id' => $fournisseur->id,
+        ]);
+    
+        $includeReason = $request->input('includeReason', false);
+        $fournisseur->notify(new FournisseurRefusNotification($fournisseur, $reason, $includeReason));
+    
+        return response()->json(['message' => 'Demande refusée avec succès.']);
+    }
+    
+    public function approve($id)
+    {
+        $fournisseur = FicheFournisseur::findOrFail($id);
+        $fournisseurold = $fournisseur;
+        $usager = Auth::user();
+
+        $fournisseur->etat = 'accepter';
+        $fournisseur->date_changement_etat = now();
+        $fournisseur->save();
+        Historique::create([
+            'table_name' => 'Identification et statut',
+            'author' => $usager->email,
+            'action' => 'Accepter',
+            'old_values' => "-état : ".$fournisseurold->etat,
+            'new_values' => '+état : '.$fournisseur->etat,
+            'fiche_fournisseur_id' => $fournisseur->id,
+        ]);
+        $fournisseur->notify(new FournisseurApproveNotification($fournisseur));
+
+        return response()->json(['message' => 'Demande approuvée avec succès.']);
     }
 
 }
