@@ -229,19 +229,24 @@
         </div>
 
         <div class="flex w-full lg:w-auto justify-end flex-col lg:flex-row gap-4">
-            @role('admin', 'responsable')
-                    <button type="button"
-                        class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out"
-                        id="approveButton">
-                        Approuver
-                    </button>
-                    <button type="button"
-                        class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out"
-                        id="rejectButton">
-                        Refuser
-                    </button>
-                
-            @endrole   
+        @role('admin', 'responsable')
+                @if($etat === 'En attente')
+                    @if(!in_array($etat, ['accepter']))
+                        <button type="button"
+                            class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out"
+                            id="approveButton">
+                            Approuver
+                        </button>
+                    @endif
+                    @if(!in_array($etat, ['refuser']))
+                        <button type="button"
+                            class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out"
+                            id="rejectButton">
+                            Refuser
+                        </button>
+                    @endif
+                @endif
+        @endrole  
         </div>
     </div>
     </div>
