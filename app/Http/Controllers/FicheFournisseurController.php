@@ -116,7 +116,7 @@ use Carbon\Carbon;
                         'etat' => 'a reviser',
                         'date_changement_etat' => Carbon::now(),
                     ]);
-                }
+                
                 Historique::create([
                     'table_name' => 'FicheFournisseur',
                     'author' =>'Système',
@@ -134,6 +134,7 @@ use Carbon\Carbon;
                 ->value('valeur');
                 Notification::route('mail', $emailApprovisionnement)
                 ->notify(new NotificationRevisionFiche($data));
+               }
             }
         }
     }
@@ -1186,7 +1187,7 @@ public function desactivationFiche($id)
             'author' => $usager->email,
             'action' => 'Refuser',
             'old_values' => "-état : " . $original['etat'],
-            'new_values' => '+état : ' . $fournisseur->etat,
+            'new_values' => '+état : ' . $fournisseur->etat. ', +raison_refus : ' . ($hashedReason ?? 'N/A'),
             'fiche_fournisseur_id' => $fournisseur->id,
         ]);
     
