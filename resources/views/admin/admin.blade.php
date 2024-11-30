@@ -23,11 +23,6 @@
                 <span class="iconify text-xl w-6  arrow" data-icon="material-symbols:arrow-forward-ios-rounded"></span>
             </div>
 
-            <div class="flex flex-row cursor-pointer hover:bg-gray-200 p-4 px-2 w-full justify-center md:justify-start items-center gap-3 menu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black" data-target="suppliersDiv" onclick="SelectedMenu(this)">
-                <span class="iconify text-xl w-8" data-icon="material-symbols:box-outline-rounded" data-inline="false"></span>
-                <span class="text-xl">Fournisseurs</span>
-                <span class="iconify text-xl w-6 hidden arrow" data-icon="material-symbols:arrow-forward-ios-rounded"></span>
-            </div>
 
             <div class="flex flex-row cursor-pointer hover:bg-gray-200 p-4 px-2 w-full justify-center md:justify-start items-center gap-3 menu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black" data-target="settingsDiv" onclick="SelectedMenu(this)">
                 <span class="iconify text-xl w-8" data-icon="material-symbols:display-settings-outline-rounded" data-inline="false"></span>
@@ -112,7 +107,6 @@
             </div>
         </div>
     </div>
-    <div class="flex flex-col justify-center w-full h-full bg-yellow-500 hidden" id="suppliersDiv"></div>
     <div class="flex flex-col justify-center w-full h-full  hidden" id="settingsDiv">
         <div class="flex flex-col w-full h-full px-4 mt-10">
             <h1 class="text-2xl font-bold mb-6 flex justify-center">Gestion des paramètres</h1>
@@ -166,8 +160,7 @@
             <select id="modelesSelect" class="border-2  rounded-md shadow-sm" onchange="afficherModele()">
 
             </select>
-            <button class="bg-green-300 rounded-md p-2 px-2 hover:text-white hover:bg-green-700 daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black"><span class=" hidden md:block">Ajouter</span> <span class="block md:hidden iconify size-6" data-icon="material-symbols-light:post-add" data-inline="false"></span></button>
-            <button class="bg-red-300 rounded-md p-2 px-2 hover:text-white hover:bg-red-700 daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black"><span class="hidden md:block">Supprimer</span> <span class="block md:hidden iconify size-6" data-icon="mdi:bin" data-inline="false"></button>
+           
         </div>
 
 
