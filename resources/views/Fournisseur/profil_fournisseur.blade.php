@@ -264,6 +264,10 @@
                     class="approveButton bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out">
                     Approuver
                 </button>
+                <button type="button" onclick="showReason()"
+                class="consultReason bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out">
+                Consulter la raison du refus
+            </button>
                 @endif
             @endrole  
         </div>
@@ -294,7 +298,6 @@
 
                     <div class="mt-4">
                         <p class="font-Alumni text-md md:text-lg"><strong>Mot de passe :</strong> ••••••••</p>
-                        <!-- Placeholder for security reasons -->
                     </div>
 
                 </div>
@@ -1067,6 +1070,34 @@ function openDetailsModal(index) {
         openHistoriqueModal();
     });
 }
+function showReason() {
+    const fournisseurId = localStorage.getItem('fournisseurId');
+    axios.get(`/fournisseur/${fournisseurId}/raison-refus`)
+        .then(response => {
+            const reason = response.data.reason;
+
+            Swal.fire({
+                title: 'Raison du refus',
+                html: `<p>${reason}</p>`, 
+                icon: 'info',
+                confirmButtonText: 'Fermer',
+                scrollbarPadding: false,
+                showCloseButton: true
+            });
+        })
+        .catch(error => {
+            console.error("Erreur lors de la récupération de la raison :", error);
+
+            Swal.fire({
+                title: 'Erreur',
+                text: 'Impossible de récupérer la raison du refus. Veuillez réessayer plus tard.',
+                icon: 'error',
+                confirmButtonText: 'Fermer'
+            });
+        });
+}
+
+
 const etatFiche = "{{ $fournisseur->etat }}"; 
     
 

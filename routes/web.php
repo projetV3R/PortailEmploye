@@ -129,6 +129,7 @@ Route::delete('/licence/delete/{id}', [FicheFournisseurController::class, 'delet
 Route::get('/listeFournisseur', [FicheFournisseurController::class, 'index'])->name('fiches.index');
 Route::post('/fiches/reject/{id}', [FicheFournisseurController::class, 'reject'])->name('fiches.reject');
 Route::post('/fiches/approve/{id}', [FicheFournisseurController::class, 'approve'])->name('fiches.approve');
+Route::get('/fournisseur/{id}/raison-refus', [FicheFournisseurController::class, 'getReason']);
 
 Route::get('/historique/{id}', [FicheFournisseurController::class, 'getHistorique']);
 Route::post('/send-finance', [FicheFournisseurController::class, 'sendToFinance'])->name('send.finance');

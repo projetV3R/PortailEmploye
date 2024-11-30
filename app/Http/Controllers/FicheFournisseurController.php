@@ -38,6 +38,7 @@ use App\Notifications\NotificationRevisionFiche;
 use App\Notifications\NotificationFinance;
 use Illuminate\Support\Facades\Notification;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Crypt;
      class FicheFournisseurController extends Controller
     {
     /**
@@ -45,7 +46,20 @@ use Carbon\Carbon;
      */
 
  
-
+     public function getReason($id)
+     {
+         $fournisseur = FicheFournisseur::find($id);
+     
+         if (!$fournisseur || !$fournisseur->raison_refus) {
+             return response()->json(['reason' => 'Aucune raison précisée.'], 404);
+         }
+     
+        
+         $reason = Crypt::decrypt($fournisseur->raison_refus);
+     
+         return response()->json(['reason' => $reason]);
+     }
+     
      public function sendToFinance(Request $request)
      {
          $ids = $request->input('ids', []);
@@ -1177,7 +1191,7 @@ public function desactivationFiche($id)
         $fournisseur->date_changement_etat = now();
     
         $reason = $request->input('reason', null);
-        $hashedReason = $reason ? bcrypt($reason) : null;
+        $hashedReason = $reason ?  Crypt::encrypt($reason) : null;
         $fournisseur->raison_refus = $hashedReason;
     
         $fournisseur->save();
