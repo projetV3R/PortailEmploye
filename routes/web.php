@@ -74,8 +74,7 @@ Route::get('/line-chart-data', [ChartsController::class, 'lineChart']);
 // route data pie-Chart
 Route::get('/chart/pie', [ChartsController::class, 'pieChart']);
 
-Route::get('/listeFournisseur', [FicheFournisseurController::class, 'index'])->name('fiches.index');
-
+Route::get('/top-cities', [ChartsController::class, 'getTopCitiesByRegion']);
 //Route::get('/profil', [FicheFournisseurController::class, 'profil'])->name('profil');
 
 Route::get('/profil/{id}', [FicheFournisseurController::class, 'profil'])->name('profil');
@@ -130,6 +129,10 @@ Route::delete('/licence/delete/{id}', [FicheFournisseurController::class, 'delet
 Route::get('/listeFournisseur', [FicheFournisseurController::class, 'index'])->name('fiches.index');
 Route::post('/fiches/reject/{id}', [FicheFournisseurController::class, 'reject'])->name('fiches.reject');
 Route::post('/fiches/approve/{id}', [FicheFournisseurController::class, 'approve'])->name('fiches.approve');
+Route::get('/fournisseur/{id}/raison-refus', [FicheFournisseurController::class, 'getReason']);
+
+Route::get('/historique/{id}', [FicheFournisseurController::class, 'getHistorique']);
+Route::post('/send-finance', [FicheFournisseurController::class, 'sendToFinance'])->name('send.finance');
 
 
 //!!! ROUTE DE REDIRECTION ERREUR 404 TOUJOURS A LA FIN DU FICHIER DE ROUTE NE JAMAIS AVOIR DE ROUTE APRES !!!!

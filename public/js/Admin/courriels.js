@@ -38,11 +38,11 @@ document.addEventListener('DOMContentLoaded', function () {
     <option value="{fiche_fournisseurs-&gt;neq}">{NEQ de l'entreprise}</option>
     <option value="{fiche_fournisseurs-&gt;etat}">{Statut du dossier}</option>
     <option value="{fiche_fournisseurs-&gt;raison_refus}">{Raison du refus}</option>
-    <option value="{finances-&gt;numero_tps}">{Numéro de TPS}</option>
-    <option value="{finances-&gt;numero_tvq}">{Numéro de TVQ}</option>
-    <option value="{finances-&gt;condition_paiement}">{Condition de paiement}</option>
-    <option value="{finances-&gt;devise}">{Devise}</option>
-    <option value="{finances-&gt;mode_communication}">{Mode de communication}</option>
+    <option value="{fiche_fournisseurs-&gt;finance-&gt;numero_tps}">{Numéro de TPS}</option>
+    <option value="{fiche_fournisseurs-&gt;finance-&gt;numero_tvq}">{Numéro de TVQ}</option>
+    <option value="{fiche_fournisseurs-&gt;finance-&gt;condition_paiement}">{Condition de paiement}</option>
+    <option value="{fiche_fournisseurs-&gt;finance-&gt;devise}">{Devise}</option>
+    <option value="{fiche_fournisseurs-&gt;finance-&gt;mode_communication}">{Mode de communication}</option>
     `;
 
     document.querySelector('.ql-toolbar').appendChild(variableSelect);

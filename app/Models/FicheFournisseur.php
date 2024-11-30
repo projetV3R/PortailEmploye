@@ -18,6 +18,7 @@ class FicheFournisseur extends Authenticatable
         "adresse_courriel",
         "details_specifications",
         "date_changement_etat",
+        "raison_refus"
     ];
 
     protected $hidden = [

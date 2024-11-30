@@ -8,29 +8,35 @@ use Carbon\Carbon;
 
 class ChartsController extends Controller
 {
-    /**
-     * Retourne les données pour le graphique des inscriptions mensuelles.
-     */
+
     public function lineChart()
     {
-        $currentYear = Carbon::now()->year;
-
+      
+        $startOfWeek = Carbon::now()->startOfWeek();
+        $endOfWeek = Carbon::now()->endOfWeek();
+    
+      
         $data = DB::table('fiche_fournisseurs')
-            ->selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-            ->whereYear('created_at', $currentYear)
-            ->groupBy('month')
-            ->orderBy('month')
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+            ->groupBy('date')
+            ->orderBy('date')
             ->get();
-
-        // Remplir les mois manquants avec 0
-        $formattedData = array_fill(1, 12, 0);
-        foreach ($data as $item) {
-            $formattedData[$item->month] = $item->count;
+    
+    
+        $counts = [];
+        for ($i = 0; $i < 7; $i++) {
+            $date = $startOfWeek->copy()->addDays($i);
+            $count = $data->firstWhere('date', $date->toDateString())->count ?? 0;
+            $counts[] = $count;
         }
 
-        // Retourner les données formatées en JSON
-        return response()->json(array_values($formattedData));
+        return response()->json([
+            'data' => $counts
+        ]);
     }
+    
+
 
     public function pieChart()
     {
@@ -41,9 +47,41 @@ class ChartsController extends Controller
         ->select('sous_categories.code_sous_categorie as sous_categorie', DB::raw('COUNT(fiche_fournisseurs.id) as fournisseur_count'))
         ->groupBy('sous_categories.code_sous_categorie')
         ->orderByDesc('fournisseur_count')
-        ->limit(10)
+        ->limit(5)
         ->get();
 
         return response()->json($data);
     }
+
+    public function getTopCitiesByRegion(Request $request)
+{
+    $regionValue = $request->input('region_value');
+
+ 
+    if (!$regionValue || $regionValue === '') {
+        $data = DB::table('coordonnees')
+            ->select('ville', DB::raw('COUNT(fiche_fournisseur_id) as fournisseur_count'))
+            ->where('province', 'Québec') 
+            ->groupBy('ville')
+            ->orderByDesc('fournisseur_count')
+            ->limit(10)
+            ->get();
+
+        return response()->json($data);
+    }
+
+ 
+    $data = DB::table('coordonnees')
+        ->select('ville', DB::raw('COUNT(fiche_fournisseur_id) as fournisseur_count'))
+        ->where('region_administrative', $regionValue)
+        ->where('province', 'Québec') 
+        ->groupBy('ville')
+        ->orderByDesc('fournisseur_count')
+        ->limit(10)
+        ->get();
+
+    return response()->json($data);
+}
+
+
 }

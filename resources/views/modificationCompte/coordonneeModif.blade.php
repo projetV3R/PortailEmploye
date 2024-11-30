@@ -115,6 +115,7 @@
                             <option value="Alberta">Alberta</option>
                             <option value="Saskatchewan">Saskatchewan</option>
                             <option value="Manitoba">Manitoba</option>
+                            <option value="Colombie_Britannique">Colombie-Britannique</option>
                             <option value="Ontario">Ontario</option>
                             <option value="Québec" selected>Québec</option>
                             <option value="Nouveau_Brunswick">Nouveau-Brunswick</option>
