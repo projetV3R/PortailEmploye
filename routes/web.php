@@ -74,8 +74,7 @@ Route::get('/line-chart-data', [ChartsController::class, 'lineChart']);
 // route data pie-Chart
 Route::get('/chart/pie', [ChartsController::class, 'pieChart']);
 
-Route::get('/listeFournisseur', [FicheFournisseurController::class, 'index'])->name('fiches.index');
-
+Route::get('/top-cities', [ChartsController::class, 'getTopCitiesByRegion']);
 //Route::get('/profil', [FicheFournisseurController::class, 'profil'])->name('profil');
 
 Route::get('/profil/{id}', [FicheFournisseurController::class, 'profil'])->name('profil');

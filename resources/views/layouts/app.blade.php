@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://code.iconify.design/3/3.0.0/iconify.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment/locale/fr.js"></script>
 
     <link rel="icon" type="image/png" href="https://www.v3r.net/wp-content/uploads/2023/06/favicon.png" />
     @vite('resources/css/app.css')
@@ -178,6 +180,7 @@
     @yield('contenu')
 
     <script>
+         moment.locale('fr');
         @auth
         // Toogle menu mobile
         document.getElementById('menu-toggle').addEventListener('click', function() {
