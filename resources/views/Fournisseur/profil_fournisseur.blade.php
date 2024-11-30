@@ -215,19 +215,56 @@
     @endif
 
 
-        <div class="{{ $etatStyle['bgColor'] }} mt-4 md:mt-0 md:ml-2 w-full md:w-1/2 py-4 px-6 flex items-center">
+    <div class="{{ $etatStyle['bgColor'] }} mt-4 lg:mt-0 lg:ml-6 w-full lg:w-1/2 py-6 px-4 flex flex-col xl:flex-row items-center justify-between rounded-lg shadow-md gap-4">
+        <div class="flex items-center space-x-4">
             <div class="{{ $etatStyle['textColor'] }}">
-                <span class="iconify" data-icon="{{ $etatStyle['icon'] }}" data-inline="false" style="font-size: 2rem;"></span>
+                <span class="iconify" data-icon="{{ $etatStyle['icon'] }}" data-inline="false" style="font-size: 2.5rem;"></span>
             </div>
-            <div class="ml-4">
-                <h4 class="font-Alumni font-bold text-lg md:text-2xl">Statut du dossier : 
-                    <span class="{{ $etatStyle['labelColor'] }}">
-                        {{ $etatStyle['text'] }}
-                    </span>
-                </h4>
-            </div>
+            <div class="flex flex-col lg:flex-row items-start lg:items-center space-y-2 lg:space-y-0 lg:space-x-2">
+            <h4 class="font-Alumni font-bold text-lg lg:text-xl">Statut de la demande :</h4>
+            <span class="{{ $etatStyle['labelColor'] }} text-lg lg:text-xl font-semibold">
+                {{ $etatStyle['text'] }}
+            </span>
+        </div>
+        </div>
+
+        <div class="flex w-full lg:w-auto justify-end flex-col lg:flex-row gap-4">
+    
+
+        @role('admin', 'responsable')
+                @if($etat === 'En attente')
+                    <button type="button"
+                        class="approveButton bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out">
+                        Approuver
+                    </button>
+                    <button type="button"
+                        class="rejectButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out">
+                        Refuser
+                    </button>
+                @elseif($etat === 'a reviser')
+                <button type="button"
+                    class="approveButton bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out">
+                    Approuver
+                </button>
+                <button type="button"
+                        class="rejectButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out">
+                        Refuser
+                </button>
+                @elseif($etat === 'accepter')
+                    <button type="button"
+                        class="rejectButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out">
+                        Refuser
+                    </button>
+                @elseif($etat === 'refuser')
+                <button type="button"
+                    class="approveButton bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out">
+                    Approuver
+                </button>
+                @endif
+            @endrole  
         </div>
     </div>
+</div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
@@ -534,6 +571,87 @@
     // Stocker l'ID dans le localStorage
    
     document.addEventListener('DOMContentLoaded', function() {
+
+        document.querySelectorAll('.approveButton').forEach(function(button) {
+                button.addEventListener('click', function() {
+                Swal.fire({
+                    title: 'Êtes-vous sûr ?',
+                    text: "Voulez-vous vraiment approuver cette demande ?",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#28a745',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui, approuver',
+                    cancelButtonText: 'Annuler'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        approuverDemande();
+                    }
+                });
+            });
+            });
+        document.querySelectorAll('.rejectButton').forEach(function(button) {
+                button.addEventListener('click', function() {
+                Swal.fire({
+                    title: 'Êtes-vous sûr ?',
+                    html: `
+                        <p>Voulez-vous vraiment refuser cette demande ?</p>
+                        <textarea id="raisonRefus" class="swal2-textarea" placeholder="Veuillez entrer la raison du refus (facultatif)"></textarea>
+                        <div class="flex items-center mt-2">
+                            <input type="checkbox" id="includeReason" name="includeReason">
+                            <label for="includeReason" class="ml-2">Inclure la raison du refus dans l'email</label>
+                        </div>
+                        `,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#28a745',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Refuser',
+                    cancelButtonText: 'Annuler',
+                    preConfirm: () => {
+                        return {
+                            reason: document.getElementById('raisonRefus').value,
+                            includeReason: document.getElementById('includeReason').checked
+                        }
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let reason = result.value.reason;
+                        const includeReason = result.value.includeReason;
+                        if (!includeReason) {
+                            reason = 'Non spécifiée';
+                        }
+                        refuserDemande(reason, includeReason);
+                    }
+                });
+            });
+            });
+
+            function refuserDemande(reason, includeReason) {
+                axios.post('{{ route('fiches.reject', ['id' => $fournisseur->id]) }}', {
+                    reason: reason,
+                    includeReason: includeReason
+                })
+                .then(response => {
+                    Swal.fire('Refusé!', 'La demande a été refusée.', 'success')
+                        .then(() => location.reload());
+                })
+                .catch(error => {
+                    Swal.fire('Erreur!', "Une erreur s'est produite.", 'error');
+                });
+            }
+
+            function approuverDemande() {
+                axios.post('{{ route('fiches.approve', ['id' => $fournisseur->id]) }}')
+                    .then(response => {
+                        Swal.fire('Approuvé!', 'La demande a été approuvée.', 'success')
+                            .then(() => location.reload());
+                    })
+                    .catch(error => {
+                        Swal.fire('Erreur!', "Une erreur s'est produite.", 'error');
+                    });
+            }
+
         const fournisseurId = {{ $fournisseur->id }};
         localStorage.setItem('fournisseurId', fournisseurId);
         console.log(fournisseurId);
@@ -559,16 +677,17 @@
         openContactModal();
         @endif
 
+
         
         var successMessage = document.getElementById('successMessage');
         if (successMessage) {
             Swal.fire({
-  position: "top-end",
-  icon: "success",
-  title: successMessage,
-  showConfirmButton: false,
-  timer: 1500
-});
+                position: "top-end",
+                icon: "success",
+                title: successMessage,
+                showConfirmButton: false,
+                timer: 1500
+                    });          
         }
         //Formattage rbq et tel format canadien ###-###-####
     function formatPhoneNumber(number) {
@@ -820,6 +939,10 @@ function closeFinanceModal() {
     document.getElementById('financeModal').classList.add('hidden');
 }
 const etatFiche = "{{ $fournisseur->etat }}"; 
-    </script>
+    
+
+
+</script>
+
     
     
