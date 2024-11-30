@@ -31,4 +31,19 @@ class ChartsController extends Controller
         // Retourner les données formatées en JSON
         return response()->json(array_values($formattedData));
     }
+
+    public function pieChart()
+    {
+        $data = DB::table('sous_categorie_licence')
+        ->join('licences', 'sous_categorie_licence.licence_id', '=', 'licences.id')
+        ->join('fiche_fournisseurs', 'licences.fiche_fournisseur_id', '=', 'fiche_fournisseurs.id')
+        ->join('sous_categories', 'sous_categorie_licence.sous_categorie_id', '=', 'sous_categories.id')
+        ->select('sous_categories.code_sous_categorie as sous_categorie', DB::raw('COUNT(fiche_fournisseurs.id) as fournisseur_count'))
+        ->groupBy('sous_categories.code_sous_categorie')
+        ->orderByDesc('fournisseur_count')
+        ->limit(10)
+        ->get();
+
+        return response()->json($data);
+    }
 }
