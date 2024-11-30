@@ -241,7 +241,7 @@
                         class="rejectButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out">
                         Refuser
                     </button>
-                @elseif($etat === 'A reviser')
+                @elseif($etat === 'a reviser')
                 <button type="button"
                     class="approveButton bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out">
                     Approuver
