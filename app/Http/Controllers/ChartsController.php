@@ -41,7 +41,7 @@ class ChartsController extends Controller
         ->select('sous_categories.code_sous_categorie as sous_categorie', DB::raw('COUNT(fiche_fournisseurs.id) as fournisseur_count'))
         ->groupBy('sous_categories.code_sous_categorie')
         ->orderByDesc('fournisseur_count')
-        ->limit(10)
+        ->limit(5)
         ->get();
 
         return response()->json($data);

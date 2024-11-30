@@ -10,20 +10,16 @@
 <div class="flex flex-col w-full h-full p-4 lg:p-16 gap-y-4 ">
     <div class="flex w-full flex-col lg:flex-row lg:h-3/4 h-full gap-4">
         <div class="flex lg:w-1/2 w-full h-full">
-            <div class="flex w-full border-2 justify-center p-4 daltonien:border-black"  id="piechart">
+            <div class="flex w-full border-2 justify-center p-4 rounded-sm shadow-md  daltonien:border-black"  id="linechart">
             </div>
         </div>
         <div class="flex lg:w-1/2 w-full h-full ">
-            <div class="flex w-full border-2 rounded-sm shadow-md justify-center p-4 daltonien:border-black" id="linechart">
+            <div class="flex w-full border-2 rounded-sm shadow-md justify-center p-4 daltonien:border-black" id="piechart">
 
             </div>
         </div>
     </div>
-    <div class="flex w-full ">
-        <div class="flex w-full h-36 border-2 border-dashed justify-center daltonien:border-black">
-            DERNIERE INSCRIPTION ENREGISTRER OU TIMEPICKER POUR LES CHARTS OU FILTRE POUR LES LISTE ICI
-        </div>
-    </div>
+
 
     <div class="flex w-full">
         <div class="flex w-full justify-center border-2 border-dashed daltonien:border-black">LISTES FOURNISSEURS
@@ -33,57 +29,90 @@
 </div>
 
 <script>
-        document.addEventListener('DOMContentLoaded', initializePieChart);
-function initializePieChart() {
+      document.addEventListener('DOMContentLoaded', () => {
+        initializeLineChart();
+        initializeBarChart();
+    });
+
+function initializeBarChart() {
     axios.get('/chart/pie')
         .then(response => {
-            console.log(response.data);
             const data = response.data;
 
-            let chartData = data.map(item => ({
-                name: item.sous_categorie,
-                y: item.fournisseur_count
-            }));
+            let categories = data.map(item => item.sous_categorie);
+            let counts = data.map(item => item.fournisseur_count);
 
             Highcharts.chart('piechart', {
                 chart: {
-                    type: 'pie'
+                    type: 'column',
+                    backgroundColor: 'transparent', 
+                    style: {
+                        fontFamily: 'Arial, sans-serif' 
+                    }
                 },
                 title: {
-                    text: 'HIGHCHARTS SOUS CATEGORIE RBQ PIE CHARTS'
+                    text: 'Top Sous-Catégories de Licences RBQ',
+                    style: {
+                        color: '#333',
+                        fontSize: '18px',
+                        fontWeight: 'bold'
+                    }
+                },
+                xAxis: {
+                    categories: categories,
+                    title: {
+                        text: 'Sous-Catégories'
+                    },
+                    labels: {
+                        style: {
+                            fontSize: '12px'
+                        }
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Nombre de Fournisseurs',
+                        align: 'middle'
+                    },
+                    labels: {
+                        style: {
+                            fontSize: '12px'
+                        }
+                    }
                 },
                 tooltip: {
-                    pointFormat: '{series.name}: <b>{point.y}</b>'
+                    pointFormat: '<b>{point.y}</b> Fournisseurs'
                 },
+                
                 plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
+                    column: {
+                        colorByPoint: true,
                         dataLabels: {
                             enabled: true,
-                            format: '{point.name}: {point.percentage:.1f} %',
                             style: {
-                                fontSize: '10px', 
-                                fontWeight: '600' 
+                                fontSize: '12px',
+                                fontWeight: 'bold',
+                                color: '#000'
                             }
                         }
                     }
                 },
-                series: [
-                    {
-                        name: 'Fournisseurs',
-                        colorByPoint: true,
-                        data: chartData
-                    }
-                ]
+                series: [{
+                    name: 'Fournisseurs',
+                    data: counts,
+                    showInLegend: false 
+                }],
+                credits: {
+                    enabled: false 
+                }
             });
         })
         .catch(error => {
-            console.error('Erreur lors de la récupération des données pour le pie chart:', error);
+            console.error('Erreur lors de la récupération des données pour le bar chart:', error);
         });
 }
 
-    document.addEventListener('DOMContentLoaded', initializeLineChart);
     function initializeLineChart() {
         axios.get('/line-chart-data')
             .then(response => {
@@ -114,6 +143,9 @@ function initializePieChart() {
                         name: 'fiche_fournisseurs',
                         data: data
                     }],
+                    credits: {
+                    enabled: false 
+                },
                     responsive: {
                         rules: [{
                             condition: {
