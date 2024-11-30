@@ -35,6 +35,7 @@ use App\Notifications\NotificationModification;
 use App\Notifications\FournisseurApproveNotification;
 use App\Notifications\FournisseurRefusNotification;
 use App\Notifications\NotificationRevisionFiche;
+use App\Notifications\NotificationFinance;
 use Illuminate\Support\Facades\Notification;
 use Carbon\Carbon;
      class FicheFournisseurController extends Controller
@@ -42,6 +43,49 @@ use Carbon\Carbon;
     /**
      * Display a listing of the resource.
      */
+
+ 
+
+     public function sendToFinance(Request $request)
+     {
+         $ids = $request->input('ids', []);
+     
+     
+         $nonEligibleFournisseur = FicheFournisseur::whereIn('id', $ids)
+             ->where(function ($query) {
+                 $query->where('etat', '!=', 'accepter')
+                     ->orWhereDoesntHave('finance');
+             })
+             ->get(['id', 'nom_entreprise']);
+     
+         if ($nonEligibleFournisseur->isNotEmpty()) {
+             return response()->json([
+                 'success' => false,
+                 'message' => 'Certaines entreprises ne remplissent pas les conditions requises.',
+                 'nonEligibleCompanies' => $nonEligibleFournisseur,
+             ]);
+         }
+     
+         $fournisseurs = FicheFournisseur::whereIn('id', $ids)
+             ->where('etat', 'accepter')
+             ->whereHas('finance')
+             ->get();
+     
+         foreach ($fournisseurs as $fournisseur) {
+             $financeApprovisionnement = ParametreSysteme::where('cle', 'finance_approvisionnement')->value('valeur');
+             
+             Notification::route('mail', $financeApprovisionnement)
+                 ->notify(new NotificationFinance($fournisseur));
+         }
+     
+         return response()->json([
+             'success' => true,
+             'message' => 'Les informations ont été transmises avec succès.',
+             'nonEligibleCompanies' => [],
+         ]);
+     }
+     
+
     public function getHistorique($id)
     {
         $this->revision();

@@ -132,6 +132,8 @@ Route::post('/fiches/reject/{id}', [FicheFournisseurController::class, 'reject']
 Route::post('/fiches/approve/{id}', [FicheFournisseurController::class, 'approve'])->name('fiches.approve');
 
 Route::get('/historique/{id}', [FicheFournisseurController::class, 'getHistorique']);
+Route::post('/send-finance', [FicheFournisseurController::class, 'sendToFinance'])->name('send.finance');
+
 
 //!!! ROUTE DE REDIRECTION ERREUR 404 TOUJOURS A LA FIN DU FICHIER DE ROUTE NE JAMAIS AVOIR DE ROUTE APRES !!!!
 Route::fallback(function () {

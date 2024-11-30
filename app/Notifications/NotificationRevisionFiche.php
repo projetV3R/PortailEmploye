@@ -43,7 +43,7 @@ class NotificationRevisionFiche extends Notification
             ->line('- Courriel de l\'entreprise : ' . $this->data['emailEntreprise'])
             ->line('- Date et heure : ' . $this->data['dateModification'])
             ->line('Merci.')
-            ->salutation('Systme.');
+            ->salutation('Systeme.');
     }
 
     /**
