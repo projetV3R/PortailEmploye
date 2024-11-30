@@ -34,11 +34,126 @@ use App\Models\SousCategorie;
 use App\Notifications\NotificationModification;
 use App\Notifications\FournisseurApproveNotification;
 use App\Notifications\FournisseurRefusNotification;
+use App\Notifications\NotificationRevisionFiche;
+use App\Notifications\NotificationFinance;
+use Illuminate\Support\Facades\Notification;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Crypt;
      class FicheFournisseurController extends Controller
     {
     /**
      * Display a listing of the resource.
      */
+
+ 
+     public function getReason($id)
+     {
+         $fournisseur = FicheFournisseur::find($id);
+     
+         if (!$fournisseur || !$fournisseur->raison_refus) {
+             return response()->json(['reason' => 'Aucune raison précisée.'], 404);
+         }
+     
+        
+         $reason = Crypt::decrypt($fournisseur->raison_refus);
+     
+         return response()->json(['reason' => $reason]);
+     }
+     
+     public function sendToFinance(Request $request)
+     {
+         $ids = $request->input('ids', []);
+     
+     
+         $nonEligibleFournisseur = FicheFournisseur::whereIn('id', $ids)
+             ->where(function ($query) {
+                 $query->where('etat', '!=', 'accepter')
+                     ->orWhereDoesntHave('finance');
+             })
+             ->get(['id', 'nom_entreprise']);
+     
+         if ($nonEligibleFournisseur->isNotEmpty()) {
+             return response()->json([
+                 'success' => false,
+                 'message' => 'Certaines entreprises ne remplissent pas les conditions requises.',
+                 'nonEligibleCompanies' => $nonEligibleFournisseur,
+             ]);
+         }
+     
+         $fournisseurs = FicheFournisseur::whereIn('id', $ids)
+             ->where('etat', 'accepter')
+             ->whereHas('finance')
+             ->get();
+     
+         foreach ($fournisseurs as $fournisseur) {
+             $financeApprovisionnement = ParametreSysteme::where('cle', 'finance_approvisionnement')->value('valeur');
+             
+             Notification::route('mail', $financeApprovisionnement)
+                 ->notify(new NotificationFinance($fournisseur));
+         }
+     
+         return response()->json([
+             'success' => true,
+             'message' => 'Les informations ont été transmises avec succès.',
+             'nonEligibleCompanies' => [],
+         ]);
+     }
+     
+
+    public function getHistorique($id)
+    {
+        $this->revision();
+        $historique = DB::table('historiques')
+            ->where('fiche_fournisseur_id', $id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        return response()->json($historique);
+    }
+    protected function revision()
+    {
+        Log::info('Méthode revision() exécutée');
+    
+        $moisRevision = DB::table('parametres_systeme')
+            ->where('cle', 'mois_revision')
+            ->value('valeur_numerique');
+    
+        if ($moisRevision) {
+            $fiches = FicheFournisseur::where('etat', 'refuser')->get();
+    
+            foreach ($fiches as $fournisseur) {
+                $lastChangeDate = Carbon::parse($fournisseur->date_changement_etat);
+                $monthsSinceLastChange = $lastChangeDate->diffInMonths(Carbon::now());
+    
+                if ($monthsSinceLastChange >= $moisRevision) {
+                    $fournisseur->update([
+                        'etat' => 'a reviser',
+                        'date_changement_etat' => Carbon::now(),
+                    ]);
+                
+                Historique::create([
+                    'table_name' => 'FicheFournisseur',
+                    'author' =>'Système',
+                    'action' => 'A reviser',
+                    'old_values' => "-état: Refuser",
+                    'new_values' => "+état: A reviser",
+                    'fiche_fournisseur_id' => $fournisseur->id,
+                ]);
+                $data = [
+                    'nomEntreprise' => $fournisseur->nom_entreprise,
+                    'emailEntreprise' => $fournisseur->adresse_courriel,
+                    'dateModification' => now()->format('d-m-Y H:i:s'),
+                ];
+                $emailApprovisionnement = ParametreSysteme::where('cle', 'email_approvisionnement')
+                ->value('valeur');
+                Notification::route('mail', $emailApprovisionnement)
+                ->notify(new NotificationRevisionFiche($data));
+               }
+            }
+        }
+    }
+    
+    
     public function index(Request $request)
     {
         $perPage = $request->input('perPage', 5);
@@ -112,7 +227,7 @@ use App\Notifications\FournisseurRefusNotification;
         $fournisseur = FicheFournisseur::find($id);
         $licence = $fournisseur->licence()->with('sousCategories.categorie')->first();
         $maxFileSize = ParametreSysteme::where('cle', 'taille_fichier')->value('valeur_numerique');
-
+        $this->revision();
         return view('Fournisseur/profil_fournisseur', compact('maxFileSize', 'fournisseur', 'licence'));
     }
 
@@ -1076,7 +1191,7 @@ public function desactivationFiche($id)
         $fournisseur->date_changement_etat = now();
     
         $reason = $request->input('reason', null);
-        $hashedReason = $reason ? bcrypt($reason) : null;
+        $hashedReason = $reason ?  Crypt::encrypt($reason) : null;
         $fournisseur->raison_refus = $hashedReason;
     
         $fournisseur->save();
@@ -1086,7 +1201,7 @@ public function desactivationFiche($id)
             'author' => $usager->email,
             'action' => 'Refuser',
             'old_values' => "-état : " . $original['etat'],
-            'new_values' => '+état : ' . $fournisseur->etat,
+            'new_values' => '+état : ' . $fournisseur->etat. ', +raison_refus : ' . ($hashedReason ?? 'N/A'),
             'fiche_fournisseur_id' => $fournisseur->id,
         ]);
     

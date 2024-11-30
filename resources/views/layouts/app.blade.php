@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://code.iconify.design/3/3.0.0/iconify.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment/locale/fr.js"></script>
 
     <link rel="icon" type="image/png" href="https://www.v3r.net/wp-content/uploads/2023/06/favicon.png" />
     @vite('resources/css/app.css')
@@ -138,27 +140,27 @@
                 </div>
                 <!-- Liens de navigation pour mobile -->
                 <nav class="space-y-4 mt-4 text-white text-xl flex flex-col h-full">
-                    <a href="/dashboard" class="block hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
-                        Accueil
+                    <a href="/dashboard" class="block flex items-center w-full hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
+                        <span class="iconify size-10 hover:bg-green-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black" data-icon="mdi:home" data-inline="false"></span>   Accueil 
                     </a>
                     @role('admin')
-                    <a href="/admin" class="block hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
-                        Panneau
+                    <a href="/admin" class="block flex items-center w-full hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
+                        <span class="iconify size-10 hover:bg-green-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black" data-icon="material-symbols:display-settings-outline-rounded" data-inline="false"></span>   Panneau
                         Administration
                     </a>
                     @endrole
-                    <a href="{{ route('fiches.index') }}" class="block hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
-                        Fournisseurs
+                    <a href="{{ route('fiches.index') }}" class="block  flex items-center w-full hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
+                        <span class="iconify size-10 hover:bg-green-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black" data-icon="material-symbols:box-outline-rounded" data-inline="false"></span>   Fournisseurs
                     </a>
-                    <a href="/profil" class="block hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
-                        Profil
+                    <a href="/profil" class="block flex items-center w-full hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
+                        <span class="iconify size-10 hover:bg-green-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black" data-icon="lucide:user-round" data-inline="false"></span>   Profil
                     </a>
 
                     <!-- Bouton deconnexion pour mobile -->
                     @auth
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button class="block text-white hover:bg-red-600 p-2 transition duration-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
+                        <button class="block flex items-center w-full text-white hover:bg-red-600 p-2 transition duration-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
                             <span class="iconify size-10" data-icon="mdi:logout" data-inline="false"></span> Déconnexion
                         </button>
                     </form>
@@ -178,6 +180,7 @@
     @yield('contenu')
 
     <script>
+         moment.locale('fr');
         @auth
         // Toogle menu mobile
         document.getElementById('menu-toggle').addEventListener('click', function() {

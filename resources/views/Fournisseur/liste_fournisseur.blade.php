@@ -78,7 +78,7 @@ $etatStyles = [
                 <span class="iconify" data-icon="mdi:file-excel"></span>
                 <span class="font-Alumni"><b>Excel</b></span>
             </button>
-            <button
+            <button onclick="sendToFinance()"
                 class="flex items-center justify-center space-x-2 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 w-full md:w-auto 
                        daltonien:bg-daltonienBleu daltonien:hover:bg-daltonienYellow daltonien:hover:text-black daltonien:text-black">
                 <span class="iconify" data-icon="mdi:currency-usd"></span>
@@ -111,9 +111,9 @@ $etatStyles = [
 
 
     <!-- Options de sélection du nombre d'éléments par page -->
-    <div class="mb-4">
+    <div class="mb-4 w-full">
         <label for="items-per-page" class="text-sm text-gray-600 font-Alumni md:text-lg daltonien:text-black">Afficher par :</label>
-        <select id="items-per-page" class="border rounded px-2 py-1 font-Alumni md:text-lg"
+        <select id="items-per-page" class="border rounded px-2 py-1 font-Alumni md:text-lg  w-16"
             onchange="updatePagination()">
             <option value="5">5</option>
             <option value="10">10</option>
@@ -266,7 +266,7 @@ $etatStyles = [
  oninput="fetchData()"   />   
     </div>
     <!-- Tableau de données dynamique -->
-    <div class="relative overflow-x-auto shadow-md rounded-lg">
+    <div class="relative overflow-x-auto shadow-md border-2 rounded-lg">
         <table class="w-full text-sm text-left text-gray-500 font-Alumni md:text-xl">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 daltonien:text-black daltonien:border border-black">
                 <tr>
@@ -1129,6 +1129,51 @@ function updateEtatFilterBubbles(selectedEtats) {
             selectAllCheckbox.indeterminate = false;
         }
     }
+
+    function sendToFinance() {
+    if (selectedCompanies.length === 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Aucune sélection',
+            text: 'Aucune entreprise sélectionnée.',
+            confirmButtonText: 'OK',
+        });
+        return;
+    }
+
+    const companyIds = selectedCompanies.map(company => company.id);
+
+    axios.post('{{ route('send.finance') }}', { ids: companyIds })
+        .then(response => {
+            if (response.data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Transmission réussie',
+                    text: response.data.message,
+                    confirmButtonText: 'OK',
+                });
+            } else {
+                const nonEligibleCompanies = response.data.nonEligibleCompanies || [];
+                const companyNames = nonEligibleCompanies.map(company => company.nom_entreprise).join(', ');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Échec de transmission',
+                    text: `Les informations n'ont pas été transmises. Les entreprises suivantes ne remplissent pas les conditions : ${companyNames}.`,
+                    confirmButtonText: 'OK',
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erreur',
+                text: 'Une erreurs est survenue lors de la transmission des données.',
+                confirmButtonText: 'OK',
+            });
+            console.error('Erreur Axios:', error);
+        });
+}
+
 </script>
 
 @endsection
