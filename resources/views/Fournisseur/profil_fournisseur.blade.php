@@ -361,7 +361,10 @@
                     <h6 class="font-Alumni font-semibold text-md md:text-lg">{{ $brochure->nom }}</h6>
                     <p class="font-Alumni text-md"><strong>Type de fichier:</strong> {{ $brochure->type_de_fichier }}</p>
                     <p class="font-Alumni text-md"><strong>Taille:</strong> {{ number_format($brochure->taille / 1048576, 2) }} MB</p>
-        <!-- TODO A Retravailer le telechargement ne fonctionne pas ici    <p class="font-Alumni text-md"><a href="{{ asset($brochure->chemin) }}" class="text-tertiary-400 underline">Télécharger</a></p>-->    
+                    <p class="font-Alumni text-md flex w-full"> <a href="{{ $brochure->downloadUrl }}" class="text-tertiary-400 underline flex items-center">
+                        <span class="iconify" data-icon="material-symbols:download" data-inline="false"></span>
+                        Télécharger
+                    </a></p>   
                 </div>
             @empty
                 <p class="font-Alumni text-md md:text-lg">Aucun document disponible.</p>
@@ -597,60 +600,79 @@
                 });
             });
             });
-        document.querySelectorAll('.rejectButton').forEach(function(button) {
-                button.addEventListener('click', function() {
-                Swal.fire({
-                    title: 'Êtes-vous sûr ?',
-                    html: `
-                        <p>Voulez-vous vraiment refuser cette demande ?</p>
-                        <textarea id="raisonRefus" class="swal2-textarea" placeholder="Veuillez entrer la raison du refus (facultatif)"></textarea>
-                        <div class="flex items-center mt-2">
-                            <input type="checkbox" id="includeReason" name="includeReason">
-                            <label for="includeReason" class="ml-2">Inclure la raison du refus dans l'email</label>
-                        </div>
-                        `,
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#28a745',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Refuser',
-                    cancelButtonText: 'Annuler',
-                    preConfirm: () => {
-                        return {
-                            reason: document.getElementById('raisonRefus').value,
-                            includeReason: document.getElementById('includeReason').checked
-                        }
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        let reason = result.value.reason;
-                        const includeReason = result.value.includeReason;
-                        if (!includeReason) {
-                            reason = 'Non spécifiée';
-                        }
-                        refuserDemande(reason, includeReason);
-                    }
-                });
-            });
-            });
+            document.querySelectorAll('.rejectButton').forEach(function(button) {
+    button.addEventListener('click', function() {
+        Swal.fire({
+            title: 'Êtes-vous sûr ?',
+            html: `
+                <p>Voulez-vous vraiment refuser cette demande ?</p>
+                <textarea id="raisonRefus" class="swal2-textarea" placeholder="Veuillez entrer la raison du refus (facultatif)"></textarea>
+                <div class="flex items-center mt-2">
+                    <input type="checkbox" id="includeReason" name="includeReason">
+                    <label for="includeReason" class="ml-2">Inclure la raison du refus dans l'email</label>
+                </div>
+                `,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Refuser',
+            cancelButtonText: 'Annuler',
+            preConfirm: () => {
+                const reasonInput = document.getElementById('raisonRefus').value.trim();
+                const includeReason = document.getElementById('includeReason').checked;
+
+                // Si aucune raison n'est saisie, utiliser "Non spécifiée"
+                const reason = reasonInput !== '' ? reasonInput : 'Non spécifiée';
+
+                return { reason, includeReason };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                refuserDemande(result.value.reason, result.value.includeReason);
+            }
+        });
+    });
+});
+
 
             function refuserDemande(reason, includeReason) {
+                Swal.fire({
+        title: 'Traitement en cours',
+        text: 'Veuillez patienter...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading(); 
+        }
+    });
+        
                 axios.post('{{ route('fiches.reject', ['id' => $fournisseur->id]) }}', {
                     reason: reason,
                     includeReason: includeReason
                 })
                 .then(response => {
+                    Swal.close();
                     Swal.fire('Refusé!', 'La demande a été refusée.', 'success')
                         .then(() => location.reload());
                 })
                 .catch(error => {
+                    Swal.close();
                     Swal.fire('Erreur!', "Une erreur s'est produite.", 'error');
                 });
             }
 
             function approuverDemande() {
+                Swal.fire({
+        title: 'Traitement en cours',
+        text: 'Veuillez patienter...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading(); 
+        }
+    });
                 axios.post('{{ route('fiches.approve', ['id' => $fournisseur->id]) }}')
-                    .then(response => {
+                    .then(response => 
+                    {   Swal.close();
                         Swal.fire('Approuvé!', 'La demande a été approuvée.', 'success')
                             .then(() => location.reload());
                     })
@@ -1075,6 +1097,7 @@ function showReason() {
     axios.get(`/fournisseur/${fournisseurId}/raison-refus`)
         .then(response => {
             const reason = response.data.reason;
+            console.log(reason);
 
             Swal.fire({
                 title: 'Raison du refus',
