@@ -63,18 +63,26 @@ class FournisseurRefusNotification extends Notification
     private function replaceVariables($body)
     {
         $body = str_replace('&gt;', '>', $body);
-
+    
         $variables = [
-            '{fiche_fournisseurs->raison_refus}' => $this->reason ?? 'Non spécifiée',
             '{fiche_fournisseurs->nom_entreprise}' => $this->fournisseur->nom_entreprise,
         ];
-
+    
+     
+        if ($this->includeReason) {
+            $variables['{fiche_fournisseurs->raison_refus}'] = $this->reason ?? 'Non spécifiée';
+        } else {
+          
+            $variables['{fiche_fournisseurs->raison_refus}'] = '';
+        }
+    
         foreach ($variables as $key => $value) {
             $body = str_replace($key, $value, $body);
         }
-
+    
         return $body;
     }
+    
 
     /**
      * Mail de refus par défaut (si aucun modèle n'est trouvé).

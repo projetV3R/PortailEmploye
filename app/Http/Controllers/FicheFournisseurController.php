@@ -324,13 +324,16 @@ use Illuminate\Support\Facades\Crypt;
         foreach ($fileIdsToDelete as $fileId) {
             $fileToDelete = $existingFiles->find($fileId);
             if ($fileToDelete) {
-            
-                if (Storage::disk('public')->exists($fileToDelete->chemin)) {
-                    Storage::disk('public')->delete($fileToDelete->chemin);
-                }
               
+                try {
+                    Storage::disk('azure')->delete($fileToDelete->chemin);
+                } catch (\Exception $e) {
+                    \Log::error("Erreur lors de la suppression sur Azure Blob Storage : " . $e->getMessage());
+                    return redirect()->back()->withErrors('Erreur lors de la suppression du fichier : ' . $e->getMessage());
+                }
+                
                 $historiqueRemove[] = "-{$fileToDelete->nom}";
-             
+                
                 $fileToDelete->delete();
             }
         }
@@ -338,7 +341,14 @@ use Illuminate\Support\Facades\Crypt;
        
         if ($request->hasFile('fichiers')) {
             foreach ($request->file('fichiers') as $file) {
-                $path = $file->store('brochures', 'public');
+                $path = uniqid() . '_' . $file->getClientOriginalName();
+                try {
+                    Storage::disk('azure')->put($path, file_get_contents($file));
+                } catch (\Exception $e) {
+                    \Log::error("Erreur lors de l'upload vers Azure Blob Storage : " . $e->getMessage());
+                    return redirect()->back()->withErrors('Erreur lors de l\'upload du fichier : ' . $e->getMessage());
+                }
+                
                 $brochure = $fournisseur->brochuresCarte()->create([
                     'nom' => $file->getClientOriginalName(),
                     'chemin' => $path,
@@ -1182,34 +1192,53 @@ public function desactivationFiche($id)
     public function reject(Request $request, $id)
     {
         $fournisseur = FicheFournisseur::findOrFail($id);
-        $changes = $fournisseur->getChanges(); 
-        $original = $fournisseur->getOriginal(); 
-    
         $usager = Auth::user();
+            $historiqueRemove = [];
     
         $fournisseur->etat = 'refuser';
         $fournisseur->date_changement_etat = now();
     
+        // Sauvegarde de la raison du refus dans la BD
         $reason = $request->input('reason', null);
-        $hashedReason = $reason ?  Crypt::encrypt($reason) : null;
-        $fournisseur->raison_refus = $hashedReason;
-    
+        $hashedReason = $reason ? Crypt::encrypt($reason) : null;
+        $fournisseur->raison_refus =$hashedReason;
         $fournisseur->save();
+
+        
+        $brochures = $fournisseur->brochuresCarte;
+        foreach ($brochures as $file) {
+            if ($file && Storage::disk('azure')->exists($file->chemin)) {
+                try {
+                    Storage::disk('azure')->delete($file->chemin); 
+                } catch (\Exception $e) {
+                    \Log::error("Erreur lors de la suppression sur Azure Blob Storage : " . $e->getMessage());
+                    return response()->json(['success' => false, 'message' => 'Erreur lors de la suppression d\'un fichier : ' . $e->getMessage()]);
+                }
+            }
+            $historiqueRemove[] = "-{$file->nom}";
+            $file->delete(); 
+        }
+
     
+        $historiqueRemove = implode(', ', $historiqueRemove);
+    
+        // Crée un enregistrement dans l'historique
         Historique::create([
             'table_name' => 'Identification et statut',
             'author' => $usager->email,
             'action' => 'Refuser',
-            'old_values' => "-état : " . $original['etat'],
-            'new_values' => '+état : ' . $fournisseur->etat. ', +raison_refus : ' . ($hashedReason ?? 'N/A'),
+            'old_values' => "-état : " . $fournisseur->getOriginal('etat'),
+            'new_values' => "+état : {$fournisseur->etat}, +raison_refus : " . ($reason ?? 'Non spécifiée') .",fichier supprimer : {$historiqueRemove}" ,
             'fiche_fournisseur_id' => $fournisseur->id,
         ]);
     
+        // Notification de refus avec ou sans inclusion de la raison
         $includeReason = $request->input('includeReason', false);
         $fournisseur->notify(new FournisseurRefusNotification($fournisseur, $reason, $includeReason));
     
         return response()->json(['message' => 'Demande refusée avec succès.']);
     }
+    
     
     
     public function approve($id)
