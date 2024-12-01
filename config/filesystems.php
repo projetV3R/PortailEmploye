@@ -55,6 +55,14 @@ return [
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
         ],
+        'azure' => [
+            'driver'            => 'azure',
+            'connection_string' => env('AZURE_STORAGE_CONNECTION_STRING'),
+            'container'         => env('AZURE_STORAGE_CONTAINER'),
+            'key'               => env('AZURE_STORAGE_KEY'),
+            'name'              => env('AZURE_STORAGE_NAME'),
+        ],
+        
 
     ],
 
