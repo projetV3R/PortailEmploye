@@ -140,7 +140,7 @@ $etatStyles = [
                     <span class="iconify" data-icon="material-symbols:cancel"></span>  Refusé
                 </label>
                 <label class="flex items-center">
-                    <input type="checkbox" value="A reviser" class="etat-filter mr-2">
+                    <input type="checkbox" value="a reviser" class="etat-filter mr-2">
                     <span class="iconify" data-icon="material-symbols:hourglass-top"></span>  À réviser
                 </label>
             </div>
