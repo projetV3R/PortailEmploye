@@ -30,6 +30,18 @@ class ProduitServiceRequest extends FormRequest
             
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'details_specifications.required' => 'Les spécifications détaillées sont requises.',
+            'details_specifications.string' => 'Les spécifications détaillées doivent être une chaîne de caractères valide.',
+            'details_specifications.max' => 'Les spécifications détaillées ne peuvent pas dépasser 500 caractères.',
+
+            'produits_services.required' => 'Les produits ou services doivent être fournis.',
+        ];
+    }
+
     protected function failedValidation(Validator $validator)
     {
         $currentRouteName = $this->route()->getName();

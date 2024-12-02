@@ -104,6 +104,67 @@ class CoordonneeRequest extends FormRequest
 
         return $rules;
     }
+
+    public function messages(): array
+    {
+        return [
+      
+            'numeroCivique.required' => 'Le numéro civique est requis.',
+            'numeroCivique.string' => 'Le numéro civique doit être une chaîne de caractères.',
+            'numeroCivique.max' => 'Le numéro civique ne peut pas dépasser 8 caractères.',
+            'numeroCivique.regex' => 'Le numéro civique doit contenir uniquement des lettres et des chiffres.',
+    
+    
+            'rue.required' => 'La rue est requise.',
+            'rue.string' => 'La rue doit être une chaîne de caractères.',
+            'rue.max' => 'La rue ne peut pas dépasser 64 caractères.',
+            'rue.regex' => 'La rue peut contenir uniquement des lettres, des chiffres, des espaces, des apostrophes et des tirets.',
+    
+    
+            'province.required' => 'La province est requise.',
+    
+            'bureau.string' => 'Le bureau doit être une chaîne de caractères.',
+            'bureau.max' => 'Le bureau ne peut pas dépasser 8 caractères.',
+            'bureau.regex' => 'Le bureau doit contenir uniquement des lettres et des chiffres.',
+    
+            'codePostale.required' => 'Le code postal est requis.',
+            'codePostale.string' => 'Le code postal doit être une chaîne de caractères.',
+            'codePostale.max' => 'Le code postal ne peut pas dépasser 6 caractères.',
+            'codePostale.regex' => 'Le code postal doit contenir uniquement des lettres et des chiffres.',
+    
+      
+            'siteWeb.string' => 'Le site web doit être une chaîne de caractères.',
+            'siteWeb.max' => 'Le site web ne peut pas dépasser 64 caractères.',
+            'siteWeb.regex' => 'Le site web doit commencer par "www" et être au format valide (exemple : www.exemple.com).',
+    
+    
+    
+            'ligne.required' => 'Les informations de ligne sont requises.',
+    
+            'ligne.*.type.required' => 'Le type de ligne est requis.',
+            'ligne.*.type.string' => 'Le type de ligne doit être une chaîne de caractères.',
+            'ligne.*.type.in' => 'Le type de ligne doit être "Bureau", "Télécopieur" ou "Cellulaire".',
+    
+       
+            'ligne.*.numeroTelephone.required' => 'Le numéro de téléphone est requis.',
+            'ligne.*.numeroTelephone.string' => 'Le numéro de téléphone doit être une chaîne de caractères.',
+    
+        
+            'ligne.*.poste.string' => 'Le poste doit être une chaîne de caractères.',
+            'ligne.*.poste.max' => 'Le poste ne peut pas dépasser 6 caractères.',
+            'ligne.*.poste.regex' => 'Le poste doit contenir uniquement des chiffres.',
+    
+            'municipalite.required' => 'La municipalité est requise.',
+    
+            'regionAdministrative.required' => 'La région administrative est requise pour les provinces au Québec.',
+            'regionAdministrative.string' => 'La région administrative doit être une chaîne de caractères.',
+    
+    
+            'municipaliteInput.required' => 'La municipalité est requise.',
+            'municipaliteInput.string' => 'La municipalité doit être une chaîne de caractères.',
+            'municipaliteInput.max' => 'La municipalité ne peut pas dépasser 64 caractères.',
+        ];
+    }
     protected function failedValidation(Validator $validator)
 {
     $currentRouteName = $this->route()->getName();

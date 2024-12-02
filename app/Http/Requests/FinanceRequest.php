@@ -32,6 +32,26 @@ class FinanceRequest extends FormRequest
             'modeCommunication' => ['required', 'string', Rule::in(['courriel','courrier'])], // Liste prédéterminée de modes de communication
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'numeroTPS.required' => 'Le numéro de TPS est requis.',
+            'numeroTPS.string' => 'Le numéro de TPS doit être une chaîne de caractères.',
+            'numeroTPS.regex' => 'Le numéro de TPS doit être un format numérique composé de 9 chiffres.',
+    
+    
+            'numeroTVQ.required' => 'Le numéro de TVQ est requis.',
+            'numeroTVQ.string' => 'Le numéro de TVQ doit être une chaîne de caractères.',
+            'numeroTVQ.regex' => 'Le numéro de TVQ doit être un format numérique composé de 10 chiffres.',
+    
+            'conditionDePaiement.required' => 'Les conditions de paiement sont requises.',
+    
+            'devise.required' => 'La devise est requise.',
+    
+            'modeCommunication.required' => 'Le mode de communication est requis.',
+        ];
+    }
     protected function failedValidation(Validator $validator)
     {
         $currentRouteName = $this->route()->getName();

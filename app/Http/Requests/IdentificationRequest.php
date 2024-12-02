@@ -107,8 +107,33 @@ class IdentificationRequest extends FormRequest
     public function messages(): array
     {
         return [
+            // Password
+            'password.required' => 'Le mot de passe est requis.',
+            'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
             'password.regex' => 'Le mot de passe doit contenir entre 7 et 12 caractères, avec au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.',
-            'numeroEntreprise.regex' => 'Le numéro d\'entreprise doit commencer par "11", "22", "33" ou "88", suivi d\'un chiffre entre 4 et 9, puis de 7 autres chiffres.',
+    
+            // Password confirmation
+            'password_confirmation.required' => 'La confirmation du mot de passe est requise.',
+            'password_confirmation.required_with' => 'La confirmation du mot de passe est requise lorsque le mot de passe est fourni.',
+    
+            // Email
+            'email.required' => 'L\'adresse courriel est requise.',
+            'email.string' => 'L\'adresse courriel doit être une chaîne de caractères.',
+            'email.email' => 'L\'adresse courriel doit être une adresse valide.',
+            'email.max' => 'L\'adresse courriel ne peut pas dépasser 64 caractères.',
+            'email.unique' => 'Cette adresse courriel est déjà utilisée.',
+    
+    
+            'numeroEntreprise.nullable' => 'Le numéro d\'entreprise est facultatif.',
+            'numeroEntreprise.string' => 'Le numéro d\'entreprise doit être une chaîne de caractères.',
+            'numeroEntreprise.size' => 'Le numéro d\'entreprise doit contenir exactement 10 caractères.',
+            'numeroEntreprise.regex' => 'Le numéro d\'entreprise doit commencer par "11", "22", "33" ou "88", suivi de chiffres valides.',
+            'numeroEntreprise.unique' => 'Ce numéro d\'entreprise est déjà utilisé.',
+    
+       
+            'nomEntreprise.required' => 'Le nom de l\'entreprise est requis.',
+            'nomEntreprise.string' => 'Le nom de l\'entreprise doit être une chaîne de caractères.',
+            'nomEntreprise.max' => 'Le nom de l\'entreprise ne peut pas dépasser 64 caractères.',
         ];
     }
 

@@ -41,6 +41,12 @@ class LicenceRequest extends FormRequest
         return [
             'numeroLicence.required_with' => 'Le numéro de licence est obligatoire lorsque le statut, le type de licence ou la sous-catégorie est renseigné.',
             'numeroLicence.regex' => 'Le format du numéro de licence est invalide. Veuillez utiliser le format suivant et respecter qu\'il contient bien 10 chiffres uniquement : ####-####-##.',
+
+            'statut.required_with' => 'Le statut est obligatoire lorsque le numéro de licence est renseigné.',
+
+            'typeLicence.required_with' => 'Le type de licence est obligatoire lorsque le numéro de licence est renseigné.',
+
+            'sousCategorie.required_with' => 'Au moins une sous-catégorie est requise lorsque le numéro de licence est renseigné.',
         ];
     }
     protected function failedValidation(Validator $validator)
