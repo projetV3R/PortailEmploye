@@ -291,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </td>
                     <td class="font-Alumni px-4 py-1 text-center whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                         <input type="hidden" value="${usager.id}">
-                        <select name="usagers[${usager.id}][role]" class="pr-2 role-dropdown dark:text-neutral-500 dark:bg-blueV3R">
+                        <select name="usagers[${usager.id}][role]" class="pt-2 role-dropdown dark:text-neutral-500 dark:bg-blueV3R">
                             <option value="admin" ${usager.role == 'admin' ? 'selected' : ''}>Admin</option>
                             <option value="responsable" ${usager.role == 'responsable' ? 'selected' : ''}>Responsable</option>
                             <option value="commis" ${usager.role == 'commis' ? 'selected' : ''}>Commis</option>
