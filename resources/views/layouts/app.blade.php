@@ -78,7 +78,7 @@
                     Fournisseurs
                 </a>
                 |
-                <a href="/profil"
+                <a href="/pageProfil"
                     class="hover:bg-green-300 hover:text-black p-2 transition duration-300 ease-in-out transform hover:shadow-lg daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
                     Profil
                 </a>
@@ -152,7 +152,7 @@
                     <a href="{{ route('fiches.index') }}" class="block  flex items-center w-full hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
                         <span class="iconify size-10 hover:bg-green-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black" data-icon="material-symbols:box-outline-rounded" data-inline="false"></span>   Fournisseurs
                     </a>
-                    <a href="/profil" class="block flex items-center w-full hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
+                    <a href="/pageProfil" class="block flex items-center w-full hover:bg-green-300 p-2 transition duration-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black">
                         <span class="iconify size-10 hover:bg-green-300 daltonien:hover:bg-daltonienYellow daltonien:hover:text-black" data-icon="lucide:user-round" data-inline="false"></span>   Profil
                     </a>
 

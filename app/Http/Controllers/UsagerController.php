@@ -67,6 +67,11 @@ class UsagerController extends Controller
         return redirect()->route('login')->with('success', 'Déconnexion réussie');
     }
 
+    public function pageProfil(){
+        $usager = Auth::user();
+        return view('Auth.profileUtilisateur', compact('usager'));
+    }
+
 
     public function store(UsagerRequest $request)
     {

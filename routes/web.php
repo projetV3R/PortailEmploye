@@ -24,10 +24,11 @@ Route::post('/logout',
  
 Route::get('/dashboard',
 [UsagerController::class, 'dashboard'])->name('dashboard')->middleware('auth');
- 
+Route::get('/pageProfil',
+[UsagerController::class, 'pageProfil'])->name('pageProfil')->middleware('auth');
 Route::get('/redirection', function () {
     return view('redirection.403');});
- 
+   
 /*Route::get('/usagers', [UsagerController::class, 'index']);
 
  
